@@ -18,7 +18,7 @@ jobs:
         with:
           arguments: test jacocoTestReport
       - name: Upload coverage reports to Codecov
-        uses: codecov.yml/codecov.yml-action@v3
+        uses: codecov.yml/codecov.yml-action@v2
       - name: Upload test report
         uses: actions/upload-artifact@v3
         with:
