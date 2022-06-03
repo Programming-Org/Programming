@@ -11,6 +11,10 @@ repositories {
 }
 
 apply plugin: "jacoco"
+compileJava.options.encoding = "UTF-8"
+
+sourceCompatibility = 17
+targetCompatibility = 17
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
