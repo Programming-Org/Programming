@@ -1,11 +1,14 @@
-name: Basic checks
+name: code cov
 
-on: [pull_request]
+on: push
 
-jobs:
-  codecov:
-    name: "codecov"
+jobs :
+  build:
     runs-on: ubuntu-latest
+
+  coverage:
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
       - name: Setup java
@@ -13,11 +16,21 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
       - name: Build project
         uses: gradle/gradle-build-action@v2
         with:
           arguments: test jacocoTestReport
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
+      - name: Upload test report
+        uses: actions/upload-artifact@v3
+        with:
+          path: build/reports/tests/test/
+          name: Test Report
+          retention-days: 14
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          path: build/reports/jacoco/test/
+          name: Coverage Report
+          retention-days: 14
