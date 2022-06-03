@@ -6,11 +6,11 @@ plugins {
 group 'io.github.org.programming'
 version '1.0-SNAPSHOT'
 
-apply plugin: "jacoco"
-
 repositories {
     mavenCentral()
 }
+
+apply plugin: "jacoco"
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
@@ -28,6 +28,19 @@ test {
     useJUnitPlatform()
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+configurations.all {
+    //noinspection GrUnresolvedAccess
+    // ez vulnerability fix
+    exclude group: "org.slf4j", module: "slf4j-log4j12"
+}
+
 compileJava {
     // Makes spotlessApply task run on every compile/build.
     dependsOn 'spotlessApply'
@@ -37,12 +50,6 @@ compileJava {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled false
-    }
-}
 
 spotless {
     java {
@@ -68,3 +75,41 @@ java {
     withJavadocJar()
     withSourcesJar()
 }
+
+jar {
+    archiveVersion.set("")
+}
+
+/**
+ * This task downloads all dependencies (with transitive dependencies) and puts them into the libraries folder.
+ * Used instead of shadowJar to hopefully optimize build times.
+ * Run the application jar with the downloaded library files in the classpath.
+ */
+task downloadDependencies {
+    doLast {
+        logger.info("===== Downloading dependencies =====")
+        logger.info("  ---       Cleaning up...     ---")
+        // delete superseded library jars
+        Set<String> newFiles = sourceSets.main.runtimeClasspath.getFiles().stream().map(File::getName).toList()
+        fileTree("libraries").files.stream().filter(file -> !newFiles.contains(file.getName())).forEach(file -> {
+            logger.info("  -> Deleting leftover file: ${file.getName()}...")
+            file.delete()
+        })
+        logger.info("  ---     Cleanup complete.    ---")
+
+        logger.info("\n  ---  Copying dependencies... ---")
+        copy {
+            from(sourceSets.main.runtimeClasspath) {
+                include "*.jar"
+            }
+            into 'libraries/'
+            eachFile {
+                logger.info("  -> Copying ${it.name}...")
+            }
+        }
+        logger.info("  ---    Dependencies copied.  ---")
+        logger.info("===== Dependencies downloaded ======")
+    }
+}
+
+
