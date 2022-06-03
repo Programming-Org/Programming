@@ -28,13 +28,6 @@ test {
     useJUnitPlatform()
 }
 
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled false
-    }
-}
-
 compileJava {
     // Makes spotlessApply task run on every compile/build.
     dependsOn 'spotlessApply'
@@ -42,6 +35,13 @@ compileJava {
     // Nails the Java-Version of every Subproject
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
 }
 
 spotless {
