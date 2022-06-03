@@ -124,4 +124,4 @@ task downloadDependencies {
     }
 }
 
-
+check.dependsOn jacocoTestReport
