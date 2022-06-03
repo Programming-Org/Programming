@@ -1,6 +1,6 @@
 name: code cov
 
-on: push
+on: [pull_request]
 
 jobs :
   build:
