@@ -1,7 +1,9 @@
 plugins {
     id 'java'
     id "com.diffplug.spotless" version "6.6.1"
+    id "application"
 }
+
 
 group 'io.github.org.programming'
 version '1.0-SNAPSHOT'
@@ -10,15 +12,12 @@ repositories {
     mavenCentral()
 }
 
-apply plugin: "jacoco"
 compileJava.options.encoding = "UTF-8"
 
 sourceCompatibility = 17
 targetCompatibility = 17
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     implementation group: 'net.dv8tion', name: 'JDA', version: '5.0.0-alpha.12'
     //Logger
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
@@ -26,17 +25,28 @@ dependencies {
     //config
     implementation group: 'io.github.yusufsdiscordbot', name: 'jda5.basic', version: '1.0.2'
     implementation group: 'io.github.yusufsdiscordbot', name: 'config', version: '1.0.4'
+    //test
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
+
+apply plugin: 'jacoco' // code coverage reports
+
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
+
 jacocoTestReport {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
     reports {
         xml.enabled true
         html.enabled true
     }
+    jacocoTestReport.dependsOn test
+    jacocoTestCoverageVerification.dependsOn jacocoTestReport
 }
 
 configurations.all {
@@ -45,13 +55,16 @@ configurations.all {
     exclude group: "org.slf4j", module: "slf4j-log4j12"
 }
 
+mainClassName = "io.github.org.programming.Bot"
+
+
 compileJava {
     // Makes spotlessApply task run on every compile/build.
     dependsOn 'spotlessApply'
 
     // Nails the Java-Version of every Subproject
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = rootProject.sourceCompatibility
+    targetCompatibility = rootProject.targetCompatibility
 }
 
 
@@ -73,11 +86,6 @@ javadoc {
     if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
 }
 
 jar {
@@ -116,6 +124,4 @@ task downloadDependencies {
     }
 }
 
-check.dependsOn jacocoTestCoverageVerification
-jacocoTestCoverageVerification.dependsOn jacocoTestReport
 
