@@ -6,6 +6,8 @@ plugins {
 group 'io.github.org.programming'
 version '1.0-SNAPSHOT'
 
+apply plugin: "jacoco"
+
 repositories {
     mavenCentral()
 }
@@ -24,6 +26,13 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
 }
 
 compileJava {
