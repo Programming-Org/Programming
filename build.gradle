@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id "com.diffplug.spotless" version "6.6.1"
+    id 'jacoco'
 }
 
 group 'io.github.org.programming'
@@ -26,6 +27,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 compileJava {
