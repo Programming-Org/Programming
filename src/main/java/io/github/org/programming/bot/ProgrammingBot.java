@@ -13,15 +13,16 @@ import java.util.Objects;
 public class ProgrammingBot {
     public ProgrammingBot(String[] args) throws Exception {
         JDA jda = JDABuilder.createDefault(BotConfig.getToken())
-                .enableCache(CacheFlag.ONLINE_STATUS, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS)
-                .disableCache(CacheFlag.ACTIVITY, CacheFlag.EMOTE, CacheFlag.MEMBER_OVERRIDES)
-                .setActivity(Activity.watching("for misbehaving users"))
-                .setStatus(OnlineStatus.ONLINE)
-                .build();
+            .enableCache(CacheFlag.ONLINE_STATUS, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS)
+            .disableCache(CacheFlag.ACTIVITY, CacheFlag.EMOTE, CacheFlag.MEMBER_OVERRIDES)
+            .setActivity(Activity.watching("for misbehaving users"))
+            .setStatus(OnlineStatus.ONLINE)
+            .build();
 
-        SlashCommandHandler handler = new SlashCommandHandler(jda, Objects.requireNonNull(jda.getGuildById(BotConfig.getGuildId())), BotConfig.getOwnerId());
-        jda.awaitReady()
-                .addEventListener(handler);
+        SlashCommandHandler handler = new SlashCommandHandler(jda,
+                Objects.requireNonNull(jda.getGuildById(BotConfig.getGuildId())),
+                BotConfig.getOwnerId());
+        jda.awaitReady().addEventListener(handler);
         handler.addSlashCommand();
         handler.queueSlashCommand();
     }
