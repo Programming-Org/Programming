@@ -1,5 +1,4 @@
 .gradle
-build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -12,6 +11,7 @@ out/
 .idea
 !**/src/main/**/out/
 !**/src/test/**/out/
+/build/
 
 ### Eclipse ###
 .apt_generated

@@ -1,20 +1,23 @@
 plugins {
     id 'java'
     id "com.diffplug.spotless" version "6.6.1"
+    id "application"
 }
+
 
 group 'io.github.org.programming'
 version '1.0-SNAPSHOT'
-
-apply plugin: "jacoco"
 
 repositories {
     mavenCentral()
 }
 
+compileJava.options.encoding = "UTF-8"
+
+sourceCompatibility = 17
+targetCompatibility = 17
+
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     implementation group: 'net.dv8tion', name: 'JDA', version: '5.0.0-alpha.12'
     //Logger
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
@@ -22,27 +25,48 @@ dependencies {
     //config
     implementation group: 'io.github.yusufsdiscordbot', name: 'jda5.basic', version: '1.0.2'
     implementation group: 'io.github.yusufsdiscordbot', name: 'config', version: '1.0.4'
+    //test
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
+
+apply plugin: 'jacoco' // code coverage reports
+
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
+
 jacocoTestReport {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
     reports {
         xml.enabled true
-        html.enabled false
+        html.enabled true
     }
+    jacocoTestReport.dependsOn test
+    jacocoTestCoverageVerification.dependsOn jacocoTestReport
 }
+
+configurations.all {
+    //noinspection GrUnresolvedAccess
+    // ez vulnerability fix
+    exclude group: "org.slf4j", module: "slf4j-log4j12"
+}
+
+mainClassName = "io.github.org.programming.Bot"
+
 
 compileJava {
     // Makes spotlessApply task run on every compile/build.
     dependsOn 'spotlessApply'
 
     // Nails the Java-Version of every Subproject
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = rootProject.sourceCompatibility
+    targetCompatibility = rootProject.targetCompatibility
 }
+
 
 spotless {
     java {
@@ -64,7 +88,40 @@ javadoc {
     }
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
+jar {
+    archiveVersion.set("")
 }
+
+/**
+ * This task downloads all dependencies (with transitive dependencies) and puts them into the libraries folder.
+ * Used instead of shadowJar to hopefully optimize build times.
+ * Run the application jar with the downloaded library files in the classpath.
+ */
+task downloadDependencies {
+    doLast {
+        logger.info("===== Downloading dependencies =====")
+        logger.info("  ---       Cleaning up...     ---")
+        // delete superseded library jars
+        Set<String> newFiles = sourceSets.main.runtimeClasspath.getFiles().stream().map(File::getName).toList()
+        fileTree("libraries").files.stream().filter(file -> !newFiles.contains(file.getName())).forEach(file -> {
+            logger.info("  -> Deleting leftover file: ${file.getName()}...")
+            file.delete()
+        })
+        logger.info("  ---     Cleanup complete.    ---")
+
+        logger.info("\n  ---  Copying dependencies... ---")
+        copy {
+            from(sourceSets.main.runtimeClasspath) {
+                include "*.jar"
+            }
+            into 'libraries/'
+            eachFile {
+                logger.info("  -> Copying ${it.name}...")
+            }
+        }
+        logger.info("  ---    Dependencies copied.  ---")
+        logger.info("===== Dependencies downloaded ======")
+    }
+}
+
+check.dependsOn jacocoTestReport
