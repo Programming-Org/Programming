@@ -112,4 +112,6 @@ task downloadDependencies {
     }
 }
 
+check.dependsOn jacocoTestCoverageVerification
+jacocoTestCoverageVerification.dependsOn jacocoTestReport
 
