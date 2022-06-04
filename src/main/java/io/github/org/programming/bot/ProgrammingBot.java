@@ -35,8 +35,7 @@ public class ProgrammingBot extends ListenerAdapter {
 
         SlashCommandHandler handler = new SlashCommandHandler(jda, guild, BotConfig.getOwnerId());
         jda.awaitReady().addEventListener(handler, this);
-        handler.addSlashCommand();
-        handler.queueSlashCommand();
+        handler.addSlashCommands();
     }
 
     @Override

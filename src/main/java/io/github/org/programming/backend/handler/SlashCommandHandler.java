@@ -1,6 +1,5 @@
 package io.github.org.programming.backend.handler;
 
-import io.github.org.programming.backend.builder.SlashCommand;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -10,19 +9,14 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-import net.dv8tion.jda.internal.utils.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * For register the commands make sure to set it to awaitReady as seen here
@@ -52,20 +46,7 @@ import java.util.Set;
  */
 public class SlashCommandHandler extends ListenerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(SlashCommandHandler.class);
-
-    private static final Map<String, Pair<Long, SlashCommandExtender>> commands = new HashMap<>();
-
-    // private final Map<String, SlashCommandExtender> slashCommand = new HashMap<>();
-
-
-    private static final Map<Class<? extends SlashCommandExtender>, SlashCommand> commandInstances =
-            new HashMap<>();
-
-
-    private static int numberOfCommands = 0;
-
-    private CommandListUpdateAction commandListUpdateAction;
-
+    private final Map<String, SlashCommandExtender> slashCommand = new HashMap<>();
 
     /**
      * Used to determine whether the commands should be global or guild only.
@@ -73,15 +54,9 @@ public class SlashCommandHandler extends ListenerAdapter {
     private final @NotNull CommandListUpdateAction globalCommandsData;
     private final @NotNull CommandListUpdateAction guildCommandsData;
     private final @NotNull JDA jda;
+
     private final long ownerId;
 
-    /**
-     * Creates a new SlashCommandHandler
-     *
-     * @param jda The JDA instance. Also used to register global commands.
-     * @param guild The guild instance. Also used to register guild commands.
-     * @param ownerId The owner id.
-     */
     public SlashCommandHandler(@NotNull JDA jda, @NotNull Guild guild, long ownerId) {
         globalCommandsData = jda.updateCommands();
         guildCommandsData = guild.updateCommands();
@@ -89,34 +64,47 @@ public class SlashCommandHandler extends ListenerAdapter {
         this.ownerId = ownerId;
     }
 
-    public void addSlashCommand() {
-        numberOfCommands = 0;
-        commands.clear();
-        commandInstances.clear();
+    public void addSlashCommands() {
         final Reflections reflections =
                 new Reflections(SlashCommandExtender.class.getPackage().getName());
-        final Set<Class<? extends SlashCommandExtender>> annotated =
+        final Collection<Class<? extends SlashCommandExtender>> annotated =
                 reflections.getSubTypesOf(SlashCommandExtender.class);
         for (final Class<?> command : annotated) {
             try {
                 final SlashCommandExtender newSlashCommand =
                         (SlashCommandExtender) command.getConstructor().newInstance();
-
-                SlashCommandData data = newSlashCommand.getSlashCommandData();
-                jda.addEventListener(newSlashCommand);
-
-                commandListUpdateAction =
-                        newSlashCommand.isGuildOnly() ? guildCommandsData.addCommands(data)
-                                : globalCommandsData.addCommands(data);
-            } catch (Exception e) {
-                logger.error("Failed to add command {}", command.getName(), e);
+                queueSlashCommand(newSlashCommand);
+            } catch (final Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
+    public void addSlashCommand(SlashCommandExtender command) {
+        slashCommand.put(command.getSlashCommandData().getName(), command);
+        if (command.isGuildOnly()) {
+            guildCommandsData.addCommands(command.getSlashCommandData());
+        } else {
+            globalCommandsData.addCommands(command.getSlashCommandData());
+        }
+    }
+
+    private void queueSlashCommand(SlashCommandExtender command) {
+        addSlashCommand(command);
+        onFinishedRegistration();
+    }
+
+    /**
+     * Queues the command after the command has been registered.
+     */
+    private void onFinishedRegistration() {
+        globalCommandsData.queue();
+        guildCommandsData.queue();
+    }
+
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        final SlashCommandExtender cmd = commands.get(event.getName()).getRight();
+        final SlashCommandExtender cmd = slashCommand.get(event.getName());
 
         if (cmd.isOwnerOnly() && event.getUser().getIdLong() != ownerId) {
             event.getChannel()
@@ -139,38 +127,27 @@ public class SlashCommandHandler extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
-        final SlashCommandExtender cmd = commands.get(event.getComponentId()).getRight();
+        final SlashCommandExtender cmd = slashCommand.get(event.getComponentId());
         cmd.onButtonClick(event);
     }
 
     @Override
     public void onSelectMenuInteraction(@Nonnull SelectMenuInteractionEvent event) {
-        final SlashCommandExtender cmd = commands.get(event.getComponentId()).getRight();
+        final SlashCommandExtender cmd = slashCommand.get(event.getComponentId());
         cmd.onSelectMenu(event);
     }
 
     @Override
     public void onCommandAutoCompleteInteraction(
             @Nonnull CommandAutoCompleteInteractionEvent event) {
-        final SlashCommandExtender cmd = commands.get(event.getName()).getRight();
+        final SlashCommandExtender cmd = slashCommand.get(event.getName());
         cmd.onCommandAutoComplete(event);
     }
 
     @Override
     public void onModalInteraction(@Nonnull ModalInteractionEvent event) {
-        final SlashCommandExtender cmd = commands.get(event.getModalId()).getRight();
+        final SlashCommandExtender cmd = slashCommand.get(event.getModalId());
         cmd.onModalInteraction(event);
-    }
-
-
-    public void queueSlashCommand() throws InterruptedException {
-        // if it is null then try again
-        if (commandListUpdateAction != null) {
-            commandListUpdateAction.queue();
-        } else {
-            wait(1000);
-            queueSlashCommand();
-        }
     }
 }
 
