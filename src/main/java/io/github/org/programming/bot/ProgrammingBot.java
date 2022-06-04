@@ -1,6 +1,6 @@
 package io.github.org.programming.bot;
 
-import io.github.org.programming.backend.handler.SlashCommandHandler;
+import io.github.org.programming.backendv1.handler.SlashCommandHandler;
 import io.github.org.programming.config.BotConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -15,10 +15,19 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class ProgrammingBot extends ListenerAdapter {
     private final Logger logger = LoggerFactory.getLogger(ProgrammingBot.class);
+
+    private static ProgrammingBot instance;
+
+    private final ExecutorService executor = Executors.newCachedThreadPool();
+
+    private final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(
+            BotConfig.getCorePoolSize());
 
     public ProgrammingBot(String[] args) throws Exception {
         JDA jda = JDABuilder
@@ -33,9 +42,16 @@ public class ProgrammingBot extends ListenerAdapter {
 
         Guild guild = jda.awaitReady().getGuildById(BotConfig.getGuildId());
 
-        SlashCommandHandler handler = new SlashCommandHandler(jda, guild, BotConfig.getOwnerId());
-        jda.awaitReady().addEventListener(handler, this);
-        handler.addSlashCommands();
+        jda.awaitReady().addEventListener(new SlashCommandHandler(), this);
+        SlashCommandHandler.addSlashCommands();
+    }
+
+    public static ProgrammingBot getInstance() {
+        return instance;
+    }
+
+    public ExecutorService getExecutor() {
+        return executor;
     }
 
     @Override
