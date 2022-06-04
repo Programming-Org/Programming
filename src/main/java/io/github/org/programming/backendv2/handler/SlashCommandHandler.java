@@ -1,6 +1,6 @@
 package io.github.org.programming.backendv2.handler;
 
-import io.github.org.programming.backendv1.extension.SlashCommandExtender;
+import io.github.org.programming.backendv2.extension.SlashCommandExtender;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;

@@ -1,8 +1,8 @@
-package io.github.org.programming.backendv1.builder;
+package io.github.org.programming.backendv2.builder;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import io.github.org.programming.backendv1.type.CommandType;
+import io.github.org.programming.backendv2.type.CommandType;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 

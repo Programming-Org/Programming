@@ -1,7 +1,5 @@
 package io.github.org.programming.backendv1.dashboard;
 
-import io.github.org.programming.backendv1.type.GuildType;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

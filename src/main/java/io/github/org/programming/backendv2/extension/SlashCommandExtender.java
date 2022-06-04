@@ -1,6 +1,6 @@
-package io.github.org.programming.backendv1.extension;
+package io.github.org.programming.backendv2.extension;
 
-import io.github.org.programming.backendv1.builder.SlashCommand;
+import io.github.org.programming.backendv2.builder.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

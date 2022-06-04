@@ -1,8 +1,8 @@
 package io.github.org.programming.commands;
 
-import io.github.org.programming.backendv1.builder.SlashCommand;
-import io.github.org.programming.backendv1.builder.SlashCommandBuilder;
-import io.github.org.programming.backendv1.extension.SlashCommandExtender;
+import io.github.org.programming.backendv2.builder.SlashCommand;
+import io.github.org.programming.backendv2.builder.SlashCommandBuilder;
+import io.github.org.programming.backendv2.extension.SlashCommandExtender;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.jetbrains.annotations.NotNull;

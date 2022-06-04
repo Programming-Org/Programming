@@ -1,4 +1,4 @@
-package io.github.org.programming.backendv1.type;
+package io.github.org.programming.backendv2.type;
 
 import org.jetbrains.annotations.Nullable;
 
