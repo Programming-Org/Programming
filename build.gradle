@@ -23,8 +23,9 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
     //config
-    implementation group: 'io.github.yusufsdiscordbot', name: 'jda5.basic', version: '1.0.2'
     implementation group: 'io.github.yusufsdiscordbot', name: 'config', version: '1.0.4'
+    //Reflection
+    implementation group: 'org.reflections', name: 'reflections', version: '0.10.2'
     //test
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }

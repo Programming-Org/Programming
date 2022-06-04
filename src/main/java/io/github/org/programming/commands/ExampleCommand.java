@@ -1,8 +1,8 @@
 package io.github.org.programming.commands;
 
-import io.github.yusufsdiscordbot.yusufsdiscordcore.bot.builder.SlashCommand;
-import io.github.yusufsdiscordbot.yusufsdiscordcore.bot.builder.SlashCommandBuilder;
-import io.github.yusufsdiscordbot.yusufsdiscordcore.bot.extension.SlashCommandExtender;
+import io.github.org.programming.backend.builder.SlashCommand;
+import io.github.org.programming.backend.builder.SlashCommandBuilder;
+import io.github.org.programming.backend.extension.SlashCommandExtender;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +24,6 @@ public class ExampleCommand extends SlashCommandExtender {
 
     @Override
     protected SlashCommand build() {
-        return new SlashCommandBuilder("ping", "Reply with the ping").build();
+        return new SlashCommandBuilder("ping", "Reply with the ping").build().setToGuildOnly();
     }
 }

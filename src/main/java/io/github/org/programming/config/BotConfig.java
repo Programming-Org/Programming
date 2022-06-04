@@ -4,14 +4,14 @@ import io.github.yusufsdiscordbot.config.Config;
 
 public class BotConfig {
     public static String getToken() {
-        return Config.getString("token");
-    }
-
-    public static String getGuildId() {
-        return Config.getString("guildId");
+        return Config.getString("TOKEN");
     }
 
     public static long getOwnerId() {
-        return Config.getLong("ownerId");
+        return Config.getLong("OWNER_ID");
+    }
+
+    public static long getGuildId() {
+        return Config.getLong("GUILD_ID");
     }
 }
