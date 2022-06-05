@@ -1,24 +1,23 @@
-package io.github.org.programming.backendv2.extension;
+package io.github.org.programming.backend.extension;
 
-import io.github.org.programming.backendv2.builder.SlashCommand;
+import io.github.org.programming.backend.builder.message.MessageCommand;
+import io.github.org.programming.backend.builder.slash.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import org.jetbrains.annotations.NotNull;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import javax.annotation.Nonnull;
 
-public abstract class SlashCommandExtender extends SlashCommand {
+public abstract class MessageCommandExtender extends MessageCommand {
 
-    protected SlashCommandExtender(SlashCommandData commandData) {
+    public MessageCommandExtender(CommandData commandData) {
         super(commandData);
     }
 
-    // This method is called when the command is executed.
-    public abstract void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event);
+    public abstract void onMessageContextInteraction(@Nonnull MessageContextInteractionEvent event);
 
     public void onButtonClick(ButtonInteractionEvent event) {
 

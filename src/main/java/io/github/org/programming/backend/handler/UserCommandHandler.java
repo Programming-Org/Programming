@@ -1,11 +1,13 @@
-package io.github.org.programming.backendv2.handler;
+package io.github.org.programming.backend.handler;
 
-import io.github.org.programming.backendv2.extension.SlashCommandExtender;
+import io.github.org.programming.backend.extension.UserCommandExtender;
+import io.github.org.programming.backend.extension.UserCommandExtender;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -17,9 +19,9 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public abstract class SlashCommandHandler extends ListenerAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(SlashCommandHandler.class);
-    private final Map<String, SlashCommandExtender> slashCommand = new HashMap<>();
+public abstract class UserCommandHandler extends BaseHandler {
+    private static final Logger logger = LoggerFactory.getLogger(UserCommandHandler.class);
+    private final Map<String, UserCommandExtender> userCommand = new HashMap<>();
 
     private static final String COMMAND_ERROR = "The command {} is not registered";
 
@@ -31,18 +33,11 @@ public abstract class SlashCommandHandler extends ListenerAdapter {
     private final JDA jda;
 
 
-    protected SlashCommandHandler(@NotNull JDA jda, @NotNull Guild guild) {
+    protected UserCommandHandler(@NotNull JDA jda, @NotNull Guild guild) {
         globalCommandsData = jda.updateCommands();
         guildCommandsData = guild.updateCommands();
         this.jda = jda;
     }
-
-
-    /**
-     *
-     * @return used to set the bot owner id.
-     */
-    protected abstract long botOwnerId();
 
     /**
      * Used to register slash commands. when the developer types slashCommand.add(new
@@ -53,18 +48,18 @@ public abstract class SlashCommandHandler extends ListenerAdapter {
      *        The Command class is an interface class which contains all the need methods for the
      *        making of the command. <br>
      *        <br>
-     *        The boolean {@link SlashCommandExtender#isGuildOnly()} ()} ()} is used to determine whether
-     *        the command should be global or guild only. determines whether the command should be
-     *        Global or Guild only.
+     *        The boolean {@link UserCommandExtender#isGuildOnly()} ()} ()} is used to determine
+     *        whether the command should be global or guild only. determines whether the command
+     *        should be Global or Guild only.
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void addSlashCommand(@NotNull SlashCommandExtender command) {
+    private void addUserCommand(@NotNull UserCommandExtender command) {
         jda.addEventListener(command);
-        slashCommand.put(command.getSlashCommandData().getName(), command);
+        userCommand.put(command.getCommandData().getName(), command);
         if (command.isGuildOnly()) {
-            guildCommandsData.addCommands(command.getSlashCommandData());
+            guildCommandsData.addCommands(command.getCommandData());
         } else {
-            globalCommandsData.addCommands(command.getSlashCommandData());
+            globalCommandsData.addCommands(command.getCommandData());
         }
     }
 
@@ -73,8 +68,9 @@ public abstract class SlashCommandHandler extends ListenerAdapter {
      *
      * @param slashCommands the slash commands.
      */
-    public void queueAndRegisterSlashCommands(@NotNull Collection<SlashCommandExtender> slashCommands) {
-        slashCommands.forEach(this::addSlashCommand);
+    public void queueAndRegisterUserCommands(
+            @NotNull Collection<UserCommandExtender> slashCommands) {
+        slashCommands.forEach(this::addUserCommand);
         onFinishedRegistration();
     }
 
@@ -93,61 +89,61 @@ public abstract class SlashCommandHandler extends ListenerAdapter {
      * @param event The original slash command event,
      */
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        final SlashCommandExtender cmd = slashCommand.get(event.getName());
+    public void onUserContextInteraction(@NotNull UserContextInteractionEvent event) {
+        final UserCommandExtender cmd = userCommand.get(event.getName());
 
         if (cmd.isOwnerOnly() && event.getUser().getIdLong() != botOwnerId()) {
-            event.getChannel()
-                    .sendMessage("You do not have permission to use this command.")
-                    .queue();
+            event.reply("You do not have permission to use this command.")
+                .setEphemeral(true)
+                .queue();
             return;
         }
 
         if (Objects.requireNonNull(event.getMember()).hasPermission(cmd.getUserPerms())
                 || Objects.requireNonNull(event.getGuild())
-                .getSelfMember()
-                .hasPermission(cmd.getBotPerms())) {
-            cmd.onSlashCommandInteraction(event);
+                    .getSelfMember()
+                    .hasPermission(cmd.getBotPerms())) {
+            cmd.onUserContextInteraction(event);
         } else {
-            event.getChannel()
-                    .sendMessage("You do not have permission to use this command.")
-                    .queue();
+            event.reply("You do not have permission to use this command.")
+                .setEphemeral(true)
+                .queue();
         }
     }
 
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
-        final SlashCommandExtender cmd = slashCommand.get(event.getComponentId());
+        final UserCommandExtender cmd = userCommand.get(event.getComponentId());
         cmd.onButtonClick(event);
     }
 
     @Override
     public void onSelectMenuInteraction(@Nonnull SelectMenuInteractionEvent event) {
-        final SlashCommandExtender cmd = slashCommand.get(event.getComponentId());
+        final UserCommandExtender cmd = userCommand.get(event.getComponentId());
         cmd.onSelectMenu(event);
     }
 
     @Override
     public void onCommandAutoCompleteInteraction(
             @Nonnull CommandAutoCompleteInteractionEvent event) {
-        final SlashCommandExtender cmd = slashCommand.get(event.getName());
+        final UserCommandExtender cmd = userCommand.get(event.getName());
         cmd.onCommandAutoComplete(event);
     }
 
     @Override
     public void onModalInteraction(@Nonnull ModalInteractionEvent event) {
-        final SlashCommandExtender cmd = slashCommand.get(event.getModalId());
+        final UserCommandExtender cmd = userCommand.get(event.getModalId());
         cmd.onModalInteraction(event);
     }
 
     /**
-     * Gets slash commands as a list.
+     * Gets user commands as a list.
      *
      * @return retrieves the commands as a list.
      */
     @NotNull
-    public List<SlashCommandExtender> getSlashCommands() {
-        return new ArrayList<>(this.slashCommand.values());
+    public List<UserCommandExtender> getSlashCommands() {
+        return new ArrayList<>(this.userCommand.values());
     }
 
 }

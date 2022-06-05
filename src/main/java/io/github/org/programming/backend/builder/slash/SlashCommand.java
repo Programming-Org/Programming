@@ -1,8 +1,6 @@
-package io.github.org.programming.backendv2.builder;
+package io.github.org.programming.backend.builder.slash;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import io.github.org.programming.backendv2.type.CommandType;
+import io.github.org.programming.backend.type.CommandType;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
@@ -54,15 +52,6 @@ public class SlashCommand {
 
     public Permission[] getUserPerms() {
         return userPerms;
-    }
-
-    public ArrayNode userPermsToArrayNode() {
-        //change it from Permission[] to ArrayNode
-        ArrayNode arrayNode = JsonNodeFactory.instance.arrayNode();
-        for (Permission perm : userPerms) {
-            arrayNode.add(perm.getName());
-        }
-        return arrayNode;
     }
 
     public boolean isGuildOnly() {

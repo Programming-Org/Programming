@@ -1,4 +1,4 @@
-package io.github.org.programming.backendv2.type;
+package io.github.org.programming.backend.type;
 
 import org.jetbrains.annotations.Nullable;
 

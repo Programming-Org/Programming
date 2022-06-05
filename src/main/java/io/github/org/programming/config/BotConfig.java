@@ -17,6 +17,6 @@ public class BotConfig {
     }
 
     public static @NotNull Integer getCorePoolSize() {
-        return Config.getInt("CORE_POOL_SIZE",1);
+        return Config.getInt("CORE_POOL_SIZE", 1);
     }
 }

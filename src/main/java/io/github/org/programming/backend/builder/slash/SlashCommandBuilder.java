@@ -1,10 +1,10 @@
-package io.github.org.programming.backendv2.builder;
+package io.github.org.programming.backend.builder.slash;
 
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
-import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -127,7 +127,8 @@ public class SlashCommandBuilder {
             subcommandGroups = new SubcommandGroupData[0];
         }
 
-        var cm = new CommandDataImpl(name, description).addOptions(options)
+        var cm = Commands.slash(name, description)
+            .addOptions(options)
             .addSubcommands(subcommands)
             .addSubcommandGroups(subcommandGroups);
 

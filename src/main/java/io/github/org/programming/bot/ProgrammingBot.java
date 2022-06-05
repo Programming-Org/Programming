@@ -1,6 +1,5 @@
 package io.github.org.programming.bot;
 
-import io.github.org.programming.backendv1.handler.SlashCommandHandler;
 import io.github.org.programming.config.BotConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -26,8 +25,8 @@ public class ProgrammingBot extends ListenerAdapter {
 
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
-    private final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(
-            BotConfig.getCorePoolSize());
+    private final ScheduledExecutorService scheduledExecutor =
+            Executors.newScheduledThreadPool(BotConfig.getCorePoolSize());
 
     public ProgrammingBot(String[] args) throws Exception {
         JDA jda = JDABuilder
@@ -42,8 +41,7 @@ public class ProgrammingBot extends ListenerAdapter {
 
         Guild guild = jda.awaitReady().getGuildById(BotConfig.getGuildId());
 
-        jda.awaitReady().addEventListener(new SlashCommandHandler(), this);
-        SlashCommandHandler.addSlashCommands();
+        jda.awaitReady().addEventListener(new SlashCommandReg(jda, guild), this);
     }
 
     public static ProgrammingBot getInstance() {
