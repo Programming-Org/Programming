@@ -90,20 +90,20 @@ public abstract class MessageCommandHandler extends BaseHandler {
 
         if (cmd.isOwnerOnly() && event.getUser().getIdLong() != botOwnerId()) {
             event.reply("You do not have permission to use this command.")
-                    .setEphemeral(true)
-                    .queue();
+                .setEphemeral(true)
+                .queue();
             return;
         }
 
         if (Objects.requireNonNull(event.getMember()).hasPermission(cmd.getUserPerms())
                 || Objects.requireNonNull(event.getGuild())
-                .getSelfMember()
-                .hasPermission(cmd.getBotPerms())) {
+                    .getSelfMember()
+                    .hasPermission(cmd.getBotPerms())) {
             cmd.onMessageContextInteraction(event);
         } else {
             event.reply("You do not have permission to use this command.")
-                    .setEphemeral(true)
-                    .queue();
+                .setEphemeral(true)
+                .queue();
         }
     }
 

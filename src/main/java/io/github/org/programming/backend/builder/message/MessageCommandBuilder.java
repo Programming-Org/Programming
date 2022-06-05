@@ -8,6 +8,7 @@ public class MessageCommandBuilder {
 
     /**
      * Creates a new MessageCommandBuilder
+     * 
      * @param name The name of the message command
      */
     public MessageCommandBuilder(String name) {
