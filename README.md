@@ -30,9 +30,11 @@ To get started, you'll need to create a Discord bot account and get a token.
 ### Part 2
 Once you have added the bot to your server, you will need to create a .env file as seen here.
 ```env
-token=
-guildId=
-ownerId=
+TOKEN=
+GUILD_ID=
+OWNER_ID=
+//for the excutor default is 1;
+CORE_POOL_SIZE=
 ```
 
 ### Part 3

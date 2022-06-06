@@ -23,8 +23,15 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
     //config
-    implementation group: 'io.github.yusufsdiscordbot', name: 'jda5.basic', version: '1.0.2'
     implementation group: 'io.github.yusufsdiscordbot', name: 'config', version: '1.0.4'
+    //Reflection
+    implementation group: 'org.reflections', name: 'reflections', version: '0.10.2'
+    //json
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
+    //MongoDB
+    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.11'
     //test
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }

@@ -24,6 +24,7 @@ out/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+*.env
 
 ### NetBeans ###
 /nbproject/private/
@@ -38,3 +39,4 @@ bin/
 ### Mac OS ###
 .DS_Store
 codecov
+*.log
