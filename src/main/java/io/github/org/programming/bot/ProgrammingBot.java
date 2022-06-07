@@ -33,6 +33,7 @@ public class ProgrammingBot extends ListenerAdapter {
 
         try {
             Database.openDatabase();
+            Database.createModerationTable();
         } finally {
             Database.closeDatabase();
         }
