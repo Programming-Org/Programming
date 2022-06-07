@@ -33,20 +33,14 @@ public class Database {
         connection = DriverManager.getConnection(config.getJdbcUrl(), config.getUsername(),
                 config.getPassword());
 
-        if (connection.isValid(5)) {
-            logger.info("Connected to database.");
-        } else {
-            logger.error("Failed to connect to database.");
-        }
+        if (true)
+            throw new RuntimeException("Simulating a database error");
+        logger.info("The connection to the database was '{}'", connection.isValid(5));
     }
 
     public static void closeDatabase() throws SQLException {
         logger.info("Closing database connection...");
         connection.close();
-        if (connection.isClosed()) {
-            logger.info("Database connection closed.");
-        } else {
-            logger.error("Failed to close database connection.");
-        }
+        logger.info("The disconnection to the database was '{}'", connection.isClosed());
     }
 }

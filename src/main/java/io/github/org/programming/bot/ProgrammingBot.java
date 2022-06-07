@@ -1,6 +1,7 @@
 package io.github.org.programming.bot;
 
 import io.github.org.programming.bot.config.BotConfig;
+import io.github.org.programming.database.Database;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -29,6 +30,13 @@ public class ProgrammingBot extends ListenerAdapter {
             Executors.newScheduledThreadPool(BotConfig.getCorePoolSize());
 
     public ProgrammingBot(String[] args) throws Exception {
+
+        try {
+            Database.openDatabase();
+        } finally {
+            Database.closeDatabase();
+        }
+
         JDA jda = JDABuilder
             .createDefault(BotConfig.getToken(), GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
