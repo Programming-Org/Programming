@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id "com.diffplug.spotless" version "6.6.1"
     id "application"
+    id "nu.studer.jooq" version "6.0.1"
 }
 
 
@@ -24,14 +25,17 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
     //config
     implementation group: 'io.github.yusufsdiscordbot', name: 'config', version: '1.0.4'
-    //Reflection
-    implementation group: 'org.reflections', name: 'reflections', version: '0.10.2'
     //json
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.3'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.3'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
-    //MongoDB
-    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.11'
+    //database
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.0.5'
+    implementation group: 'org.jooq', name: 'jooq', version: '3.15.5'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.0'
+    //jooq dependency
+    jooqGenerator 'org.jooq:jooq-meta:3.16.6'
+    jooqGenerator 'org.jooq:jooq-codegen:3.16.6'
     //test
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }

@@ -1,4 +1,4 @@
-package io.github.org.programming.commands;
+package io.github.org.programming.bot.commands;
 
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;

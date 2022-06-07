@@ -33,8 +33,12 @@ Once you have added the bot to your server, you will need to create a .env file 
 TOKEN=
 GUILD_ID=
 OWNER_ID=
-//for the excutor default is 1;
+//for the excutor default is 1.
 CORE_POOL_SIZE=
+//example : jdbc:maria://localhost:3306/programming
+JDBC_URL=
+DATA_BASE_USER_NAME=
+DATA_BASE_PASSWORD=
 ```
 
 ### Part 3

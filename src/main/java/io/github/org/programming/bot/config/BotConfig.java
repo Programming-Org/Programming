@@ -1,4 +1,4 @@
-package io.github.org.programming.config;
+package io.github.org.programming.bot.config;
 
 import io.github.yusufsdiscordbot.config.Config;
 import org.jetbrains.annotations.NotNull;
