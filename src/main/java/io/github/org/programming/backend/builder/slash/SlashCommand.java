@@ -17,6 +17,10 @@ public class SlashCommand {
         this.commandData = commandData;
     }
 
+    protected SlashCommand() {
+        this.commandData = null;
+    }
+
     public SlashCommandData getSlashCommandData() {
         return commandData;
     }

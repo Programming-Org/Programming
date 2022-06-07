@@ -1,4 +1,4 @@
-package io.github.org.programming.bot;
+package io.github.org.programming;
 
 import io.github.org.programming.backend.handler.SlashCommandHandler;
 import io.github.org.programming.config.BotConfig;

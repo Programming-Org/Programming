@@ -1,5 +1,6 @@
 package io.github.org.programming.bot;
 
+import io.github.org.programming.SlashCommandReg;
 import io.github.org.programming.config.BotConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;

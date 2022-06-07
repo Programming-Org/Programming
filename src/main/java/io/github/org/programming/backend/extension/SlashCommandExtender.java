@@ -13,10 +13,6 @@ import javax.annotation.Nonnull;
 
 public abstract class SlashCommandExtender extends SlashCommand {
 
-    protected SlashCommandExtender(SlashCommandData commandData) {
-        super(commandData);
-    }
-
     // This method is called when the command is executed.
     public abstract void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event);
 
