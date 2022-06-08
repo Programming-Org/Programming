@@ -2,6 +2,7 @@ package io.github.org.programming.bot;
 
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.Database;
+import io.github.org.programming.database.ModerationDatabase;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -33,7 +34,7 @@ public class ProgrammingBot extends ListenerAdapter {
 
         try {
             Database.openDatabase();
-            Database.createModerationTable();
+            ModerationDatabase.createModerationTable();
         } finally {
             Database.closeDatabase();
         }

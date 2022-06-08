@@ -13,11 +13,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Database {
-    private static final Logger logger = LoggerFactory.getLogger(Database.class);
+    static final Logger logger = LoggerFactory.getLogger(Database.class);
     private static final HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
 
-    private static Connection connection;
+    protected static Connection connection;
 
     static {
         config.setJdbcUrl(DatabaseConfig.getJDBCUrl());
@@ -46,33 +46,6 @@ public class Database {
             preparedStatement.executeUpdate();
         }
 
-    }
-
-    public static void readData() {
-
-    }
-
-    public static void updateData(String name, String newData) {
-
-    }
-
-    public static void deleteData(String nameExpression) {}
-
-    public static void createModerationTable() {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("""
-                    CREATE TABLE IF NOT EXISTS moderation (
-                        id INT NOT NULL AUTO_INCREMENT,
-                        guild_id VARCHAR(255) NOT NULL,
-                        user_id VARCHAR(255) NOT NULL,
-                        moderator_id VARCHAR(255) NOT NULL,
-                        reason VARCHAR(255) NOT NULL,
-                        PRIMARY KEY (id)
-                    )
-                """)) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            logger.error("Error creating moderation table", e);
-        }
     }
 
     public static void openDatabase() throws SQLException {
