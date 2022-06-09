@@ -20,7 +20,6 @@ sourceCompatibility = 17
 targetCompatibility = 17
 
 dependencies {
-    implementation rootProject
     implementation group: 'net.dv8tion', name: 'JDA', version: '5.0.0-alpha.12'
     //Logger
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
