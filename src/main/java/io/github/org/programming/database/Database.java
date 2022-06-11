@@ -6,8 +6,11 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Objects;
 
 public class Database {
     private static final Logger logger = LoggerFactory.getLogger(Database.class);
@@ -28,8 +31,34 @@ public class Database {
         executeTableUpdate();
     }
 
-    private static void executeTableUpdate() {
+    private static void createDatabaseIfNotThere() {
+        try (Statement statement = dataSource.getConnection().createStatement()) {
 
+            statement.executeUpdate("CREATE DATABASE IF NOT EXISTS programming_bot");
+            statement.executeUpdate("USE programming_bot");
+        } catch (SQLException e) {
+            logger.error("Error creating database", e);
+        }
+    }
+
+    private static void executeTableUpdate() {
+        try (final Statement statement =
+                Objects.requireNonNull(getConnection(), "Connection is null").createStatement()) {
+            File folder = new File("src/main/resources/sql");
+            File[] listOfFiles = folder.listFiles();
+
+            logger.info("Executing table updates...");
+
+            for (File file : Objects.requireNonNull(listOfFiles, "List of files is null")) {
+                if (file.isFile()) {
+                    logger.info("Executing table update: {}", file.getName());
+                    statement.execute(file.getName());
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error executing table update", e);
+        }
     }
 
     public static void disconnect() {
