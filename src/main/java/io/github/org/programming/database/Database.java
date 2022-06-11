@@ -3,21 +3,16 @@ package io.github.org.programming.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jetbrains.annotations.Nullable;
-import org.mariadb.jdbc.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Database {
-    static final Logger logger = LoggerFactory.getLogger(Database.class);
+    private static final Logger logger = LoggerFactory.getLogger(Database.class);
     private static final HikariConfig config = new HikariConfig();
-    private static HikariDataSource ds;
-
-    protected static Connection connection;
+    private static final HikariDataSource dataSource;
 
     static {
         config.setJdbcUrl(DatabaseConfig.getJDBCUrl());
@@ -26,39 +21,35 @@ public class Database {
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        ds = new HikariDataSource(config);
+        config.addDataSourceProperty("characterEncoding", "utf8");
+        config.addDataSourceProperty("useUnicode", "true");
+        config.setMaximumPoolSize(10);
+        dataSource = new HikariDataSource(config);
+        executeTableUpdate();
     }
+
+    private static void executeTableUpdate() {
+
+    }
+
+    public static void disconnect() {
+        dataSource.close();
+    }
+
+    public static boolean isConnected() {
+        return (dataSource != null);
+    }
+
 
     /**
-     * Creates a new data for a programming_bot table
-     * 
-     * @param name the name of the data
-     * @param rating the rating of the data
-     * @throws SQLException if the data could not be created This is an example of inserting data.
+     * @return The connection to the database
      */
-    public static void createData(String name, int rating) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("""
-                    INSERT INTO programming_bot (name, rating)
-                    VALUES (?, ?)
-                """)) {
-            preparedStatement.setString(1, name);
-            preparedStatement.setInt(2, rating);
-            preparedStatement.executeUpdate();
+    public static @Nullable Connection getConnection() {
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            logger.error("Error while getting connection", e);
+            return null;
         }
-
-    }
-
-    public static void openDatabase() throws SQLException {
-        logger.info("Connecting to database...");
-        connection = DriverManager.getConnection(config.getJdbcUrl(), config.getUsername(),
-                config.getPassword());
-
-        logger.info("The connection to the database was '{}'", connection.isValid(5));
-    }
-
-    public static void closeDatabase() throws SQLException {
-        logger.info("Closing database connection...");
-        connection.close();
-        logger.info("The disconnection to the database was '{}'", connection.isClosed());
     }
 }

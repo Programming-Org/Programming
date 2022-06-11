@@ -8,9 +8,9 @@ import java.sql.SQLException;
 
 public class ModerationDatabase {
 
-    private static final Logger logger = Database.logger;
+    private static final Logger logger = Database1.logger;
 
-    private static final Connection connection = Database.connection;
+    private static final Connection connection = Database1.connection;
 
 
     public static void createModerationTable() {

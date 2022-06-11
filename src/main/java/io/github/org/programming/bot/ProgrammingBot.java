@@ -2,7 +2,6 @@ package io.github.org.programming.bot;
 
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.Database;
-import io.github.org.programming.database.ModerationDatabase;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -13,6 +12,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,15 +32,9 @@ public class ProgrammingBot extends ListenerAdapter {
     private final ScheduledExecutorService scheduledExecutor =
             Executors.newScheduledThreadPool(BotConfig.getCorePoolSize());
 
+    private static DSLContext context;
+
     public ProgrammingBot(String[] args) throws Exception {
-
-        try {
-            Database.openDatabase();
-            ModerationDatabase.createModerationTable();
-        } finally {
-            Database.closeDatabase();
-        }
-
         JDA jda = JDABuilder
             .createDefault(BotConfig.getToken(), GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
@@ -48,6 +44,13 @@ public class ProgrammingBot extends ListenerAdapter {
             .setActivity(Activity.watching("for misbehaving users"))
             .setStatus(OnlineStatus.ONLINE)
             .build();
+
+        try {
+            context = DSL.using(Database.getConnection(), SQLDialect.MARIADB);
+        } finally {
+            Database.disconnect();
+        }
+
 
         Guild guild = jda.awaitReady().getGuildById(BotConfig.getGuildId());
 
@@ -64,6 +67,11 @@ public class ProgrammingBot extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent readyEvent) {
-        logger.info("Bot is ready!");
+        logger.info("Bot is ready in '{}' server", readyEvent.getGuildTotalCount());
+
+        if (Database.isConnected())
+            logger.info("Database is connected");
+        else
+            logger.error("Database is not connected");
     }
 }
