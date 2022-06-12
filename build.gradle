@@ -147,9 +147,9 @@ jooq {
                 jdbc {
                     driver = 'org.mariadb.jdbc.Driver'
                     //ُTODO: Make this configurable
-                    url = System.getenv("JDBC_URL")
-                    user = System.getenv("DATA_BASE_USER_NAME")
-                    password = System.getenv("DATA_BASE_PASSWORD")
+                    url = JDBC_URL
+                    user = DATA_BASE_USER_NAME
+                    password = DATA_BASE_PASSWORD
                 }
                 generator {
                     name = 'org.jooq.codegen.JavaGenerator'

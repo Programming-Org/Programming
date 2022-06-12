@@ -21,6 +21,7 @@ public class Database {
     private static final HikariDataSource dataSource;
 
     static {
+        config.setDriverClassName("org.mariadb.jdbc.Driver");
         config.setJdbcUrl(DatabaseConfig.getJDBCUrl());
         config.setUsername(DatabaseConfig.getUserName());
         config.setPassword(DatabaseConfig.getPassword());
@@ -28,19 +29,6 @@ public class Database {
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         dataSource = new HikariDataSource(config);
-        // check if the database programming_bot exists
-
-        try (Connection connection = dataSource.getConnection()) {
-            try (Statement statement = connection.createStatement()) {
-                statement.execute("CREATE DATABASE IF NOT EXISTS programming_bot");
-            }
-        } catch (SQLException e) {
-            logger.error("Failed to create database programming_bot", e);
-        }
-
-        // use the database programming_bot
-        config.setJdbcUrl(DatabaseConfig.getJDBCUrl() + "programming_bot");
-
         executeTableUpdate();
     }
 
@@ -51,6 +39,10 @@ public class Database {
             File[] listOfFiles = folder.listFiles();
 
             logger.info("Executing table updates...");
+
+            // select a database to use
+            statement.execute("CREATE DATABASE IF NOT EXISTS programming_bot");
+            statement.execute("USE programming_bot");
 
             for (File file : Objects.requireNonNull(listOfFiles, "List of files is null")) {
                 if (file.isFile()) {
