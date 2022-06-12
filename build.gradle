@@ -144,8 +144,12 @@ task downloadDependencies {
     }
 }
 
-//def props = new Properties()
-//file(".env").withInputStream { props.load(it) }
+def props = new Properties()
+file(".env").withInputStream { props.load(it) }
+
+props.forEach { key, value ->
+    System.setProperty(key, value)
+}
 
 /**
  * Needed to make sure gradle workflow does not fail in Github Actions.
@@ -170,9 +174,9 @@ jooq {
                 logging = org.jooq.meta.jaxb.Logging.WARN
                 jdbc {
                     driver = 'org.postgresql.Driver'
-                    url = "jdbc:postgresql://localhost:5432/programming_bot"
-                    user = DB_USER
-                    password = DB_PASSWORD
+                    url = props.getProperty("DB_URL")
+                    user = props.getProperty("DB_USER")
+                    password = props.getProperty("DB_PASSWORD")
                 }
                 generator {
                     name = 'org.jooq.codegen.JavaGenerator'
