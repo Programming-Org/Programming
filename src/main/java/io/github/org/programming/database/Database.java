@@ -8,26 +8,30 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
+import java.util.Properties;
 
 public class Database {
     private static final Logger logger = LoggerFactory.getLogger(Database.class);
-    private static final HikariConfig config = new HikariConfig();
+    private static final HikariConfig config;
     private static final HikariDataSource dataSource;
 
     static {
-        config.setDriverClassName("org.mariadb.jdbc.Driver");
-        config.setJdbcUrl(DatabaseConfig.getJDBCUrl());
-        config.setUsername(DatabaseConfig.getUserName());
-        config.setPassword(DatabaseConfig.getPassword());
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        Properties props = new Properties();
+        props.setProperty("dataSourceClassName", "org.postgresql.ds.PGSimpleDataSource");
+        props.setProperty("dataSource.user", DatabaseConfig.getUserName());
+        props.setProperty("dataSource.password", DatabaseConfig.getPassword());
+        props.setProperty("dataSource.databaseName", "postgres");
+        props.setProperty("dataSource.portNumber", String.valueOf(5432));
+        props.setProperty("dataSource.serverName", "localhost");
+        props.put("dataSource.logWriter", new PrintWriter(System.out));
+        config = new HikariConfig(props);
         dataSource = new HikariDataSource(config);
         executeTableUpdate();
     }
@@ -39,10 +43,6 @@ public class Database {
             File[] listOfFiles = folder.listFiles();
 
             logger.info("Executing table updates...");
-
-            // select a database to use
-            statement.execute("CREATE DATABASE IF NOT EXISTS programming_bot");
-            statement.execute("USE programming_bot");
 
             for (File file : Objects.requireNonNull(listOfFiles, "List of files is null")) {
                 if (file.isFile()) {

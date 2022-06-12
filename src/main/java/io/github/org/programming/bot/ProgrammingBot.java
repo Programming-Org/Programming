@@ -34,7 +34,7 @@ public class ProgrammingBot extends ListenerAdapter {
 
     public ProgrammingBot(String[] args) throws Exception {
 
-        onDatabase(context);
+        onDatabase();
 
         JDA jda = JDABuilder
             .createDefault(BotConfig.getToken(), GatewayIntent.GUILD_MESSAGES,
@@ -62,8 +62,8 @@ public class ProgrammingBot extends ListenerAdapter {
             logger.error("Database is not connected");
     }
 
-    public void onDatabase(DSLContext dslContext) {
-        dslContext = DSL.using(Database.getConnection(), SQLDialect.MARIADB);
+    public void onDatabase() {
+        context = DSL.using(Database.getConnection(), SQLDialect.MARIADB);
 
 
         if (Database.isConnected()) {
