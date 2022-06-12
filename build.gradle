@@ -144,8 +144,8 @@ task downloadDependencies {
     }
 }
 
-def props = new Properties()
-file(".env").withInputStream { props.load(it) }
+//def props = new Properties()
+//file(".env").withInputStream { props.load(it) }
 
 jooq {
     version = '3.15.2'
@@ -157,9 +157,7 @@ jooq {
                 logging = org.jooq.meta.jaxb.Logging.WARN
                 jdbc {
                     driver = 'org.postgresql.Driver'
-                    url = props.getProperty("JDBC_URL")
-                    user = props.getProperty("DATA_BASE_USER_NAME")
-                    password = props.getProperty("DATA_BASE_PASSWORD")
+                    url = "jdbc:postgresql://localhost:5432/postgres"
                 }
                 generator {
                     name = 'org.jooq.codegen.JavaGenerator'

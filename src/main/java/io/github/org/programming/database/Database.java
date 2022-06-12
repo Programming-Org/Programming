@@ -25,8 +25,6 @@ public class Database {
     static {
         Properties props = new Properties();
         props.setProperty("dataSourceClassName", "org.postgresql.ds.PGSimpleDataSource");
-        props.setProperty("dataSource.user", DatabaseConfig.getUserName());
-        props.setProperty("dataSource.password", DatabaseConfig.getPassword());
         props.setProperty("dataSource.databaseName", "postgres");
         props.setProperty("dataSource.portNumber", String.valueOf(5432));
         props.setProperty("dataSource.serverName", "localhost");

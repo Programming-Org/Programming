@@ -35,10 +35,6 @@ GUILD_ID=
 OWNER_ID=
 //for the excutor default is 1.
 CORE_POOL_SIZE=
-//example : jdbc:postgresql://localhost:5432/postgres
-JDBC_URL=
-DATA_BASE_USER_NAME=
-DATA_BASE_PASSWORD=
 ```
 
 ### Part 3
