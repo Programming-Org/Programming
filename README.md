@@ -35,9 +35,26 @@ GUILD_ID=
 OWNER_ID=
 //for the excutor default is 1.
 CORE_POOL_SIZE=
+DATABASE_NAME=programming_bot
+DB_USER=
+DB_PASSWORD=
+PORT_NUMBER=5432
+SERVER_NAME=localhost
 ```
 
 ### Part 3
+To get started with postgres you will need to install it using homebrew or any other package manager.
+
+To install it with homebrew run the following command:
+```brew install postgresql```
+
+For linux see the [postgresql download](https://www.postgresql.org/download/linux/)
+
+To start the server run the following command:
+```brew servers start postgresql```
+
+
+### Part 4
 
 In order to make a command for the bot, you will need to create an issue and wait to see if the command is needed.
 

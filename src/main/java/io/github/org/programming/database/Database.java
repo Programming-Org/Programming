@@ -25,9 +25,11 @@ public class Database {
     static {
         Properties props = new Properties();
         props.setProperty("dataSourceClassName", "org.postgresql.ds.PGSimpleDataSource");
-        props.setProperty("dataSource.databaseName", "postgres");
-        props.setProperty("dataSource.portNumber", String.valueOf(5432));
-        props.setProperty("dataSource.serverName", "localhost");
+        props.setProperty("dataSource.databaseName", DatabaseConfig.getDatabaseName());
+        props.setProperty("dataSource.portNumber", String.valueOf(DatabaseConfig.getPortNumber()));
+        props.setProperty("dataSource.serverName", DatabaseConfig.getServerName());
+        props.setProperty("dataSource.user", DatabaseConfig.getDatabaseUser());
+        props.setProperty("dataSource.password", DatabaseConfig.getDatabasePassword());
         props.put("dataSource.logWriter", new PrintWriter(System.out));
         config = new HikariConfig(props);
         dataSource = new HikariDataSource(config);
@@ -42,10 +44,11 @@ public class Database {
 
             logger.info("Executing table updates...");
 
-            for (File file : Objects.requireNonNull(listOfFiles, "List of files is null")) {
+            for (File file : listOfFiles) {
                 if (file.isFile()) {
-                    logger.info("Executing table update: {}", file.getName());
-                    statement.executeUpdate(Files.readString(Path.of(file.getPath())));
+                    logger.info("Executing update: {}", file.getName());
+                    String sql = new String(Files.readAllBytes(file.toPath()));
+                    statement.execute(sql);
                 }
             }
         } catch (SQLException | IOException e) {
@@ -72,5 +75,9 @@ public class Database {
             logger.error("Error while getting connection", e);
             return null;
         }
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 }

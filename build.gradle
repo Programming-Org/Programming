@@ -147,6 +147,19 @@ task downloadDependencies {
 //def props = new Properties()
 //file(".env").withInputStream { props.load(it) }
 
+/**
+ * Needed to make sure gradle workflow does not fail in Github Actions.
+ */
+tasks.register("createBuildDirectoryIfNeeded") {
+    doLast {
+        if (!databaseFile.parentFile.exists()) {
+            databaseFile.parentFile.mkdirs()
+        }
+    }
+
+    mustRunAfter(project.tasks.findByPath('clean'))
+}
+
 jooq {
     version = '3.15.2'
     edition = JooqEdition.OSS
@@ -157,14 +170,24 @@ jooq {
                 logging = org.jooq.meta.jaxb.Logging.WARN
                 jdbc {
                     driver = 'org.postgresql.Driver'
-                    url = "jdbc:postgresql://localhost:5432/postgres"
+                    url = "jdbc:postgresql://localhost:5432/programming_bot"
+                    user = DB_USER
+                    password = DB_PASSWORD
                 }
                 generator {
                     name = 'org.jooq.codegen.JavaGenerator'
                     database {
                         name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        inputSchema = 'public'
                         includes = '.*'
                         excludes = ''
+
+                        forcedTypes {
+                            forcedType {
+                                name = 'INSTANT'
+                                includeTypes = 'TIMESTAMP'
+                            }
+                        }
                     }
                     generate {
                         records = true
@@ -172,7 +195,7 @@ jooq {
                         fluentSetters = true
                     }
                     target {
-                        packageName = 'io.github.org.programming.db.generated'
+                        packageName = 'io.github.org.programming.jooq'
                         directory = "build/generated/java"
                     }
                     strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
