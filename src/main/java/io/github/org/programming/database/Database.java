@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,21 +27,21 @@ public class Database {
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.addDataSourceProperty("characterEncoding", "utf8");
-        config.addDataSourceProperty("useUnicode", "true");
-        config.setMaximumPoolSize(10);
         dataSource = new HikariDataSource(config);
-        executeTableUpdate();
-    }
+        // check if the database programming_bot exists
 
-    private static void createDatabaseIfNotThere() {
-        try (Statement statement = dataSource.getConnection().createStatement()) {
-
-            statement.executeUpdate("CREATE DATABASE IF NOT EXISTS programming_bot");
-            statement.executeUpdate("USE programming_bot");
+        try (Connection connection = dataSource.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                statement.execute("CREATE DATABASE IF NOT EXISTS programming_bot");
+            }
         } catch (SQLException e) {
-            logger.error("Error creating database", e);
+            logger.error("Failed to create database programming_bot", e);
         }
+
+        // use the database programming_bot
+        config.setJdbcUrl(DatabaseConfig.getJDBCUrl() + "programming_bot");
+
+        executeTableUpdate();
     }
 
     private static void executeTableUpdate() {
@@ -52,11 +55,10 @@ public class Database {
             for (File file : Objects.requireNonNull(listOfFiles, "List of files is null")) {
                 if (file.isFile()) {
                     logger.info("Executing table update: {}", file.getName());
-                    statement.execute(file.getName());
+                    statement.executeUpdate(Files.readString(Path.of(file.getPath())));
                 }
             }
-
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             logger.error("Error executing table update", e);
         }
     }

@@ -13,9 +13,6 @@ import org.jetbrains.annotations.NotNull;
  * This command basically replays with the gateway ping.
  */
 public class ExampleCommand extends SlashCommandExtender {
-    protected ExampleCommand(SlashCommandData commandData) {
-        super(commandData);
-    }
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
@@ -23,7 +20,7 @@ public class ExampleCommand extends SlashCommandExtender {
     }
 
     @Override
-    protected SlashCommand build() {
+    public SlashCommand build() {
         return new SlashCommandBuilder("ping", "Reply with the ping").build().setToGuildOnly();
     }
 }

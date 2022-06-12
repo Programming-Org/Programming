@@ -35,7 +35,7 @@ GUILD_ID=
 OWNER_ID=
 //for the excutor default is 1.
 CORE_POOL_SIZE=
-//example : jdbc:maria://localhost:3306/program_db
+//example : jdbc:mariadb://localhost:3306
 JDBC_URL=
 DATA_BASE_USER_NAME=
 DATA_BASE_PASSWORD=

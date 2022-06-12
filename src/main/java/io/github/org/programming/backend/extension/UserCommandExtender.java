@@ -11,10 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public abstract class UserCommandExtender extends UserCommand {
-    public UserCommandExtender(CommandData commandData) {
-        super(commandData);
-    }
+public abstract class UserCommandExtender {
 
     public abstract void onUserContextInteraction(@NotNull UserContextInteractionEvent event);
 
@@ -34,5 +31,5 @@ public abstract class UserCommandExtender extends UserCommand {
 
     }
 
-    protected abstract UserCommand build();
+    public abstract UserCommand build();
 }

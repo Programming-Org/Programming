@@ -11,11 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public abstract class SlashCommandExtender extends SlashCommand {
-
-    protected SlashCommandExtender(SlashCommandData commandData) {
-        super(commandData);
-    }
+public abstract class SlashCommandExtender {
 
     // This method is called when the command is executed.
     public abstract void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event);
@@ -36,5 +32,5 @@ public abstract class SlashCommandExtender extends SlashCommand {
 
     }
 
-    protected abstract SlashCommand build();
+    public abstract SlashCommand build();
 }

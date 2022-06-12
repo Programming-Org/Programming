@@ -25,8 +25,6 @@ import java.util.concurrent.ScheduledExecutorService;
 public class ProgrammingBot extends ListenerAdapter {
     private final Logger logger = LoggerFactory.getLogger(ProgrammingBot.class);
 
-    private static ProgrammingBot instance;
-
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
     private final ScheduledExecutorService scheduledExecutor =
@@ -35,6 +33,9 @@ public class ProgrammingBot extends ListenerAdapter {
     private static DSLContext context;
 
     public ProgrammingBot(String[] args) throws Exception {
+
+        onDatabase(context);
+
         JDA jda = JDABuilder
             .createDefault(BotConfig.getToken(), GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
@@ -45,24 +46,10 @@ public class ProgrammingBot extends ListenerAdapter {
             .setStatus(OnlineStatus.ONLINE)
             .build();
 
-        try {
-            context = DSL.using(Database.getConnection(), SQLDialect.MARIADB);
-        } finally {
-            Database.disconnect();
-        }
-
 
         Guild guild = jda.awaitReady().getGuildById(BotConfig.getGuildId());
 
         jda.awaitReady().addEventListener(new SlashCommandReg(jda, guild), this);
-    }
-
-    public static ProgrammingBot getInstance() {
-        return instance;
-    }
-
-    public ExecutorService getExecutor() {
-        return executor;
     }
 
     @Override
@@ -73,5 +60,30 @@ public class ProgrammingBot extends ListenerAdapter {
             logger.info("Database is connected");
         else
             logger.error("Database is not connected");
+    }
+
+    public void onDatabase(DSLContext dslContext) {
+        dslContext = DSL.using(Database.getConnection(), SQLDialect.MARIADB);
+
+
+        if (Database.isConnected()) {
+            logger.info("Connected to database");
+        } else {
+            logger.error("Failed to connect to database");
+        }
+
+        // closes the database when the bot is shut down
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                Database.disconnect();
+            } catch (Exception e) {
+                logger.error("Failed to close database", e);
+            }
+        }));
+
+    }
+
+    public static DSLContext getContext() {
+        return context;
     }
 }

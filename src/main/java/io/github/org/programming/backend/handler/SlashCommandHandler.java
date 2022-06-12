@@ -66,18 +66,20 @@ public abstract class SlashCommandHandler extends BaseHandler {
      *        The Command class is an interface class which contains all the need methods for the
      *        making of the command. <br>
      *        <br>
-     *        The boolean {@link SlashCommandExtender#isGuildOnly()} ()} ()} is used to determine
+     *        The boolean {@link SlashCommandExtender#build()#isGuildOnly()} is used to determine
      *        whether the command should be global or guild only. determines whether the command
      *        should be Global or Guild only.
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void addSlashCommand(@NotNull SlashCommandExtender command) {
-        jda.addEventListener(command);
-        slashCommand.put(command.getSlashCommandData().getName(), command);
-        if (command.isGuildOnly()) {
-            guildCommandsData.addCommands(command.getSlashCommandData());
+
+        BaseHandler.checkIfBuildIsNull(command.build());
+
+        slashCommand.put(command.build().getSlashCommandData().getName(), command);
+        if (command.build().isGuildOnly()) {
+            guildCommandsData.addCommands(command.build().getSlashCommandData());
         } else {
-            globalCommandsData.addCommands(command.getSlashCommandData());
+            globalCommandsData.addCommands(command.build().getSlashCommandData());
         }
     }
 
@@ -110,22 +112,27 @@ public abstract class SlashCommandHandler extends BaseHandler {
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         final SlashCommandExtender cmd = slashCommand.get(event.getName());
 
-        if (cmd.isOwnerOnly() && event.getUser().getIdLong() != botOwnerId()) {
+        if (cmd.build().isOwnerOnly() && event.getUser().getIdLong() != botOwnerId()) {
             event.reply("You do not have permission to use this command.")
                 .setEphemeral(true)
                 .queue();
             return;
         }
 
-        if (Objects.requireNonNull(event.getMember()).hasPermission(cmd.getUserPerms())
-                || Objects.requireNonNull(event.getGuild())
-                    .getSelfMember()
-                    .hasPermission(cmd.getBotPerms())) {
-            cmd.onSlashCommandInteraction(event);
-        } else {
+        if (cmd.build().getUserPerms() != null
+                && event.getMember().hasPermission(cmd.build().getUserPerms())) {
             event.reply("You do not have permission to use this command.")
                 .setEphemeral(true)
                 .queue();
+        } else {
+            cmd.onSlashCommandInteraction(event);
+        }
+
+        if (cmd.build().getBotPerms() != null
+                && event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
+            event.reply("I do not have permission to use this command.").setEphemeral(true).queue();
+        } else {
+            cmd.onSlashCommandInteraction(event);
         }
     }
 

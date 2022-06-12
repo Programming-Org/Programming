@@ -11,11 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import javax.annotation.Nonnull;
 
-public abstract class MessageCommandExtender extends MessageCommand {
-
-    public MessageCommandExtender(CommandData commandData) {
-        super(commandData);
-    }
+public abstract class MessageCommandExtender {
 
     public abstract void onMessageContextInteraction(@Nonnull MessageContextInteractionEvent event);
 
@@ -35,5 +31,5 @@ public abstract class MessageCommandExtender extends MessageCommand {
 
     }
 
-    protected abstract SlashCommand build();
+    public abstract MessageCommand build();
 }

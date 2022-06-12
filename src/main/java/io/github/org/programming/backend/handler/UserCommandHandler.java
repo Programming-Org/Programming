@@ -45,18 +45,20 @@ public abstract class UserCommandHandler extends BaseHandler {
      *        The Command class is an interface class which contains all the need methods for the
      *        making of the command. <br>
      *        <br>
-     *        The boolean {@link UserCommandExtender#isGuildOnly()} ()} ()} is used to determine
+     *        The boolean {@link UserCommandExtender#build#isGuildOnly()} is used to determine
      *        whether the command should be global or guild only. determines whether the command
      *        should be Global or Guild only.
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void addUserCommand(@NotNull UserCommandExtender command) {
-        jda.addEventListener(command);
-        userCommand.put(command.getCommandData().getName(), command);
-        if (command.isGuildOnly()) {
-            guildCommandsData.addCommands(command.getCommandData());
+
+        BaseHandler.checkIfBuildIsNull(command.build());
+
+        userCommand.put(command.build().getCommandData().getName(), command);
+        if (command.build().isGuildOnly()) {
+            guildCommandsData.addCommands(command.build().getCommandData());
         } else {
-            globalCommandsData.addCommands(command.getCommandData());
+            globalCommandsData.addCommands(command.build().getCommandData());
         }
     }
 
@@ -89,22 +91,27 @@ public abstract class UserCommandHandler extends BaseHandler {
     public void onUserContextInteraction(@NotNull UserContextInteractionEvent event) {
         final UserCommandExtender cmd = userCommand.get(event.getName());
 
-        if (cmd.isOwnerOnly() && event.getUser().getIdLong() != botOwnerId()) {
+        if (cmd.build().isOwnerOnly() && event.getUser().getIdLong() != botOwnerId()) {
             event.reply("You do not have permission to use this command.")
                 .setEphemeral(true)
                 .queue();
             return;
         }
 
-        if (Objects.requireNonNull(event.getMember()).hasPermission(cmd.getUserPerms())
-                || Objects.requireNonNull(event.getGuild())
-                    .getSelfMember()
-                    .hasPermission(cmd.getBotPerms())) {
-            cmd.onUserContextInteraction(event);
-        } else {
+        if (cmd.build().getUserPerms() != null
+                && event.getMember().hasPermission(cmd.build().getUserPerms())) {
             event.reply("You do not have permission to use this command.")
                 .setEphemeral(true)
                 .queue();
+        } else {
+            cmd.onUserContextInteraction(event);
+        }
+
+        if (cmd.build().getBotPerms() != null
+                && event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
+            event.reply("I do not have permission to use this command.").setEphemeral(true).queue();
+        } else {
+            cmd.onUserContextInteraction(event);
         }
     }
 
