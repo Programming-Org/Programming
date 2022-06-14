@@ -197,6 +197,7 @@ jooq {
                         records = true
                         immutablePojos = true
                         fluentSetters = true
+                        
                     }
                     target {
                         packageName = 'io.github.org.programming.jooq'
