@@ -11,7 +11,6 @@ plugins {
     id "com.diffplug.spotless" version "6.6.1"
     id "application"
     id "nu.studer.jooq" version "6.0.1"
-    id "org.flywaydb.flyway" version "8.5.12"
 }
 
 group 'io.github.org.programming'
@@ -152,21 +151,15 @@ if (file(".env").exists()) {
 }
 
 
-/**
- * Needed to make sure gradle workflow does not fail in Github Actions.
- */
-tasks.register("createBuildDirectoryIfNeeded") {
+//create the build directory so no errors happen with the workflow
+task createBuildDir {
     doLast {
-        if (!file("build").exists()) {
-            file("build").mkdirs()
-        }
+        logger.info("===== Creating build directory =====")
+        file("build").mkdirs()
+        logger.info("===== Build directory created ======")
     }
 
     mustRunAfter(project.tasks.findByPath('clean'))
-}
-
-tasks.flywayMigrate {
-    dependsOn("createBuildDirectoryIfNeeded")
 }
 
 
@@ -216,8 +209,5 @@ jooq {
     }
 }
 
-tasks.generateJooq {
-    dependsOn("flywayMigrate")
-}
 
 check.dependsOn jacocoTestReport
