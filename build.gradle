@@ -157,15 +157,14 @@ if (file(".env").exists()) {
  */
 tasks.register("createBuildDirectoryIfNeeded") {
     doLast {
-        if (!databaseFile.parentFile.exists()) {
-            databaseFile.parentFile.mkdirs()
+        if (!file("build").exists()) {
+            file("build").mkdirs()
         }
     }
 
     mustRunAfter(project.tasks.findByPath('clean'))
 }
 
-//if createBuildDirectoryIfNeeded is needed, run it
 tasks.flywayMigrate {
     dependsOn("createBuildDirectoryIfNeeded")
 }
