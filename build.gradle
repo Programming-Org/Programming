@@ -11,6 +11,7 @@ plugins {
     id "com.diffplug.spotless" version "6.6.1"
     id "application"
     id "nu.studer.jooq" version "6.0.1"
+    id "org.flywaydb.flyway" version "8.5.12"
 }
 
 group 'io.github.org.programming'
@@ -164,6 +165,12 @@ tasks.register("createBuildDirectoryIfNeeded") {
     mustRunAfter(project.tasks.findByPath('clean'))
 }
 
+//if createBuildDirectoryIfNeeded is needed, run it
+tasks.flywayMigrate {
+    dependsOn("createBuildDirectoryIfNeeded")
+}
+
+
 jooq {
     version = '3.15.2'
     edition = JooqEdition.OSS
@@ -197,7 +204,7 @@ jooq {
                         records = true
                         immutablePojos = true
                         fluentSetters = true
-                        
+
                     }
                     target {
                         packageName = 'io.github.org.programming.jooq'
