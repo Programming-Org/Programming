@@ -38,9 +38,9 @@ CORE_POOL_SIZE=
 DATABASE_NAME=programming_bot
 DB_USER=
 DB_PASSWORD=
-DB_URL=jdbc:postgresql://localhost:5432/programming_bot
-PORT_NUMBER=5432
-SERVER_NAME=localhost
+DB_URL=
+PORT_NUMBER=
+SERVER_NAME=
 ```
 
 ### Part 3
