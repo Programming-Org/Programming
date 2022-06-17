@@ -6,15 +6,11 @@ import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInterac
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public abstract class UserCommandExtender extends UserCommand {
-    public UserCommandExtender(CommandData commandData) {
-        super(commandData);
-    }
+public abstract class UserCommandExtender {
 
     public abstract void onUserContextInteraction(@NotNull UserContextInteractionEvent event);
 
@@ -34,5 +30,5 @@ public abstract class UserCommandExtender extends UserCommand {
 
     }
 
-    protected abstract UserCommand build();
+    public abstract UserCommand build();
 }

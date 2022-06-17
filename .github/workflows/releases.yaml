@@ -30,4 +30,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          files: build/libs/ydw.jar
+          files: build/libs/programming_bot.jar

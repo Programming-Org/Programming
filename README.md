@@ -1,4 +1,4 @@
-[![Java CI with Gradle](https://github.com/Programming-Org/Programming/actions/workflows/gradle.yml/badge.svg)](https://github.com/YusufsDiscordbot/Yusuf-s-Moderation-Bot/actions/workflows/gradle.yml)
+[![Java CI with Gradle](https://github.com/Programming-Org/Programming/actions/workflows/gradle.yml/badge.svg)](https://github.com/Programming-Org/Programming/actions/workflows/gradle.yml)
 [![codecov](https://codecov.io/gh/Programming-Org/Programming/branch/main/graph/badge.svg?token=M1KBWF0CDY)](https://codecov.io/gh/Programming-Org/Programming)
 
 # Welcome to the Programming Server's Discord bot!
@@ -33,11 +33,29 @@ Once you have added the bot to your server, you will need to create a .env file 
 TOKEN=
 GUILD_ID=
 OWNER_ID=
-//for the excutor default is 1;
+//for the excutor default is 1.
 CORE_POOL_SIZE=
+DATABASE_NAME=programming_bot
+DB_USER=
+DB_PASSWORD=
+DB_URL=
+PORT_NUMBER=
+SERVER_NAME=
 ```
 
 ### Part 3
+To get started with postgres you will need to install it using homebrew or any other package manager.
+
+To install it with homebrew run the following command:
+```brew install postgresql```
+
+For linux see the [postgresql download](https://www.postgresql.org/download/linux/)
+
+To start the server run the following command:
+```brew servers start postgresql```
+
+
+### Part 4
 
 In order to make a command for the bot, you will need to create an issue and wait to see if the command is needed.
 

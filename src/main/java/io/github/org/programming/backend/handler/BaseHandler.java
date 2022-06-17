@@ -2,6 +2,8 @@ package io.github.org.programming.backend.handler;
 
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.util.Objects;
+
 public abstract class BaseHandler extends ListenerAdapter {
     /**
      *
@@ -10,4 +12,9 @@ public abstract class BaseHandler extends ListenerAdapter {
     protected abstract long botOwnerId();
 
 
+    public static void checkIfBuildIsNull(Object build) {
+        if (Objects.isNull(build)) {
+            throw new IllegalArgumentException("Build is null");
+        }
+    }
 }

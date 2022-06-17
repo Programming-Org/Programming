@@ -1,6 +1,7 @@
 package io.github.org.programming.bot;
 
-import io.github.org.programming.config.BotConfig;
+import io.github.org.programming.bot.config.BotConfig;
+import io.github.org.programming.database.Database;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -11,6 +12,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,14 +25,17 @@ import java.util.concurrent.ScheduledExecutorService;
 public class ProgrammingBot extends ListenerAdapter {
     private final Logger logger = LoggerFactory.getLogger(ProgrammingBot.class);
 
-    private static ProgrammingBot instance;
-
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
     private final ScheduledExecutorService scheduledExecutor =
             Executors.newScheduledThreadPool(BotConfig.getCorePoolSize());
 
+    private static DSLContext context;
+
     public ProgrammingBot(String[] args) throws Exception {
+
+        onDatabase();
+
         JDA jda = JDABuilder
             .createDefault(BotConfig.getToken(), GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
@@ -39,21 +46,44 @@ public class ProgrammingBot extends ListenerAdapter {
             .setStatus(OnlineStatus.ONLINE)
             .build();
 
+
         Guild guild = jda.awaitReady().getGuildById(BotConfig.getGuildId());
 
         jda.awaitReady().addEventListener(new SlashCommandReg(jda, guild), this);
     }
 
-    public static ProgrammingBot getInstance() {
-        return instance;
-    }
-
-    public ExecutorService getExecutor() {
-        return executor;
-    }
-
     @Override
     public void onReady(@NotNull ReadyEvent readyEvent) {
-        logger.info("Bot is ready!");
+        logger.info("Bot is ready in '{}' server", readyEvent.getGuildTotalCount());
+
+        if (Database.isConnected())
+            logger.info("Database is connected");
+        else
+            logger.error("Database is not connected");
+    }
+
+    public void onDatabase() {
+        context = DSL.using(Database.getConnection(), SQLDialect.MARIADB);
+
+
+        if (Database.isConnected()) {
+            logger.info("Connected to database");
+        } else {
+            logger.error("Failed to connect to database");
+        }
+
+        // closes the database when the bot is shut down
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                Database.disconnect();
+            } catch (Exception e) {
+                logger.error("Failed to close database", e);
+            }
+        }));
+
+    }
+
+    public static DSLContext getContext() {
+        return context;
     }
 }
