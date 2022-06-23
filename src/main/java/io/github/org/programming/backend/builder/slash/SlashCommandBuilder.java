@@ -62,23 +62,28 @@ public class SlashCommandBuilder {
         return this;
     }
 
-    public SlashCommandBuilder addOption(@Nonnull OptionType type, @Nonnull String name,
-            @Nonnull String description, boolean required, boolean autoComplete) {
-        return addOptions(new OptionData(type, name, description).setRequired(required)
-            .setAutoComplete(autoComplete));
+    @NotNull
+    public SlashCommandBuilder addOption(@NotNull OptionType type, @NotNull String name,
+            @NotNull String description) {
+        this.options = new OptionData[] {new OptionData(type, name, description)};
+        return this;
     }
+
 
     @NotNull
     public SlashCommandBuilder addOption(@NotNull OptionType type, @NotNull String name,
             @NotNull String description, boolean required) {
-        return addOption(type, name, description, required);
+        this.options = new OptionData[] {new OptionData(type, name, description, required)};
+        return this;
     }
 
-    @NotNull
-    public SlashCommandBuilder addOption(@NotNull OptionType type, @NotNull String name,
-            @NotNull String description) {
-        return addOption(type, name, description);
+    public SlashCommandBuilder addOption(@Nonnull OptionType type, @Nonnull String name,
+            @Nonnull String description, boolean required, boolean autoComplete) {
+        this.options =
+                new OptionData[] {new OptionData(type, name, description, required, autoComplete)};
+        return this;
     }
+
 
     @NotNull
     public SlashCommandBuilder addSubcommands(@NotNull SubcommandData... subcommands) {
