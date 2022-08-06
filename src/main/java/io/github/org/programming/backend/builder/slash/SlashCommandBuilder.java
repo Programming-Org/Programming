@@ -53,6 +53,11 @@ public class SlashCommandBuilder {
         return options == null ? List.of() : options;
     }
 
+    public SlashCommandBuilder addOptions(@Nonnull OptionData... options) {
+        this.options.addAll(List.of(options));
+        return this;
+    }
+
     public SlashCommandBuilder addOptions(@Nonnull List<OptionData> options) {
         this.options.addAll(options);
         return this;
