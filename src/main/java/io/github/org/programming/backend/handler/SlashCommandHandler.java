@@ -122,9 +122,9 @@ public abstract class SlashCommandHandler extends BaseHandler {
         // check if does not have user perms and bot perms
 
         if (!cmd.build().getUserPerms().isEmpty()
-                && event.getMember().hasPermission(cmd.build().getUserPerms())
+                && !event.getMember().hasPermission(cmd.build().getUserPerms())
                 && !cmd.build().getBotPerms().isEmpty()
-                && event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
+                && !event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
             event.reply("You and the bot do not have permission to use this command.")
                 .setEphemeral(true)
                 .queue();
@@ -132,12 +132,12 @@ public abstract class SlashCommandHandler extends BaseHandler {
         }
 
         if (!cmd.build().getUserPerms().isEmpty()
-                && event.getMember().hasPermission(cmd.build().getUserPerms())) {
+                && !event.getMember().hasPermission(cmd.build().getUserPerms())) {
             event.reply("You do not have permission to use this command.")
                 .setEphemeral(true)
                 .queue();
         } else if (!cmd.build().getBotPerms().isEmpty()
-                && event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
+                && !event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
             event.reply("I do not have permission to use this command.").setEphemeral(true).queue();
         } else {
             cmd.onSlashCommandInteraction(event);

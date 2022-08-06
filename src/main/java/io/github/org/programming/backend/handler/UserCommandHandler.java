@@ -111,12 +111,12 @@ public abstract class UserCommandHandler extends BaseHandler {
         }
 
         if (!cmd.build().getUserPerms().isEmpty()
-                && event.getMember().hasPermission(cmd.build().getUserPerms())) {
+                && !event.getMember().hasPermission(cmd.build().getUserPerms())) {
             event.reply("You do not have permission to use this command.")
                 .setEphemeral(true)
                 .queue();
         } else if (!cmd.build().getBotPerms().isEmpty()
-                && event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
+                && !event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
             event.reply("I do not have permission to use this command.").setEphemeral(true).queue();
         } else {
             cmd.onUserContextInteraction(event);
