@@ -28,9 +28,9 @@ public class KickCommand implements SlashCommandExtender {
                 member.getId(), moderator.getId(), reason, "kick");
 
 
-        User user = Objects.requireNonNull(event.getGuild()
-                        .getMemberById(member.getId()), "Member not found")
-                .getUser();
+        User user = Objects
+            .requireNonNull(event.getGuild().getMemberById(member.getId()), "Member not found")
+            .getUser();
 
         user.openPrivateChannel()
             .flatMap(channel -> channel.sendMessageEmbeds(kickEmbed(moderator, reason, id)))
