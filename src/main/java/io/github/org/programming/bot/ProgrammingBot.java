@@ -60,7 +60,7 @@ public class ProgrammingBot extends ListenerAdapter {
     }
 
     public void onDatabase() {
-        context = DSL.using(Database.getConnection(), SQLDialect.MARIADB);
+        context = DSL.using(Database.getConnection(), SQLDialect.POSTGRES);
 
 
         if (Database.isConnected()) {

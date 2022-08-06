@@ -9,10 +9,13 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class KickCommand implements SlashCommandExtender {
     @Override
@@ -24,10 +27,12 @@ public class KickCommand implements SlashCommandExtender {
         int id = ModerationDatabase.updateModerationDataBase(event.getGuild().getId(),
                 member.getId(), moderator.getId(), reason, "kick");
 
-        JDA jda = event.getJDA();
 
-        jda.getUserById(member.getId())
-            .openPrivateChannel()
+        User user = Objects.requireNonNull(event.getGuild()
+                        .getMemberById(member.getId()), "Member not found")
+                .getUser();
+
+        user.openPrivateChannel()
             .flatMap(channel -> channel.sendMessageEmbeds(kickEmbed(moderator, reason, id)))
             .flatMap(message -> member.kick(reason))
             .flatMap(message -> event.reply("Kicked " + member.getAsMention() + " for " + reason))
