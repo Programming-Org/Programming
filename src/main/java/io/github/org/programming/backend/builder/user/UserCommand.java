@@ -4,10 +4,13 @@ import io.github.org.programming.backend.type.CommandType;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserCommand {
     private final CommandData commandData;
-    private Permission[] userPerms = null;
-    private Permission[] botPerms = null;
+    private final List<Permission> userPerms = new ArrayList<>();
+    private final List<Permission> botPerms = new ArrayList<>();
     private boolean isGuildOnly = false;
     private boolean isOwnerOnly = false;
     private CommandType commandType;
@@ -21,12 +24,12 @@ public class UserCommand {
     }
 
     public UserCommand setBotPerms(final Permission... perms) {
-        this.botPerms = perms;
+        this.botPerms.addAll(List.of(perms));
         return this;
     }
 
     public UserCommand setUserPerms(final Permission... perms) {
-        this.userPerms = perms;
+        this.userPerms.addAll(List.of(perms));
         return this;
     }
 
@@ -45,11 +48,11 @@ public class UserCommand {
         return this;
     }
 
-    public Permission[] getBotPerms() {
+    public List<Permission> getBotPerms() {
         return botPerms;
     }
 
-    public Permission[] getUserPerms() {
+    public List<Permission> getUserPerms() {
         return userPerms;
     }
 

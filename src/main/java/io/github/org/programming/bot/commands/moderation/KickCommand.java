@@ -14,40 +14,43 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.NotNull;
 
-public class KickCommand extends SlashCommandExtender {
+public class KickCommand implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         Member member = event.getOption("user", OptionMapping::getAsMember);
         Member moderator = event.getMember();
         String reason = event.getOption("reason", OptionMapping::getAsString);
 
-        int id = ModerationDatabase.updateModerationDataBase(event.getGuild().getId(), member.getId(),
-                moderator.getId(), reason, "kick");
+        int id = ModerationDatabase.updateModerationDataBase(event.getGuild().getId(),
+                member.getId(), moderator.getId(), reason, "kick");
 
         JDA jda = event.getJDA();
 
-        jda.getUserById(member.getId()).openPrivateChannel()
-                .flatMap(channel -> channel.sendMessageEmbeds(kickEmbed(moderator, reason, id)))
-                .flatMap(message -> member.kick(reason))
-                .flatMap(message -> event.reply("Kicked " + member.getAsMention() + " for " + reason))
-                .queue();
+        jda.getUserById(member.getId())
+            .openPrivateChannel()
+            .flatMap(channel -> channel.sendMessageEmbeds(kickEmbed(moderator, reason, id)))
+            .flatMap(message -> member.kick(reason))
+            .flatMap(message -> event.reply("Kicked " + member.getAsMention() + " for " + reason))
+            .queue();
     }
 
-    private @NotNull MessageEmbed kickEmbed(@NotNull Member moderator, @NotNull String reason, int caseId) {
-       return new EmbedBuilder()
-                .setTitle("You have been kicked from the server")
-                .setDescription("You have been kicked by " + moderator.getAsMention() + " for " + reason)
-                .setFooter("Your case number is " + caseId, null)
-                .setColor(0xFF0000)
-                .build();
+    private @NotNull MessageEmbed kickEmbed(@NotNull Member moderator, @NotNull String reason,
+            int caseId) {
+        return new EmbedBuilder().setTitle("You have been kicked from the server")
+            .setDescription(
+                    "You have been kicked by " + moderator.getAsMention() + " for " + reason)
+            .setFooter("Your case number is " + caseId, null)
+            .setColor(0xFF0000)
+            .build();
     }
 
     @Override
     public SlashCommand build() {
         return new SlashCommandBuilder("kick", "Kick a user from the server")
-            .addOption(OptionType.USER, "user", "The user to kick")
-            .addOption(OptionType.STRING, "reason", "The reason for the kick")
+            .addOption(OptionType.USER, "user", "The user to kick", true)
+            .addOption(OptionType.STRING, "reason", "The reason for the kick", true)
             .build()
+            .setToGuildOnly()
             .setBotPerms(Permission.KICK_MEMBERS)
             .setUserPerms(Permission.KICK_MEMBERS);
     }

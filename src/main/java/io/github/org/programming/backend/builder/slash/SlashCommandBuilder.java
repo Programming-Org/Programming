@@ -8,15 +8,16 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class SlashCommandBuilder {
     private final String name;
     private final String description;
-    private OptionData[] options = null;
-    private SubcommandData[] subcommands = null;
-    private SubcommandGroupData[] subcommandGroups = null;
+    private List<OptionData> options = new ArrayList<>();
+    private List<SubcommandData> subcommands = new ArrayList<>();;
+    private List<SubcommandGroupData> subcommandGroups = new ArrayList<>();;
 
     /**
      * Creates a new SlashCommandBuilder
@@ -39,33 +40,33 @@ public class SlashCommandBuilder {
 
     @NotNull
     public List<SubcommandData> getSubcommands() {
-        return subcommands == null ? List.of() : List.of(subcommands);
+        return subcommands == null ? List.of() : subcommands;
     }
 
     @NotNull
     public List<SubcommandGroupData> getSubcommandGroups() {
-        return subcommandGroups == null ? List.of() : List.of(subcommandGroups);
+        return subcommandGroups == null ? List.of() : subcommandGroups;
     }
 
     @NotNull
     public List<OptionData> getOptions() {
-        return options == null ? List.of() : List.of(options);
+        return options == null ? List.of() : options;
     }
 
-    public SlashCommandBuilder addOptions(@Nonnull OptionData... options) {
-        this.options = options;
+    public SlashCommandBuilder addOptions(@Nonnull List<OptionData> options) {
+        this.options.addAll(options);
         return this;
     }
 
     public SlashCommandBuilder addOptions(@Nonnull Collection<? extends OptionData> options) {
-        this.options = options.toArray(new OptionData[0]);
+        this.options.addAll(options);
         return this;
     }
 
     @NotNull
     public SlashCommandBuilder addOption(@NotNull OptionType type, @NotNull String name,
             @NotNull String description) {
-        this.options = new OptionData[] {new OptionData(type, name, description)};
+        this.options.add(new OptionData(type, name, description));
         return this;
     }
 
@@ -73,41 +74,40 @@ public class SlashCommandBuilder {
     @NotNull
     public SlashCommandBuilder addOption(@NotNull OptionType type, @NotNull String name,
             @NotNull String description, boolean required) {
-        this.options = new OptionData[] {new OptionData(type, name, description, required)};
+        this.options.add(new OptionData(type, name, description, required));
         return this;
     }
 
     public SlashCommandBuilder addOption(@Nonnull OptionType type, @Nonnull String name,
             @Nonnull String description, boolean required, boolean autoComplete) {
-        this.options =
-                new OptionData[] {new OptionData(type, name, description, required, autoComplete)};
+        this.options.add(new OptionData(type, name, description, required, autoComplete));
         return this;
     }
 
 
     @NotNull
-    public SlashCommandBuilder addSubcommands(@NotNull SubcommandData... subcommands) {
-        this.subcommands = subcommands;
+    public SlashCommandBuilder addSubcommands(@NotNull List<SubcommandData> subcommands) {
+        this.subcommands.addAll(subcommands);
         return this;
     }
 
     @NotNull
     public SlashCommandBuilder addSubcommands(
             @NotNull Collection<? extends SubcommandData> subcommands) {
-        this.subcommands = subcommands.toArray(new SubcommandData[0]);
+        this.subcommands.addAll(subcommands);
         return this;
     }
 
     @NotNull
-    public SlashCommandBuilder addSubcommandGroups(@NotNull SubcommandGroupData... groups) {
-        this.subcommandGroups = groups;
+    public SlashCommandBuilder addSubcommandGroups(@NotNull List<SubcommandGroupData> groups) {
+        this.subcommandGroups.addAll(groups);
         return this;
     }
 
     @NotNull
     public SlashCommandBuilder addSubcommandGroups(
             @NotNull Collection<? extends SubcommandGroupData> groups) {
-        this.subcommandGroups = groups.toArray(new SubcommandGroupData[0]);
+        this.subcommandGroups.addAll(groups);
         return this;
     }
 
@@ -120,16 +120,16 @@ public class SlashCommandBuilder {
             throw new IllegalArgumentException("Description cannot be null or empty");
         }
 
-        if (options == null) {
-            options = new OptionData[0];
+        if (options.isEmpty()) {
+            options = List.of();
         }
 
-        if (subcommands == null) {
-            subcommands = new SubcommandData[0];
+        if (subcommands.isEmpty()) {
+            subcommands = List.of();
         }
 
-        if (subcommandGroups == null) {
-            subcommandGroups = new SubcommandGroupData[0];
+        if (subcommandGroups.isEmpty()) {
+            subcommandGroups = List.of();
         }
 
         var cm = Commands.slash(name, description)

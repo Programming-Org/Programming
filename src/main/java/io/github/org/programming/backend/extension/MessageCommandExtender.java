@@ -9,25 +9,25 @@ import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEve
 
 import javax.annotation.Nonnull;
 
-public abstract class MessageCommandExtender {
+public interface MessageCommandExtender {
 
-    public abstract void onMessageContextInteraction(@Nonnull MessageContextInteractionEvent event);
+    void onMessageContextInteraction(@Nonnull MessageContextInteractionEvent event);
 
-    public void onButtonClick(ButtonInteractionEvent event) {
-
-    }
-
-    public void onModalInteraction(ModalInteractionEvent event) {
+    default void onButtonClick(ButtonInteractionEvent event) {
 
     }
 
-    public void onCommandAutoComplete(@Nonnull CommandAutoCompleteInteractionEvent event) {
+    default void onModalInteraction(ModalInteractionEvent event) {
 
     }
 
-    public void onSelectMenu(@Nonnull SelectMenuInteractionEvent event) {
+    default void onCommandAutoComplete(@Nonnull CommandAutoCompleteInteractionEvent event) {
 
     }
 
-    public abstract MessageCommand build();
+    default void onSelectMenu(@Nonnull SelectMenuInteractionEvent event) {
+
+    }
+
+    MessageCommand build();
 }

@@ -34,7 +34,6 @@ public class ProgrammingBot extends ListenerAdapter {
     private static DSLContext context;
 
     public ProgrammingBot(String[] args) throws Exception {
-
         onDatabase();
 
         JDA jda = JDABuilder
@@ -51,11 +50,8 @@ public class ProgrammingBot extends ListenerAdapter {
         Guild guild = jda.awaitReady().getGuildById(BotConfig.getGuildId());
 
         jda.awaitReady().addEventListener(new SlashCommandReg(jda, guild), this);
-    }
 
-    @Override
-    public void onReady(@NotNull ReadyEvent readyEvent) {
-        logger.info("Bot is ready in '{}' server", readyEvent.getGuildTotalCount());
+        logger.info("Bot is ready in guild {}", guild.getName());
 
         if (Database.isConnected())
             logger.info("Database is connected");

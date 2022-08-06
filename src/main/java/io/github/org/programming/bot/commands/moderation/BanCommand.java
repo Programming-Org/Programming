@@ -5,7 +5,7 @@ import io.github.org.programming.backend.extension.SlashCommandExtender;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class BanCommand extends SlashCommandExtender {
+public class BanCommand implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
 

@@ -97,16 +97,24 @@ public abstract class MessageCommandHandler extends BaseHandler {
             return;
         }
 
-        if (cmd.build().getUserPerms() != null
+        // check if does not have user perms and bot perms
+
+        if (!cmd.build().getUserPerms().isEmpty()
+                && event.getMember().hasPermission(cmd.build().getUserPerms())
+                && !cmd.build().getBotPerms().isEmpty()
+                && event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
+            event.reply("You and the bot do not have permission to use this command.")
+                .setEphemeral(true)
+                .queue();
+            return;
+        }
+
+        if (!cmd.build().getUserPerms().isEmpty()
                 && event.getMember().hasPermission(cmd.build().getUserPerms())) {
             event.reply("You do not have permission to use this command.")
                 .setEphemeral(true)
                 .queue();
-        } else {
-            cmd.onMessageContextInteraction(event);
-        }
-
-        if (cmd.build().getBotPerms() != null
+        } else if (!cmd.build().getBotPerms().isEmpty()
                 && event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
             event.reply("I do not have permission to use this command.").setEphemeral(true).queue();
         } else {
@@ -148,5 +156,4 @@ public abstract class MessageCommandHandler extends BaseHandler {
     public List<MessageCommandExtender> getMessageCommands() {
         return new ArrayList<>(this.messageCommand.values());
     }
-
 }
