@@ -1,11 +1,9 @@
-[contributing]: https://github.com/Together-Java/TJ-Bot/wiki/Contributing
-[code_guidelines]: https://github.com/Together-Java/TJ-Bot/wiki/Code-Guidelines
-[new_issue]: https://github.com/Together-Java/TJ-Bot/issues/new/choose
+[code_of_conduct]: https://github.com/Programming-Org/Programming/blob/master/.github/CODE_OF_CONDUCT.md
+[new_issue]: https://github.com/Programming-Org/Programming/issues/new/choose
 
 ## Pull-request
 
-- [ ] I have read the [contributing guidelines][contributing].
-- [ ] I have read the [code guidelines][code_guidelines].
+- [ ] I have read the [code of conduct][code_of_conduct].
 - [ ] I have created a relating [issue][new_issue].
 
 ### Changes
