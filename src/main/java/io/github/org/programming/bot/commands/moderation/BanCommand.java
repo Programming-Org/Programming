@@ -3,11 +3,13 @@ package io.github.org.programming.bot.commands.moderation;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.moderation.ModerationDatabase;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -28,6 +30,9 @@ public class BanCommand implements SlashCommandExtender {
 
         user.openPrivateChannel()
             .flatMap(channel -> channel.sendMessageEmbeds(banEmbed(moderator, reason, id)))
+            .flatMap(message -> event.getGuild()
+                .getChannelById(TextChannel.class, BotConfig.getAuditLogChannelId())
+                .sendMessageEmbeds(banEmbed(moderator, reason, id)))
             .flatMap(message -> event.getGuild().ban(user, delDays, reason))
             .flatMap(message -> event.reply("Banned " + user.getAsMention() + " for " + reason))
             .queue();
