@@ -11,7 +11,7 @@ Make sure you have a good knowledge of java and know how [JDA](https://github.co
 
 Also read the [Code of conduct](https://github.com/Programming-Org/Programming/blob/main/.github/CODE_OF_CONDUCT.md).
 
-And finally do not forget to have a look at the [Example Command](https://github.com/Programming-Org/Programming/blob/main/src/main/java/io/github/org/programming/commands/ExampleCommand.java) to get an idea of how your command should be structured.
+And finally do not forget to have a look at the [Example Command](https://github.com/Programming-Org/Programming/blob/main/src/main/java/io/github/org/programming/bot/commands/ExampleCommand.java) to get an idea of how your command should be structured.
 ## Getting Started
 
 ### Part 1
