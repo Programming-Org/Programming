@@ -52,7 +52,7 @@ public abstract class UserCommandHandler extends BaseHandler {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void addUserCommand(@NotNull UserCommandExtender command) {
 
-        BaseHandler.checkIfBuildIsNull(command.build());
+        BaseHandler.checkIfBuildIsNull(command.build(), command.getClass().getSimpleName());
 
         userCommand.put(command.build().getCommandData().getName(), command);
         if (command.build().isGuildOnly()) {

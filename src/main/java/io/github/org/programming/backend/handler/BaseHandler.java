@@ -12,9 +12,9 @@ public abstract class BaseHandler extends ListenerAdapter {
     protected abstract long botOwnerId();
 
 
-    public static void checkIfBuildIsNull(Object build) {
+    public static void checkIfBuildIsNull(Object build, String className) {
         if (Objects.isNull(build)) {
-            throw new IllegalArgumentException("Build is null");
+            throw new IllegalArgumentException("Build is null for class: " + className);
         }
     }
 }

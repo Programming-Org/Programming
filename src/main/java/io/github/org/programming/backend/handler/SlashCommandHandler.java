@@ -72,8 +72,7 @@ public abstract class SlashCommandHandler extends BaseHandler {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void addSlashCommand(@NotNull SlashCommandExtender command) {
-
-        BaseHandler.checkIfBuildIsNull(command.build());
+        BaseHandler.checkIfBuildIsNull(command.build(), command.getClass().getSimpleName());
 
         slashCommand.put(command.build().getSlashCommandData().getName(), command);
         if (command.build().isGuildOnly()) {
