@@ -4,11 +4,14 @@ import io.github.org.programming.backend.type.CommandType;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class SlashCommand {
     private final SlashCommandData commandData;
-    private Permission[] userPerms = null;
-    private Permission[] botPerms = null;
+    private final List<Permission> userPerms = new ArrayList<>();
+    private final List<Permission> botPerms = new ArrayList<>();
     private boolean isGuildOnly = false;
     private boolean isOwnerOnly = false;
     private CommandType commandType;
@@ -22,12 +25,12 @@ public class SlashCommand {
     }
 
     public SlashCommand setBotPerms(final Permission... perms) {
-        this.botPerms = perms;
+        this.botPerms.addAll(List.of(perms));
         return this;
     }
 
     public SlashCommand setUserPerms(final Permission... perms) {
-        this.userPerms = perms;
+        this.userPerms.addAll(List.of(perms));
         return this;
     }
 
@@ -46,11 +49,11 @@ public class SlashCommand {
         return this;
     }
 
-    public Permission[] getBotPerms() {
+    public List<Permission> getBotPerms() {
         return botPerms;
     }
 
-    public Permission[] getUserPerms() {
+    public List<Permission> getUserPerms() {
         return userPerms;
     }
 

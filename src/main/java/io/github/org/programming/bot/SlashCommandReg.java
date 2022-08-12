@@ -3,6 +3,9 @@ package io.github.org.programming.bot;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
 import io.github.org.programming.backend.handler.SlashCommandHandler;
 import io.github.org.programming.bot.commands.ExampleCommand;
+import io.github.org.programming.bot.commands.moderation.BanCommand;
+import io.github.org.programming.bot.commands.moderation.KickCommand;
+import io.github.org.programming.bot.commands.moderation.UnBanCommand;
 import io.github.org.programming.bot.config.BotConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,6 +22,9 @@ public class SlashCommandReg extends SlashCommandHandler {
         List<SlashCommandExtender> extenders = new ArrayList<>();
 
         extenders.add(new ExampleCommand());
+        extenders.add(new KickCommand());
+        extenders.add(new BanCommand());
+        extenders.add(new UnBanCommand());
 
         queueAndRegisterSlashCommands(extenders);
     }

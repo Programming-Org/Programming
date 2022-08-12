@@ -9,7 +9,7 @@ import static io.github.org.programming.jooq.tables.Moderation.MODERATION;
 public class ModerationDatabase {
 
     public static @Nullable Integer updateModerationDataBase(String guildId, String userId,
-            String moderationId, String reason) {
+            String moderationId, String reason, String moderationType) {
         return getContext()
             .insertInto(MODERATION, MODERATION.GUILD_ID, MODERATION.USER_ID,
                     MODERATION.MODERATOR_ID, MODERATION.TIME_STAMP, MODERATION.REASON)

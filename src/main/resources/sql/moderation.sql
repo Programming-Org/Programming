@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS moderation
     user_id      varchar(255) not null,
     moderator_id varchar(255) not null,
     time_stamp   timestamp not null default current_timestamp,
-    reason       varchar(255) not null
+    reason       varchar(255) not null,
+    type         varchar(255) not null
 )

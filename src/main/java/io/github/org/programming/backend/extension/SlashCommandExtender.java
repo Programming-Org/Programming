@@ -10,26 +10,26 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public abstract class SlashCommandExtender {
+public interface SlashCommandExtender {
 
     // This method is called when the command is executed.
-    public abstract void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event);
+    void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event);
 
-    public void onButtonClick(ButtonInteractionEvent event) {
-
-    }
-
-    public void onModalInteraction(ModalInteractionEvent event) {
+    default void onButtonClick(ButtonInteractionEvent event) {
 
     }
 
-    public void onCommandAutoComplete(@Nonnull CommandAutoCompleteInteractionEvent event) {
+    default void onModalInteraction(ModalInteractionEvent event) {
 
     }
 
-    public void onSelectMenu(@Nonnull SelectMenuInteractionEvent event) {
+    default void onCommandAutoComplete(@Nonnull CommandAutoCompleteInteractionEvent event) {
 
     }
 
-    public abstract SlashCommand build();
+    default void onSelectMenu(@Nonnull SelectMenuInteractionEvent event) {
+
+    }
+
+    SlashCommand build();
 }

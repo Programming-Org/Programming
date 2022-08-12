@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
@@ -33,7 +34,6 @@ public class ProgrammingBot extends ListenerAdapter {
     private static DSLContext context;
 
     public ProgrammingBot(String[] args) throws Exception {
-
         onDatabase();
 
         JDA jda = JDABuilder
@@ -50,11 +50,8 @@ public class ProgrammingBot extends ListenerAdapter {
         Guild guild = jda.awaitReady().getGuildById(BotConfig.getGuildId());
 
         jda.awaitReady().addEventListener(new SlashCommandReg(jda, guild), this);
-    }
 
-    @Override
-    public void onReady(@NotNull ReadyEvent readyEvent) {
-        logger.info("Bot is ready in '{}' server", readyEvent.getGuildTotalCount());
+        logger.info("Bot is ready in guild {}", guild.getName());
 
         if (Database.isConnected())
             logger.info("Database is connected");
@@ -63,7 +60,7 @@ public class ProgrammingBot extends ListenerAdapter {
     }
 
     public void onDatabase() {
-        context = DSL.using(Database.getConnection(), SQLDialect.MARIADB);
+        context = DSL.using(Database.getConnection(), SQLDialect.POSTGRES);
 
 
         if (Database.isConnected()) {

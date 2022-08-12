@@ -27,10 +27,4 @@
         <appender-ref ref="METRICS"/>
     </logger>
 
-    <root level="${ROOT_LOG_LEVEL:-WARN}">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="LOGFILE"/>
-        <appender-ref ref="METRICS"/>
-    </root>
-
 </configuration>

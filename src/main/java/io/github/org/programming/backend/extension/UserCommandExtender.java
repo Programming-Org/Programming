@@ -10,25 +10,25 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public abstract class UserCommandExtender {
+public interface UserCommandExtender {
 
-    public abstract void onUserContextInteraction(@NotNull UserContextInteractionEvent event);
+    void onUserContextInteraction(@NotNull UserContextInteractionEvent event);
 
-    public void onButtonClick(ButtonInteractionEvent event) {
-
-    }
-
-    public void onModalInteraction(ModalInteractionEvent event) {
+    default void onButtonClick(ButtonInteractionEvent event) {
 
     }
 
-    public void onCommandAutoComplete(@Nonnull CommandAutoCompleteInteractionEvent event) {
+    default void onModalInteraction(ModalInteractionEvent event) {
 
     }
 
-    public void onSelectMenu(@Nonnull SelectMenuInteractionEvent event) {
+    default void onCommandAutoComplete(@Nonnull CommandAutoCompleteInteractionEvent event) {
 
     }
 
-    public abstract UserCommand build();
+    default void onSelectMenu(@Nonnull SelectMenuInteractionEvent event) {
+
+    }
+
+    UserCommand build();
 }

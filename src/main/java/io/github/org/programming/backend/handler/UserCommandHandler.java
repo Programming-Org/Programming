@@ -98,17 +98,25 @@ public abstract class UserCommandHandler extends BaseHandler {
             return;
         }
 
-        if (cmd.build().getUserPerms() != null
-                && event.getMember().hasPermission(cmd.build().getUserPerms())) {
+        // check if does not have user perms and bot perms
+
+        if (!cmd.build().getUserPerms().isEmpty()
+                && event.getMember().hasPermission(cmd.build().getUserPerms())
+                && !cmd.build().getBotPerms().isEmpty()
+                && event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
+            event.reply("You and the bot do not have permission to use this command.")
+                .setEphemeral(true)
+                .queue();
+            return;
+        }
+
+        if (!cmd.build().getUserPerms().isEmpty()
+                && !event.getMember().hasPermission(cmd.build().getUserPerms())) {
             event.reply("You do not have permission to use this command.")
                 .setEphemeral(true)
                 .queue();
-        } else {
-            cmd.onUserContextInteraction(event);
-        }
-
-        if (cmd.build().getBotPerms() != null
-                && event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
+        } else if (!cmd.build().getBotPerms().isEmpty()
+                && !event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
             event.reply("I do not have permission to use this command.").setEphemeral(true).queue();
         } else {
             cmd.onUserContextInteraction(event);
@@ -146,8 +154,7 @@ public abstract class UserCommandHandler extends BaseHandler {
      * @return retrieves the commands as a list.
      */
     @NotNull
-    public List<UserCommandExtender> getSlashCommands() {
+    public List<UserCommandExtender> getUserCommands() {
         return new ArrayList<>(this.userCommand.values());
     }
-
 }

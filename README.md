@@ -33,6 +33,7 @@ Once you have added the bot to your server, you will need to create a .env file 
 TOKEN=
 GUILD_ID=
 OWNER_ID=
+AUDIT_LOG_CHANNEL_ID=
 //for the excutor default is 1.
 CORE_POOL_SIZE=
 DATABASE_NAME=programming_bot

@@ -16,6 +16,10 @@ public class BotConfig {
         return Config.getLong("GUILD_ID");
     }
 
+    public static long getAuditLogChannelId() {
+        return Config.getLong("AUDIT_LOG_CHANNEL_ID");
+    }
+
     public static @NotNull Integer getCorePoolSize() {
         return Config.getInt("CORE_POOL_SIZE", 1);
     }
