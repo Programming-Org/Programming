@@ -3,6 +3,9 @@
 
 # Welcome to the Programming Server's Discord bot!
 
+## Note
+The bot uses Java 17
+
 ## Before you start
 Make sure you have a good knowledge of java and know how [JDA](https://github.com/DV8FromTheWorld/JDA/) works.
 
