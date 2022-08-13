@@ -1,3 +1,21 @@
+/*
+ * Copyright 2022 Programming Org and other Programming Org contributors
+ *
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *
+ * you may not use this file except in compliance with the License.
+ *
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */ 
 package io.github.org.programming.bot;
 
 import io.github.org.programming.bot.config.BotConfig;
@@ -43,7 +61,7 @@ public class ProgrammingBot extends ListenerAdapter {
                     GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
                     GatewayIntent.GUILD_PRESENCES)
             .enableCache(CacheFlag.ONLINE_STATUS, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS)
-            .disableCache(CacheFlag.ACTIVITY, CacheFlag.EMOTE, CacheFlag.MEMBER_OVERRIDES)
+            .disableCache(CacheFlag.ACTIVITY, CacheFlag.EMOJI, CacheFlag.MEMBER_OVERRIDES)
             .setActivity(Activity.watching("for misbehaving users"))
             .setStatus(OnlineStatus.ONLINE)
             .build();
