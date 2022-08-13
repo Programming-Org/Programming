@@ -32,10 +32,9 @@ public class AskCommand implements SlashCommandExtender {
             return;
         }
 
-        if (getAskAmount(event.getMember().getId(), event.getGuild().getId()) != null && getAskAmount(event.getMember().getId(), event.getGuild().getId()) >= 2) {
-            event.reply("You can only create 2 threads per day")
-                .setEphemeral(true)
-                .queue();
+        if (getAskAmount(event.getMember().getId(), event.getGuild().getId()) != null
+                && getAskAmount(event.getMember().getId(), event.getGuild().getId()) >= 2) {
+            event.reply("You can only create 2 threads per day").setEphemeral(true).queue();
             return;
         }
 

@@ -10,13 +10,14 @@ public class AskDatabase {
 
     public static void updateAskDatabase(String memberId, String guildId) {
         getContext()
-            .insertInto(ASKTHREAD, ASKTHREAD.GUILD_ID, ASKTHREAD.MEMBER_ID, ASKTHREAD.TIME_STAMP, ASKTHREAD.AMOUNT)
+            .insertInto(ASKTHREAD, ASKTHREAD.GUILD_ID, ASKTHREAD.MEMBER_ID, ASKTHREAD.TIME_STAMP,
+                    ASKTHREAD.AMOUNT)
             .values(guildId, memberId, Instant.now(), +1)
             .execute();
     }
 
     public static void deleteAskDatabaseWithTime(Instant time, String guildId) {
-        //find all the member in that guild with time and delete them
+        // find all the member in that guild with time and delete them
         getContext().deleteFrom(ASKTHREAD)
             .where(ASKTHREAD.GUILD_ID.eq(guildId).and(ASKTHREAD.TIME_STAMP.eq(time)))
             .execute();
