@@ -17,7 +17,7 @@ It helps make it maintainable for us, and will save you from possibly recoding e
 If there's no relating issue, keep it NaN
 -->
 
-Closes Issue: NaN
+Closes : NaN
 
 ## Description
 
