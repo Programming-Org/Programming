@@ -18,6 +18,7 @@
  */ 
 package io.github.org.programming.bot;
 
+import io.github.org.programming.bot.commands.thread.AskThreadStatus;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.Database;
 import net.dv8tion.jda.api.JDA;
@@ -25,6 +26,8 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -40,6 +43,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import static io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler.updateActiveQuestions;
 import static io.github.org.programming.database.thread.AskDatabase.deleteAskDatabaseWithTime;
 import static io.github.org.programming.database.thread.AskDatabase.getAskTimeStamps;
 
@@ -76,6 +80,7 @@ public class ProgrammingBot extends ListenerAdapter {
         // need to check this every minute
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskThreadTimeNeedsToBeRest(jda);
+            checkIfAskHelpThreadArchived(guild);
         }, 0, 1, java.util.concurrent.TimeUnit.MINUTES);
     }
 
@@ -111,6 +116,21 @@ public class ProgrammingBot extends ListenerAdapter {
                     deleteAskDatabaseWithTime(i, c.getId());
                 }
             });
+        });
+    }
+
+    public void checkIfAskHelpThreadArchived(Guild guild) {
+        List<ThreadChannel> threadChannels = guild.getThreadChannels();
+
+        threadChannels.forEach(c -> {
+            TextChannel channel = c.getParentChannel().asTextChannel();
+            if (channel.getId().equals(BotConfig.getHelpChannelId())) {
+                if (c.isArchived()) {
+                    String name = c.getName();
+                    String category = name.substring(1, name.indexOf("]"));
+                    updateActiveQuestions(c, AskThreadStatus.CLOSED, category);
+                }
+            }
         });
     }
 }

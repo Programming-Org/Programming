@@ -45,6 +45,10 @@ DB_PASSWORD=
 DB_URL=
 PORT_NUMBER=
 SERVER_NAME=
+//used for creating questions
+HELP_CHANNEL_ID=
+//Used to post the thread channels which are open
+ACTIVE_QUESTION_CHANNEL_ID=
 ```
 
 ### Part 3

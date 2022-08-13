@@ -21,6 +21,7 @@ package io.github.org.programming.bot.commands.thread;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.bot.config.BotConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.ThreadChannel;
@@ -45,7 +46,7 @@ public class AskCommand implements SlashCommandExtender {
         // if yes, then send message saying they can't create anymore threads
         // if no, then create thread and send message saying thread created
 
-        if (!event.getChannel().getName().equals("help")) {
+        if (event.getChannel().asTextChannel().getId().equals(BotConfig.getHelpChannelId())) {
             event.reply("You can only use this command in the help channel")
                 .setEphemeral(true)
                 .queue();
@@ -70,7 +71,7 @@ public class AskCommand implements SlashCommandExtender {
             return;
         }
 
-        var thread = event.getGuild().getTextChannelById("1007915436156915732");
+        var thread = event.getGuild().getTextChannelById(BotConfig.getActiveQuestionChannelId());
 
         if (thread == null) {
             event.reply("Could not find thread channel").setEphemeral(true).queue();
@@ -89,7 +90,7 @@ public class AskCommand implements SlashCommandExtender {
             .queue();
 
         updateAskDatabase(event.getMember().getId(), event.getGuild().getId());
-        updateActiveQuestions(threadChannel);
+        updateActiveQuestions(threadChannel, AskThreadStatus.OPEN, threadCategory);
     }
 
     private MessageEmbed detail() {
