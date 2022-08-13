@@ -73,7 +73,7 @@ public class ProgrammingBot extends ListenerAdapter {
 
         logger.info("Bot is ready in guild {}", guild.getName());
 
-        //need to check this every minute
+        // need to check this every minute
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskThreadTimeNeedsToBeRest(jda);
         }, 0, 1, java.util.concurrent.TimeUnit.MINUTES);
@@ -105,7 +105,7 @@ public class ProgrammingBot extends ListenerAdapter {
     public void checkIfAskThreadTimeNeedsToBeRest(JDA jda) {
         jda.getGuilds().forEach(c -> {
             List<Instant> oldTimeInstant = getAskTimeStamps(c.getId());
-            //need to check if between 24 hours since last time asked
+            // need to check if between 24 hours since last time asked
             oldTimeInstant.forEach(i -> {
                 if (i.isAfter(Instant.now().minusSeconds(86400))) {
                     deleteAskDatabaseWithTime(i, c.getId());
