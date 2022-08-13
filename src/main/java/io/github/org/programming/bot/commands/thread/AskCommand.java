@@ -5,6 +5,7 @@ import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.List;
 
+import static io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler.updateActiveQuestions;
 import static io.github.org.programming.database.thread.AskDatabase.getAskAmount;
 import static io.github.org.programming.database.thread.AskDatabase.updateAskDatabase;
 
@@ -41,9 +43,9 @@ public class AskCommand implements SlashCommandExtender {
         // event.getTextChannel().createThreadChannel("Ask a question").queue();
 
         var threadName = event.getOption("name", OptionMapping::getAsString);
-        var threadType = event.getOption("type", OptionMapping::getAsString);
+        var threadCategory = event.getOption("category", OptionMapping::getAsString);
 
-        if (threadName == null || threadType == null) {
+        if (threadName == null || threadCategory == null) {
             event.reply("You must provide a name and a type for the thread")
                 .setEphemeral(true)
                 .queue();
@@ -57,7 +59,9 @@ public class AskCommand implements SlashCommandExtender {
             return;
         }
 
-        var threadChannel = thread.createThreadChannel(threadName).complete();
+        var threadChannel = thread.createThreadChannel("[" + threadCategory + "] " + threadName)
+            .setAutoArchiveDuration(ThreadChannel.AutoArchiveDuration.TIME_3_DAYS)
+            .complete();
 
         threadChannel
             .sendMessage(
@@ -67,6 +71,7 @@ public class AskCommand implements SlashCommandExtender {
             .queue();
 
         updateAskDatabase(event.getMember().getId(), event.getGuild().getId());
+        updateActiveQuestions(threadChannel);
     }
 
     private MessageEmbed detail() {
@@ -85,13 +90,13 @@ public class AskCommand implements SlashCommandExtender {
     public SlashCommand build() {
         return new SlashCommandBuilder("ask", "Ask a question")
             .addOption(OptionType.STRING, "name", "The name of the question", true)
-            .addOptions(new OptionData(OptionType.STRING, "type", "The type of question", true)
-                .addChoices(choices))
+            .addOptions(new OptionData(OptionType.STRING, "category", "The type of question", true)
+                .addChoices(categoryChoices))
             .build()
             .setToGuildOnly();
     }
 
-    private List<Command.Choice> choices =
+    private List<Command.Choice> categoryChoices =
             List.of(new Command.Choice("Java", "java"), new Command.Choice("C++", "c++"),
                     new Command.Choice("C#", "c#"), new Command.Choice("Python", "python"),
                     new Command.Choice("JavaScript", "js"), new Command.Choice("PHP", "php"),
