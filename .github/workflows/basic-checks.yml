@@ -1,6 +1,6 @@
 name: Basic checks
 
-on: [pull_request]
+on: [ pull_request ]
 
 env:
   JAVA_VERSION: 17
