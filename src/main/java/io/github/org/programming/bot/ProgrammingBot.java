@@ -18,18 +18,18 @@
  */ 
 package io.github.org.programming.bot;
 
+import io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler;
 import io.github.org.programming.bot.commands.thread.AskThreadStatus;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.Database;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.ThreadChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.requests.restaction.pagination.ThreadChannelPaginationAction;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
@@ -44,7 +44,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler.updateActiveQuestions;
+import static io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler.*;
 import static io.github.org.programming.database.thread.AskDatabase.deleteAskDatabaseWithTime;
 import static io.github.org.programming.database.thread.AskDatabase.getAskTimeStamps;
 
@@ -77,12 +77,56 @@ public class ProgrammingBot extends ListenerAdapter {
         jda.awaitReady().addEventListener(new SlashCommandReg(jda, guild), this);
 
         logger.info("Bot is ready in guild {}", guild.getName());
+        System.out.println("Waiting for 5 seconds");
+
+        Thread.sleep(5000);
+        scheduledExecutor.scheduleAtFixedRate(() -> {
+            try {
+                checkIfAskActiveQuestionMessageExsists(guild);
+            } catch (Exception e) {
+                logger.error("Error while deleting ask database", e);
+            }
+        }, 0, 1, TimeUnit.DAYS);
 
         // need to check this every minute
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskThreadTimeNeedsToBeRest(jda);
-            checkIfAskHelpThreadArchived(guild);
         }, 0, 30, TimeUnit.SECONDS);
+
+        scheduledExecutor.scheduleAtFixedRate(() -> {
+            checkIfAskHelpThreadArchived(guild);
+        }, 0, 2, TimeUnit.SECONDS);
+    }
+
+    public void checkIfAskActiveQuestionMessageExsists(Guild guild) {
+        TextChannel activeQuestionsChannel =
+                guild.getTextChannelById(BotConfig.getActiveQuestionChannelId());
+
+        if (activeQuestionsChannel == null) {
+            throw new IllegalStateException("Active questions channel not found");
+        }
+
+
+        String messageId = getActiveQuestionMessage(guild.getId());
+
+        Message message;
+        if (messageId == null) {
+            message = activeQuestionsChannel.sendMessage(messageToSend()).complete();
+            updateActiveQuestionMessage(guild.getId(), message.getId());
+        } else {
+            // TODO: nneed to add a way to check for erorr in message
+            RestAction<Message> restMessage = activeQuestionsChannel.retrieveMessageById(messageId);
+            Message message1;
+            if (restMessage.complete() == null) {
+                deleteActiveQuestionMessageId(guild.getId(), messageId);
+                message1 = activeQuestionsChannel.sendMessage(messageToSend()).complete();
+                updateActiveQuestionMessage(guild.getId(), message1.getId());
+                message = message1;
+            } else
+                message = restMessage.complete();
+        }
+
+        ActiveQuestionsHandler.setMessage(message);
     }
 
     public void onDatabase() {
@@ -122,17 +166,20 @@ public class ProgrammingBot extends ListenerAdapter {
 
     public void checkIfAskHelpThreadArchived(Guild guild) {
         TextChannel channel = guild.getTextChannelById(BotConfig.getActiveQuestionChannelId());
-        List<ThreadChannel> threadChannels = channel != null ? channel.getThreadChannels() : null;
+        ThreadChannelPaginationAction threadChannelPaginationAction =
+                channel != null ? channel.retrieveArchivedPublicThreadChannels() : null;
 
-        if (threadChannels == null || !threadChannels.isEmpty()) {
+        if (threadChannelPaginationAction == null) {
+            logger.debug("No archived thread channels found");
             return;
         }
 
-        channel.getThreadChannels().forEach(c -> {
+        List<ThreadChannel> archivedThreadChannels = threadChannelPaginationAction.complete();
+
+        archivedThreadChannels.forEach(c -> {
             if (c.isArchived()) {
                 String name = c.getName();
-                String category = name.substring(1, name.indexOf("]"));
-                updateActiveQuestions(c, AskThreadStatus.CLOSED, category);
+                updateActiveQuestions(c, AskThreadStatus.CLOSED, name);
             }
         });
     }

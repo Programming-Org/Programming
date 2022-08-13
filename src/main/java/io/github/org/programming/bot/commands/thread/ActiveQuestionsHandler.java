@@ -28,38 +28,15 @@ import static io.github.org.programming.bot.ProgrammingBot.getContext;
 import static io.github.org.programming.jooq.Tables.ACTIVEQUESTIONMESSAGE;
 
 public class ActiveQuestionsHandler {
+    private static Message message;
 
     public static void updateActiveQuestions(ThreadChannel channel, AskThreadStatus status,
             String category) {
-        TextChannel activeQuestionsChannel =
-                channel.getGuild().getTextChannelById(BotConfig.getActiveQuestionChannelId());
-
-        if (activeQuestionsChannel == null) {
-            throw new IllegalStateException("Active questions channel not found");
-        }
-
-        Message message;
-        String messageId = getActiveQuestionMessage(activeQuestionsChannel.getGuild().getId());
-        if (messageId == null) {
-            String sendMessage;
-            sendMessage = messageToSend();
-            message = activeQuestionsChannel.sendMessage(sendMessage).complete();
-            updateActiveQuestionMessage(activeQuestionsChannel.getGuild().getId(), message.getId());
-        } else {
-            message = activeQuestionsChannel.getHistory().getMessageById(messageId);
-        }
-
-        if (message == null) {
-            deleteActiveQuestionMessageId(activeQuestionsChannel.getGuild().getId(), messageId);
-            String sendMessage;
-            sendMessage = messageToSend();
-            message = activeQuestionsChannel.sendMessage(sendMessage).complete();
-            updateActiveQuestionMessage(activeQuestionsChannel.getGuild().getId(), message.getId());
-        }
 
         String rawContent = message.getContentRaw();
         String channelLink = "<#" + channel.getId() + ">";
         if (status.equals(AskThreadStatus.OPEN)) {
+
             // were the specific category is find it add the channel under the category
 
             if (rawContent.contains(channelLink)) {
@@ -90,15 +67,13 @@ public class ActiveQuestionsHandler {
             for (String line : lines) {
                 if (line.contains(channelLink)) {
                     newContent.append(line).append("\n");
-                } else {
-                    newContent.append(line).append("\n");
                 }
             }
             message.editMessage(newContent.toString()).queue();
         }
     }
 
-    private static void updateActiveQuestionMessage(String guildId, String messageId) {
+    public static void updateActiveQuestionMessage(String guildId, String messageId) {
         getContext()
             .insertInto(ACTIVEQUESTIONMESSAGE, ACTIVEQUESTIONMESSAGE.GUILD_ID,
                     ACTIVEQUESTIONMESSAGE.MESSAGE_ID)
@@ -120,8 +95,12 @@ public class ActiveQuestionsHandler {
             .execute();
     }
 
-    private static String messageToSend() {
-        return "*** Active questions ***".concat("\n")
+    public static void setMessage(Message message) {
+        ActiveQuestionsHandler.message = message;
+    }
+
+    public static String messageToSend() {
+        return "***Active questions***:".concat("\n")
             .concat("\n")
             .concat("**Java**: ")
             .concat("\n")
