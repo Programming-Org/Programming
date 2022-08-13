@@ -4,6 +4,7 @@
 package io.github.org.programming.jooq;
 
 
+import io.github.org.programming.jooq.tables.Activequestionmessage;
 import io.github.org.programming.jooq.tables.Askthread;
 import io.github.org.programming.jooq.tables.Moderation;
 
@@ -27,6 +28,11 @@ public class Public extends SchemaImpl {
      * The reference instance of <code>public</code>
      */
     public static final Public PUBLIC = new Public();
+
+    /**
+     * The table <code>public.activequestionmessage</code>.
+     */
+    public final Activequestionmessage ACTIVEQUESTIONMESSAGE = Activequestionmessage.ACTIVEQUESTIONMESSAGE;
 
     /**
      * The table <code>public.askthread</code>.
@@ -54,6 +60,7 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            Activequestionmessage.ACTIVEQUESTIONMESSAGE,
             Askthread.ASKTHREAD,
             Moderation.MODERATION
         );

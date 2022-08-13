@@ -19,8 +19,13 @@
 package io.github.org.programming.bot.commands.thread;
 
 import io.github.org.programming.bot.config.BotConfig;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.ThreadChannel;
+import org.jetbrains.annotations.Nullable;
+
+import static io.github.org.programming.bot.ProgrammingBot.getContext;
+import static io.github.org.programming.jooq.Tables.ACTIVEQUESTIONMESSAGE;
 
 public class ActiveQuestionsHandler {
 
@@ -33,10 +38,129 @@ public class ActiveQuestionsHandler {
             throw new IllegalStateException("Active questions channel not found");
         }
 
-        if (status.equals(AskThreadStatus.OPEN)) {
-
+        Message message;
+        String messageId = getActiveQuestionMessage(activeQuestionsChannel.getGuild().getId());
+        if (messageId == null) {
+            String sendMessage;
+            sendMessage = messageToSend();
+            message = activeQuestionsChannel.sendMessage(sendMessage).complete();
+            updateActiveQuestionMessage(activeQuestionsChannel.getGuild().getId(), message.getId());
         } else {
-
+            message = activeQuestionsChannel.getHistory().getMessageById(messageId);
         }
+
+        if (message == null) {
+            deleteActiveQuestionMessageId(activeQuestionsChannel.getGuild().getId(), messageId);
+            String sendMessage;
+            sendMessage = messageToSend();
+            message = activeQuestionsChannel.sendMessage(sendMessage).complete();
+            updateActiveQuestionMessage(activeQuestionsChannel.getGuild().getId(), message.getId());
+        }
+
+        String rawContent = message.getContentRaw();
+        String channelLink = "<#" + channel.getId() + ">";
+        if (status.equals(AskThreadStatus.OPEN)) {
+            // were the specific category is find it add the channel under the category
+
+            if (rawContent.contains(channelLink)) {
+                return;
+            }
+
+            // it like this
+            // **Java**:
+            // \n
+            // \n
+            // get tha part were Java is. replace second line with the new channel link
+            String[] lines = rawContent.split("\n");
+            StringBuilder newContent = new StringBuilder();
+            String categoryCapitalised =
+                    category.substring(0, 1).toUpperCase() + category.substring(1);
+            for (String line : lines) {
+                if (line.contains("**" + categoryCapitalised + "**")) {
+                    newContent.append(line).append("\n").append(channelLink).append("\n");
+                } else {
+                    newContent.append(line).append("\n");
+                }
+            }
+            message.editMessage(newContent.toString()).queue();
+        } else {
+            // do the opposite of above
+            String[] lines = rawContent.split("\n");
+            StringBuilder newContent = new StringBuilder();
+            for (String line : lines) {
+                if (line.contains(channelLink)) {
+                    newContent.append(line).append("\n");
+                } else {
+                    newContent.append(line).append("\n");
+                }
+            }
+            message.editMessage(newContent.toString()).queue();
+        }
+    }
+
+    private static void updateActiveQuestionMessage(String guildId, String messageId) {
+        getContext()
+            .insertInto(ACTIVEQUESTIONMESSAGE, ACTIVEQUESTIONMESSAGE.GUILD_ID,
+                    ACTIVEQUESTIONMESSAGE.MESSAGE_ID)
+            .values(guildId, messageId)
+            .execute();
+    }
+
+    public static @Nullable String getActiveQuestionMessage(String guildId) {
+        return getContext().select(ACTIVEQUESTIONMESSAGE.MESSAGE_ID)
+            .from(ACTIVEQUESTIONMESSAGE)
+            .where(ACTIVEQUESTIONMESSAGE.GUILD_ID.eq(guildId))
+            .fetchOne(ACTIVEQUESTIONMESSAGE.MESSAGE_ID);
+    }
+
+    public static void deleteActiveQuestionMessageId(String guildId, String messageId) {
+        getContext().deleteFrom(ACTIVEQUESTIONMESSAGE)
+            .where(ACTIVEQUESTIONMESSAGE.GUILD_ID.eq(guildId))
+            .and(ACTIVEQUESTIONMESSAGE.MESSAGE_ID.eq(messageId))
+            .execute();
+    }
+
+    private static String messageToSend() {
+        return "*** Active questions ***".concat("\n")
+            .concat("\n")
+            .concat("**Java**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**C++**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**C#**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**C**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**Python**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**Js**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**PHP**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**Go**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**Rust**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**Swift**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**Kotlin**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**Ts**: ")
+            .concat("\n")
+            .concat("\n")
+            .concat("**Other**: ")
+            .concat("\n")
+            .concat("\n");
     }
 }

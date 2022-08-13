@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler.updateActiveQuestions;
 import static io.github.org.programming.database.thread.AskDatabase.deleteAskDatabaseWithTime;
@@ -81,7 +82,7 @@ public class ProgrammingBot extends ListenerAdapter {
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskThreadTimeNeedsToBeRest(jda);
             checkIfAskHelpThreadArchived(guild);
-        }, 0, 1, java.util.concurrent.TimeUnit.MINUTES);
+        }, 0, 30, TimeUnit.SECONDS);
     }
 
     public void onDatabase() {
@@ -120,16 +121,18 @@ public class ProgrammingBot extends ListenerAdapter {
     }
 
     public void checkIfAskHelpThreadArchived(Guild guild) {
-        List<ThreadChannel> threadChannels = guild.getThreadChannels();
+        TextChannel channel = guild.getTextChannelById(BotConfig.getActiveQuestionChannelId());
+        List<ThreadChannel> threadChannels = channel != null ? channel.getThreadChannels() : null;
 
-        threadChannels.forEach(c -> {
-            TextChannel channel = c.getParentChannel().asTextChannel();
-            if (channel.getId().equals(BotConfig.getHelpChannelId())) {
-                if (c.isArchived()) {
-                    String name = c.getName();
-                    String category = name.substring(1, name.indexOf("]"));
-                    updateActiveQuestions(c, AskThreadStatus.CLOSED, category);
-                }
+        if (threadChannels == null || !threadChannels.isEmpty()) {
+            return;
+        }
+
+        channel.getThreadChannels().forEach(c -> {
+            if (c.isArchived()) {
+                String name = c.getName();
+                String category = name.substring(1, name.indexOf("]"));
+                updateActiveQuestions(c, AskThreadStatus.CLOSED, category);
             }
         });
     }

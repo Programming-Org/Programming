@@ -41,11 +41,11 @@ public class AskDatabase {
             .execute();
     }
 
-    public static Integer getAskAmount(String memberId, String guildId) {
+    public static List<Integer> getAskAmount(String memberId, String guildId) {
         return getContext().select(ASKTHREAD.AMOUNT)
             .from(ASKTHREAD)
             .where(ASKTHREAD.GUILD_ID.eq(guildId).and(ASKTHREAD.MEMBER_ID.eq(memberId)))
-            .fetchOne(ASKTHREAD.AMOUNT);
+            .fetchInto(Integer.class);
     }
 
     public static List<Instant> getAskTimeStamps(String guildId) {

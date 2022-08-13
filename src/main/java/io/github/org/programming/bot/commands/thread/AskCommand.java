@@ -23,6 +23,7 @@ import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
 import io.github.org.programming.bot.config.BotConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -46,15 +47,15 @@ public class AskCommand implements SlashCommandExtender {
         // if yes, then send message saying they can't create anymore threads
         // if no, then create thread and send message saying thread created
 
-        if (event.getChannel().asTextChannel().getId().equals(BotConfig.getHelpChannelId())) {
+        if (!event.getChannel().asTextChannel().getId().equals(BotConfig.getHelpChannelId())) {
             event.reply("You can only use this command in the help channel")
                 .setEphemeral(true)
                 .queue();
             return;
         }
 
-        if (getAskAmount(event.getMember().getId(), event.getGuild().getId()) != null
-                && getAskAmount(event.getMember().getId(), event.getGuild().getId()) >= 2) {
+        if (!getAskAmount(event.getMember().getId(), event.getGuild().getId()).isEmpty()
+                && getAskAmount(event.getMember().getId(), event.getGuild().getId()).size() >= 2) {
             event.reply("You can only create 2 threads per day").setEphemeral(true).queue();
             return;
         }
@@ -63,30 +64,43 @@ public class AskCommand implements SlashCommandExtender {
 
         var threadName = event.getOption("name", OptionMapping::getAsString);
         var threadCategory = event.getOption("category", OptionMapping::getAsString);
+        var threadCategoryCapitalised =
+                threadCategory.substring(0, 1).toUpperCase() + threadCategory.substring(1);
 
-        if (threadName == null || threadCategory == null) {
+        if (threadName == null) {
             event.reply("You must provide a name and a type for the thread")
                 .setEphemeral(true)
                 .queue();
             return;
         }
 
-        var thread = event.getGuild().getTextChannelById(BotConfig.getActiveQuestionChannelId());
+        var textChannel =
+                event.getGuild().getTextChannelById(BotConfig.getActiveQuestionChannelId());
 
-        if (thread == null) {
+        if (textChannel == null) {
             event.reply("Could not find thread channel").setEphemeral(true).queue();
             return;
         }
 
-        var threadChannel = thread.createThreadChannel("[" + threadCategory + "] " + threadName)
-            .setAutoArchiveDuration(ThreadChannel.AutoArchiveDuration.TIME_3_DAYS)
-            .complete();
+        var threadChannel =
+                textChannel.createThreadChannel("[" + threadCategoryCapitalised + "] " + threadName)
+                    .setAutoArchiveDuration(ThreadChannel.AutoArchiveDuration.TIME_3_DAYS)
+                    .complete();
 
         threadChannel
-            .sendMessage(
-                    "Note: That if no one response, it might mean your question is to vague or "
-                            + "not clear enough.")
+            .sendMessage(event.getMember().getAsMention() + "\n"
+                    + "Note: That if no one response, it might mean your question is too vague or "
+                    + "not clear enough.")
             .setEmbeds(detail())
+            .queue(m -> m.getChannel()
+                .asThreadChannel()
+                .getParentChannel()
+                .asTextChannel()
+                .deleteMessageById(threadChannel.getId())
+                .queue());
+
+        event.reply("Your thread " + "<#" + threadChannel.getId() + ">" + " has been created")
+            .setEphemeral(true)
             .queue();
 
         updateAskDatabase(event.getMember().getId(), event.getGuild().getId());
