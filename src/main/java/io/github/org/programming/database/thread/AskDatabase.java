@@ -1,8 +1,7 @@
 package io.github.org.programming.database.thread;
 
-import io.github.org.programming.jooq.tables.Askthread;
-
 import java.time.Instant;
+import java.util.List;
 
 import static io.github.org.programming.bot.ProgrammingBot.getContext;
 import static io.github.org.programming.jooq.Tables.ASKTHREAD;
@@ -16,17 +15,26 @@ public class AskDatabase {
             .execute();
     }
 
-    public static void deleteAskDatabase(String memberId, String guildId) {
+    public static void deleteAskDatabaseWithTime(Instant time, String guildId) {
+        //find all the member in that guild with time and delete them
         getContext().deleteFrom(ASKTHREAD)
-            .where(ASKTHREAD.GUILD_ID.eq(guildId).and(ASKTHREAD.MEMBER_ID.eq(memberId)))
+            .where(ASKTHREAD.GUILD_ID.eq(guildId).and(ASKTHREAD.TIME_STAMP.eq(time)))
             .execute();
     }
 
-    public static int getAskAmount(String memberId, String guildId) {
+    public static Integer getAskAmount(String memberId, String guildId) {
         return getContext().select(ASKTHREAD.AMOUNT)
             .from(ASKTHREAD)
             .where(ASKTHREAD.GUILD_ID.eq(guildId).and(ASKTHREAD.MEMBER_ID.eq(memberId)))
             .fetchOne(ASKTHREAD.AMOUNT);
+    }
 
+    public static List<Instant> getAskTimeStamps(String guildId) {
+        return getContext().select(ASKTHREAD.TIME_STAMP)
+            .from(ASKTHREAD)
+            .where(ASKTHREAD.GUILD_ID.eq(guildId))
+            .orderBy(ASKTHREAD.TIME_STAMP.desc())
+            .limit(2)
+            .fetch(ASKTHREAD.TIME_STAMP);
     }
 }

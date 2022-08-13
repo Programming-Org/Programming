@@ -7,21 +7,23 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import static io.github.org.programming.database.thread.AskDatabase.deleteAskDatabaseWithTime;
+import static io.github.org.programming.database.thread.AskDatabase.getAskTimeStamps;
 
 public class ProgrammingBot extends ListenerAdapter {
     private final Logger logger = LoggerFactory.getLogger(ProgrammingBot.class);
@@ -53,15 +55,14 @@ public class ProgrammingBot extends ListenerAdapter {
 
         logger.info("Bot is ready in guild {}", guild.getName());
 
-        if (Database.isConnected())
-            logger.info("Database is connected");
-        else
-            logger.error("Database is not connected");
+        //need to check this every minute
+        scheduledExecutor.scheduleAtFixedRate(() -> {
+            checkIfAskThreadTimeNeedsToBeRest(jda);
+        }, 0, 1, java.util.concurrent.TimeUnit.MINUTES);
     }
 
     public void onDatabase() {
         context = DSL.using(Database.getConnection(), SQLDialect.POSTGRES);
-
 
         if (Database.isConnected()) {
             logger.info("Connected to database");
@@ -77,10 +78,21 @@ public class ProgrammingBot extends ListenerAdapter {
                 logger.error("Failed to close database", e);
             }
         }));
-
     }
 
     public static DSLContext getContext() {
         return context;
+    }
+
+    public void checkIfAskThreadTimeNeedsToBeRest(JDA jda) {
+        jda.getGuilds().forEach(c -> {
+            List<Instant> oldTimeInstant = getAskTimeStamps(c.getId());
+            //need to check if between 24 hours since last time asked
+            oldTimeInstant.forEach(i -> {
+                if (i.isAfter(Instant.now().minusSeconds(86400))) {
+                    deleteAskDatabaseWithTime(i, c.getId());
+                }
+            });
+        });
     }
 }
