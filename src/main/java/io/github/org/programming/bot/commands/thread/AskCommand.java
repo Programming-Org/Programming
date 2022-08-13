@@ -50,14 +50,20 @@ public class AskCommand implements SlashCommandExtender {
             return;
         }
 
-        var thread = event.getTextChannel()
-            .createThreadChannel("[" + threadType.toUpperCase() + "] " + threadName);
+        var thread = event.getGuild().getTextChannelById("1007915436156915732");
 
-        thread
-            .map(c -> c.sendMessage(
+        if (thread == null) {
+            event.reply("Could not find thread channel").setEphemeral(true).queue();
+            return;
+        }
+
+        var threadChannel = thread.createThreadChannel(threadName).complete();
+
+        threadChannel
+            .sendMessage(
                     "Note: That if no one response, it might mean your question is to vague or "
                             + "not clear enough.")
-                .setEmbeds(detail()))
+            .setEmbeds(detail())
             .queue();
 
         updateAskDatabase(event.getMember().getId(), event.getGuild().getId());
