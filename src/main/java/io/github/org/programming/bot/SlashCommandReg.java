@@ -24,6 +24,7 @@ import io.github.org.programming.bot.commands.ExampleCommand;
 import io.github.org.programming.bot.commands.moderation.BanCommand;
 import io.github.org.programming.bot.commands.moderation.KickCommand;
 import io.github.org.programming.bot.commands.moderation.UnBanCommand;
+import io.github.org.programming.bot.commands.thread.AskCommand;
 import io.github.org.programming.bot.config.BotConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -43,6 +44,7 @@ public class SlashCommandReg extends SlashCommandHandler {
         extenders.add(new KickCommand());
         extenders.add(new BanCommand());
         extenders.add(new UnBanCommand());
+        extenders.add(new AskCommand());
 
         queueAndRegisterSlashCommands(extenders);
     }

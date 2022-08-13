@@ -9,13 +9,14 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.io.File;
 import java.util.List;
+
+import static io.github.org.programming.database.thread.AskDatabase.getAskAmount;
+import static io.github.org.programming.database.thread.AskDatabase.updateAskDatabase;
 
 public class AskCommand implements SlashCommandExtender {
     @Override
@@ -26,6 +27,13 @@ public class AskCommand implements SlashCommandExtender {
 
         if (!event.getChannel().getName().equals("help")) {
             event.reply("You can only use this command in the help channel")
+                .setEphemeral(true)
+                .queue();
+            return;
+        }
+
+        if (getAskAmount(event.getMember().getId(), event.getGuild().getId()) != null && getAskAmount(event.getMember().getId(), event.getGuild().getId()) >= 2) {
+            event.reply("You can only create 2 threads per day")
                 .setEphemeral(true)
                 .queue();
             return;
@@ -53,7 +61,7 @@ public class AskCommand implements SlashCommandExtender {
                 .setEmbeds(detail()))
             .queue();
 
-
+        updateAskDatabase(event.getMember().getId(), event.getGuild().getId());
     }
 
     private MessageEmbed detail() {
