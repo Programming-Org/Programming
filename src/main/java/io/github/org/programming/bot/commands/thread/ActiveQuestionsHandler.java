@@ -61,15 +61,9 @@ public class ActiveQuestionsHandler {
             }
             message.editMessage(newContent.toString()).queue();
         } else {
-            // do the opposite of above
-            String[] lines = rawContent.split("\n");
-            StringBuilder newContent = new StringBuilder();
-            for (String line : lines) {
-                if (line.contains(channelLink)) {
-                    newContent.append(line).append("\n");
-                }
-            }
-            message.editMessage(newContent.toString()).queue();
+            message.editMessage(rawContent.replace(channelLink, "\n")).queue(null, e -> {
+                throw new RuntimeException(e);
+            });
         }
     }
 

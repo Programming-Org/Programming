@@ -28,7 +28,6 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.pagination.ThreadChannelPaginationAction;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jooq.DSLContext;
@@ -39,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -77,28 +77,22 @@ public class ProgrammingBot extends ListenerAdapter {
         jda.awaitReady().addEventListener(new SlashCommandReg(jda, guild), this);
 
         logger.info("Bot is ready in guild {}", guild.getName());
-        System.out.println("Waiting for 5 seconds");
 
-        Thread.sleep(5000);
         scheduledExecutor.scheduleAtFixedRate(() -> {
-            try {
-                checkIfAskActiveQuestionMessageExsists(guild);
-            } catch (Exception e) {
-                logger.error("Error while deleting ask database", e);
-            }
+            checkIfAskActiveQuestionMessageExists(guild);
         }, 0, 1, TimeUnit.DAYS);
 
         // need to check this every minute
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskThreadTimeNeedsToBeRest(jda);
-        }, 0, 30, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.SECONDS);
 
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskHelpThreadArchived(guild);
-        }, 0, 2, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
-    public void checkIfAskActiveQuestionMessageExsists(Guild guild) {
+    public synchronized void checkIfAskActiveQuestionMessageExists(Guild guild) {
         TextChannel activeQuestionsChannel =
                 guild.getTextChannelById(BotConfig.getActiveQuestionChannelId());
 
@@ -106,26 +100,32 @@ public class ProgrammingBot extends ListenerAdapter {
             throw new IllegalStateException("Active questions channel not found");
         }
 
-
         String messageId = getActiveQuestionMessage(guild.getId());
 
-        Message message;
         if (messageId == null) {
-            message = activeQuestionsChannel.sendMessage(messageToSend()).complete();
+            Message message = activeQuestionsChannel.sendMessage(messageToSend()).complete();
             updateActiveQuestionMessage(guild.getId(), message.getId());
+            ActiveQuestionsHandler.setMessage(message);
         } else {
             // TODO: nneed to add a way to check for erorr in message
-            RestAction<Message> restMessage = activeQuestionsChannel.retrieveMessageById(messageId);
-            Message message1;
-            if (restMessage.complete() == null) {
-                deleteActiveQuestionMessageId(guild.getId(), messageId);
-                message1 = activeQuestionsChannel.sendMessage(messageToSend()).complete();
-                updateActiveQuestionMessage(guild.getId(), message1.getId());
-                message = message1;
-            } else
-                message = restMessage.complete();
+            activeQuestionsChannel.retrieveMessageById(messageId)
+                .queue(this::dealWithSuccess,
+                        e -> dealWithError(e, guild, messageId, activeQuestionsChannel));
         }
+    }
 
+    private void dealWithError(Throwable error, Guild guild, String messageId,
+            TextChannel activeQuestionsChannel) {
+        if (Objects.equals(error.getMessage(), "10008: Unknown Message")) {
+            deleteActiveQuestionMessageId(guild.getId(), messageId);
+            activeQuestionsChannel.sendMessage(messageToSend()).queue(success -> {
+                updateActiveQuestionMessage(guild.getId(), success.getId());
+                ActiveQuestionsHandler.setMessage(success);
+            });
+        }
+    }
+
+    private void dealWithSuccess(Message message) {
         ActiveQuestionsHandler.setMessage(message);
     }
 
@@ -152,7 +152,7 @@ public class ProgrammingBot extends ListenerAdapter {
         return context;
     }
 
-    public void checkIfAskThreadTimeNeedsToBeRest(JDA jda) {
+    public synchronized void checkIfAskThreadTimeNeedsToBeRest(JDA jda) {
         jda.getGuilds().forEach(c -> {
             List<Instant> oldTimeInstant = getAskTimeStamps(c.getId());
             // need to check if between 24 hours since last time asked
@@ -164,7 +164,7 @@ public class ProgrammingBot extends ListenerAdapter {
         });
     }
 
-    public void checkIfAskHelpThreadArchived(Guild guild) {
+    public synchronized void checkIfAskHelpThreadArchived(Guild guild) {
         TextChannel channel = guild.getTextChannelById(BotConfig.getActiveQuestionChannelId());
         ThreadChannelPaginationAction threadChannelPaginationAction =
                 channel != null ? channel.retrieveArchivedPublicThreadChannels() : null;
@@ -176,11 +176,11 @@ public class ProgrammingBot extends ListenerAdapter {
 
         List<ThreadChannel> archivedThreadChannels = threadChannelPaginationAction.complete();
 
-        archivedThreadChannels.forEach(c -> {
-            if (c.isArchived()) {
-                String name = c.getName();
-                updateActiveQuestions(c, AskThreadStatus.CLOSED, name);
-            }
-        });
+        for (ThreadChannel c : archivedThreadChannels) {
+            String name = c.getName();
+            // name is [Java] Test22 need to get Java
+            String category = name.substring(1, name.indexOf("]")).toLowerCase();
+            updateActiveQuestions(c, AskThreadStatus.CLOSED, category);
+        }
     }
 }
