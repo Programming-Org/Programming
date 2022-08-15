@@ -54,7 +54,7 @@ public class AskCommand implements SlashCommandExtender {
         }
 
         if (!getAskAmount(event.getMember().getId(), event.getGuild().getId()).isEmpty()
-                && getAskAmount(event.getMember().getId(), event.getGuild().getId()).size() >= 2) {
+                && getAskAmount(event.getMember().getId(), event.getGuild().getId()).size() >= BotConfig.getAskLimit()) {
             event.reply("You can only create 2 threads per day").setEphemeral(true).queue();
             return;
         }
@@ -78,11 +78,6 @@ public class AskCommand implements SlashCommandExtender {
 
         if (textChannel == null) {
             event.reply("Could not find thread channel").setEphemeral(true).queue();
-            return;
-        }
-
-        if (!categoryChoices.contains(threadCategory)) {
-            event.reply("The new category is invalid").setEphemeral(true).queue();
             return;
         }
 

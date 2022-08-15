@@ -49,6 +49,8 @@ SERVER_NAME=
 HELP_CHANNEL_ID=
 //Used to post the thread channels which are open
 ACTIVE_QUESTION_CHANNEL_ID=
+//the max amount of help threads that can be created in a day, default is 2
+ASK_LIMIT=
 ```
 
 ### Part 3

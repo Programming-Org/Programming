@@ -49,4 +49,8 @@ public class BotConfig {
     public static String getActiveQuestionChannelId() {
         return Config.getString("ACTIVE_QUESTION_CHANNEL_ID");
     }
+
+    public static int getAskLimit() {
+        return Config.getInt("ASK_LIMIT", 2);
+    }
 }

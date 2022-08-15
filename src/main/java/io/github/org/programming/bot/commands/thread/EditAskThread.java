@@ -97,11 +97,6 @@ public class EditAskThread implements SlashCommandExtender {
             return;
         }
 
-        if (!categoryChoices.contains(newCategory)) {
-            event.reply("The new category is invalid").setEphemeral(true).queue();
-            return;
-        }
-
         if (newCategory.equals(category)) {
             event.reply("The new category is the same as the old category")
                 .setEphemeral(true)
@@ -109,8 +104,10 @@ public class EditAskThread implements SlashCommandExtender {
             return;
         }
 
+        String categoryCapitalised =
+                newCategory.substring(0, 1).toUpperCase() + newCategory.substring(1);
         threadChannel.getManager()
-            .setName("[" + newCategory + "] "
+            .setName("[" + categoryCapitalised + "] "
                     + threadChannel.getName().substring(oldName.indexOf("]") + 1))
             .queue();
         event.reply("The category of the thread has been changed").setEphemeral(true).queue();
@@ -124,10 +121,10 @@ public class EditAskThread implements SlashCommandExtender {
                     .addSubcommands(List.of(
                             new SubcommandData("name", "Used to edit the name of a thread")
                                 .addOption(OptionType.STRING, "new_name",
-                                        "The new name of the thread"),
+                                        "The new name of the thread", true),
                             new SubcommandData("category", "Used to edit the category of a thread")
                                 .addOptions(new OptionData(OptionType.STRING, "new_category",
-                                        "The new category of the thread")
+                                        "The new category of the thread", true)
                                             .addChoices(categoryChoices))))
                     .build();
     }

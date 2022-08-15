@@ -54,7 +54,7 @@ public class ActiveQuestionsHandler {
                 if (line.contains("**" + categoryCapitalised + "**")) {
                     newContent.append(line).append("\n").append(format(channelLink)).append("\n");
                 } else {
-                    throw new IllegalArgumentException("Category not found");
+                    newContent.append(line).append("\n");
                 }
             }
             message.editMessage(newContent.toString()).queue();
@@ -75,21 +75,13 @@ public class ActiveQuestionsHandler {
         StringBuilder newContent = new StringBuilder();
         for (String line : lines) {
             if (line.contains("**" + newCategory + "**")) {
-                // move link to new category in the message
-                // for example if link was in java category and new category is python
-                // move the link from java to python
-                // so Java:
-                // \n
-                // \n
-                // **Python**:
-                // \n
-                // new link
-
                 newContent.append(line).append("\n").append(format(channelLink)).append("\n");
             } else {
-                throw new IllegalArgumentException("Channel not found");
+                System.out.println(newCategory);
+                throw new IllegalArgumentException("Category not found");
             }
         }
+        message.editMessage(newContent.toString()).queue();
     }
 
     private static String format(String channelLink) {
