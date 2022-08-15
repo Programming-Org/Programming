@@ -51,7 +51,7 @@ public class ActiveQuestionsHandler {
             String categoryCapitalised =
                     category.substring(0, 1).toUpperCase() + category.substring(1);
             for (String line : lines) {
-                if (line.contains("**" + categoryCapitalised + "**")) {
+                if (line.contains(categoryCapitalised)) {
                     newContent.append(line).append("\n").append(format(channelLink)).append("\n");
                 } else {
                     newContent.append(line).append("\n");
@@ -73,13 +73,28 @@ public class ActiveQuestionsHandler {
 
         String[] lines = rawContent.split("\n");
         StringBuilder newContent = new StringBuilder();
+
+
+        // need to remove the link from the old category
         for (String line : lines) {
-            if (line.contains("**" + newCategory + "**")) {
+            if (line.contains(channelLink)) {
+                newContent.append(line).append("\n");
+            }
+        }
+
+        // add the link to the new category
+        String categoryCapitalised =
+                newCategory.substring(0, 1).toUpperCase() + newCategory.substring(1);
+
+
+        for (String line : lines) {
+            if (line.contains(categoryCapitalised)) {
                 newContent.append(line).append("\n").append(format(channelLink)).append("\n");
             } else {
                 newContent.append(line).append("\n");
             }
         }
+
         message.editMessage(newContent.toString()).queue();
     }
 
