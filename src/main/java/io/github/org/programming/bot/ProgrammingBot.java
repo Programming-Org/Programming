@@ -74,7 +74,7 @@ public class ProgrammingBot extends ListenerAdapter {
 
         Guild guild = jda.awaitReady().getGuildById(BotConfig.getGuildId());
 
-        jda.awaitReady().addEventListener(new SlashCommandReg(jda, guild), this);
+        jda.awaitReady().addEventListener(new RegisterSlashCommands(jda, guild), this);
 
         logger.info("Bot is ready in guild {}", guild.getName());
 
@@ -178,7 +178,6 @@ public class ProgrammingBot extends ListenerAdapter {
 
         for (ThreadChannel c : archivedThreadChannels) {
             String name = c.getName();
-            // name is [Java] Test22 need to get Java
             String category = name.substring(1, name.indexOf("]")).toLowerCase();
             updateActiveQuestions(c, AskThreadStatus.CLOSED, category);
         }

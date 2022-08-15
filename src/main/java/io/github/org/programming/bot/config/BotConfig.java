@@ -46,7 +46,7 @@ public class BotConfig {
         return Config.getString("HELP_CHANNEL_ID");
     }
 
-    public static long getActiveQuestionChannelId() {
-        return Config.getLong("ACTIVE_QUESTION_CHANNEL_ID");
+    public static String getActiveQuestionChannelId() {
+        return Config.getString("ACTIVE_QUESTION_CHANNEL_ID");
     }
 }

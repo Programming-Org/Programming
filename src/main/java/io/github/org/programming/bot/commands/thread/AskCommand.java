@@ -23,7 +23,6 @@ import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
 import io.github.org.programming.bot.config.BotConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -129,7 +128,7 @@ public class AskCommand implements SlashCommandExtender {
             .setToGuildOnly();
     }
 
-    private List<Command.Choice> categoryChoices =
+    public static List<Command.Choice> categoryChoices =
             List.of(new Command.Choice("Java", "java"), new Command.Choice("C++", "c++"),
                     new Command.Choice("C#", "c#"), new Command.Choice("Python", "python"),
                     new Command.Choice("JavaScript", "js"), new Command.Choice("PHP", "php"),

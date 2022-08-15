@@ -18,9 +18,7 @@
  */ 
 package io.github.org.programming.bot.commands.thread;
 
-import io.github.org.programming.bot.config.BotConfig;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import org.jetbrains.annotations.Nullable;
 
