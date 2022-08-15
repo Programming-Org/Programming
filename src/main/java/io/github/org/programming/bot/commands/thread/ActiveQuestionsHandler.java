@@ -77,8 +77,7 @@ public class ActiveQuestionsHandler {
             if (line.contains("**" + newCategory + "**")) {
                 newContent.append(line).append("\n").append(format(channelLink)).append("\n");
             } else {
-                System.out.println(newCategory);
-                throw new IllegalArgumentException("Category not found");
+                newContent.append(line).append("\n");
             }
         }
         message.editMessage(newContent.toString()).queue();

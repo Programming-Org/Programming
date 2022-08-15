@@ -111,7 +111,7 @@ public class EditAskThread implements SlashCommandExtender {
                     + threadChannel.getName().substring(oldName.indexOf("]") + 1))
             .queue();
         event.reply("The category of the thread has been changed").setEphemeral(true).queue();
-        ActiveQuestionsHandler.editActiveQuestionThreadCategory(threadChannel, newCategory);
+        ActiveQuestionsHandler.editActiveQuestionThreadCategory(threadChannel, categoryCapitalised);
     }
 
     @Override
