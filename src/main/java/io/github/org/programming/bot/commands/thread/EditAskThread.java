@@ -65,7 +65,7 @@ public class EditAskThread implements SlashCommandExtender {
 
     private void editName(ThreadChannel threadChannel, SlashCommandInteractionEvent event) {
         String oldName = threadChannel.getName();
-        String oldCategory = oldName.substring(1, oldName.indexOf("]")).toLowerCase();
+        String category = oldName.substring(1, oldName.indexOf("]")).toLowerCase();
         String newName = event.getOption("new_name", OptionMapping::getAsString);
 
         if (newName == null) {
@@ -82,10 +82,39 @@ public class EditAskThread implements SlashCommandExtender {
             event.reply("The new name is the same as the old name").setEphemeral(true).queue();
             return;
         }
+
+        threadChannel.getManager().setName("[" + category + "] " + newName).queue();
+        event.reply("The name of the thread has been changed").setEphemeral(true).queue();
     }
 
     private void editCategory(ThreadChannel threadChannel, SlashCommandInteractionEvent event) {
+        String oldName = threadChannel.getName();
+        String category = oldName.substring(1, oldName.indexOf("]")).toLowerCase();
+        String newCategory = event.getOption("new_category", OptionMapping::getAsString);
 
+        if (newCategory == null) {
+            event.reply("Please provide a new category").setEphemeral(true).queue();
+            return;
+        }
+
+        if (!categoryChoices.contains(newCategory)) {
+            event.reply("The new category is invalid").setEphemeral(true).queue();
+            return;
+        }
+
+        if (newCategory.equals(category)) {
+            event.reply("The new category is the same as the old category")
+                .setEphemeral(true)
+                .queue();
+            return;
+        }
+
+        threadChannel.getManager()
+            .setName("[" + newCategory + "] "
+                    + threadChannel.getName().substring(oldName.indexOf("]") + 1))
+            .queue();
+        event.reply("The category of the thread has been changed").setEphemeral(true).queue();
+        ActiveQuestionsHandler.editActiveQuestionThreadCategory(threadChannel, newCategory);
     }
 
     @Override

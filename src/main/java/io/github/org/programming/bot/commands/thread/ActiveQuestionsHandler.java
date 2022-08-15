@@ -52,9 +52,9 @@ public class ActiveQuestionsHandler {
                     category.substring(0, 1).toUpperCase() + category.substring(1);
             for (String line : lines) {
                 if (line.contains("**" + categoryCapitalised + "**")) {
-                    newContent.append(line).append("\n").append(channelLink).append("\n");
+                    newContent.append(line).append("\n").append(format(channelLink)).append("\n");
                 } else {
-                    newContent.append(line).append("\n");
+                    throw new IllegalArgumentException("Category not found");
                 }
             }
             message.editMessage(newContent.toString()).queue();
@@ -63,6 +63,38 @@ public class ActiveQuestionsHandler {
                 throw new RuntimeException(e);
             });
         }
+    }
+
+    public static void editActiveQuestionThreadCategory(ThreadChannel channel, String newCategory) {
+        String rawContent = message.getContentRaw();
+        String channelLink = "<#" + channel.getId() + ">";
+
+        // find channel link and move it to the new category
+
+        String[] lines = rawContent.split("\n");
+        StringBuilder newContent = new StringBuilder();
+        for (String line : lines) {
+            if (line.contains("**" + newCategory + "**")) {
+                // move link to new category in the message
+                // for example if link was in java category and new category is python
+                // move the link from java to python
+                // so Java:
+                // \n
+                // \n
+                // **Python**:
+                // \n
+                // new link
+
+                newContent.append(line).append("\n").append(format(channelLink)).append("\n");
+            } else {
+                throw new IllegalArgumentException("Channel not found");
+            }
+        }
+    }
+
+    private static String format(String channelLink) {
+        // add a bullet point before the link
+        return "• " + channelLink;
     }
 
     public static void updateActiveQuestionMessage(String guildId, String messageId) {

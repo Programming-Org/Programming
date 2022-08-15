@@ -81,6 +81,11 @@ public class AskCommand implements SlashCommandExtender {
             return;
         }
 
+        if (!categoryChoices.contains(threadCategory)) {
+            event.reply("The new category is invalid").setEphemeral(true).queue();
+            return;
+        }
+
         var threadChannel =
                 textChannel.createThreadChannel("[" + threadCategoryCapitalised + "] " + threadName)
                     .setAutoArchiveDuration(ThreadChannel.AutoArchiveDuration.TIME_3_DAYS)
