@@ -33,9 +33,11 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler.updateActiveQuestions;
+import static io.github.org.programming.bot.commands.thread.util.SupportedCategories.categoryChoicesString;
 import static io.github.org.programming.database.thread.AskDatabase.getAskAmount;
 import static io.github.org.programming.database.thread.AskDatabase.updateAskDatabase;
 
@@ -129,12 +131,10 @@ public class AskCommand implements SlashCommandExtender {
             .setToGuildOnly();
     }
 
-    public static List<Command.Choice> categoryChoices =
-            List.of(new Command.Choice("Java", "java"), new Command.Choice("C++", "c++"),
-                    new Command.Choice("C#", "c#"), new Command.Choice("Python", "python"),
-                    new Command.Choice("JavaScript", "js"), new Command.Choice("PHP", "php"),
-                    new Command.Choice("C", "c"), new Command.Choice("Go", "go"),
-                    new Command.Choice("Rust", "rust"), new Command.Choice("Swift", "swift"),
-                    new Command.Choice("Kotlin", "kotlin"), new Command.Choice("Scala", "scala"),
-                    new Command.Choice("TypeScript", "ts"), new Command.Choice("Other", "other"));
+    public static List<Command.Choice> categoryChoices = new ArrayList<>();
+
+    static {
+        categoryChoicesString.forEach(s -> categoryChoices
+            .add(new Command.Choice(s.substring(0, 1).toUpperCase() + s.substring(1), s)));
+    }
 }

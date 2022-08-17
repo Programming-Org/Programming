@@ -45,6 +45,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler.*;
+import static io.github.org.programming.bot.commands.thread.util.SupportedCategories.messageToSend;
 import static io.github.org.programming.database.thread.AskDatabase.deleteAskDatabaseWithTime;
 import static io.github.org.programming.database.thread.AskDatabase.getAskTimeStamps;
 
@@ -107,7 +108,6 @@ public class ProgrammingBot extends ListenerAdapter {
             updateActiveQuestionMessage(guild.getId(), message.getId());
             ActiveQuestionsHandler.setMessage(message);
         } else {
-            // TODO: nneed to add a way to check for erorr in message
             activeQuestionsChannel.retrieveMessageById(messageId)
                 .queue(this::dealWithSuccess,
                         e -> dealWithError(e, guild, messageId, activeQuestionsChannel));

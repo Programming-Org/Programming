@@ -20,9 +20,11 @@ package io.github.org.programming.bot.commands.thread;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.ThreadChannel;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static io.github.org.programming.bot.ProgrammingBot.getContext;
+import static io.github.org.programming.bot.commands.thread.AskCommand.categoryChoices;
 import static io.github.org.programming.jooq.Tables.ACTIVEQUESTIONMESSAGE;
 
 public class ActiveQuestionsHandler {
@@ -127,49 +129,5 @@ public class ActiveQuestionsHandler {
 
     public static void setMessage(Message message) {
         ActiveQuestionsHandler.message = message;
-    }
-
-    public static String messageToSend() {
-        return "***Active questions***:".concat("\n")
-            .concat("\n")
-            .concat("**Java**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**C++**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**C#**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**C**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**Python**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**Js**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**PHP**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**Go**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**Rust**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**Swift**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**Kotlin**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**Ts**: ")
-            .concat("\n")
-            .concat("\n")
-            .concat("**Other**: ")
-            .concat("\n")
-            .concat("\n");
     }
 }
