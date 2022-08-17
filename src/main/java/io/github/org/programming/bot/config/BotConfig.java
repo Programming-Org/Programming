@@ -41,4 +41,16 @@ public class BotConfig {
     public static @NotNull Integer getCorePoolSize() {
         return Config.getInt("CORE_POOL_SIZE", 1);
     }
+
+    public static String getHelpChannelId() {
+        return Config.getString("HELP_CHANNEL_ID");
+    }
+
+    public static String getActiveQuestionChannelId() {
+        return Config.getString("ACTIVE_QUESTION_CHANNEL_ID");
+    }
+
+    public static int getAskLimit() {
+        return Config.getInt("ASK_LIMIT", 2);
+    }
 }

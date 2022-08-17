@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true" debug="true">
     <conversionRule conversionWord="highlight" converterClass="io.github.org.programming.bot.config.LoggerColorScheme"/>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
+            </Pattern>
+        </layout>
     </appender>
 
-    <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>files/logs/all.log</file>
-        <encoder>
-            <pattern>%d{yyyy/mm/dd HH:mm:ss} {%thread} [%level] %logger: %msg%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>files/logs/archive/%d{yyyy-MM-dd}.log.gz</fileNamePattern>
-            <!-- Keep logs for 30 days -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-    </appender>
-
-    <logger name="io.github.org.programming" level="${LOG_LEVEL:-INFO}" additivity="false">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="LOGFILE"/>
-        <appender-ref ref="METRICS"/>
+    <logger name="io.github.programming" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE"/>
     </logger>
+
+    <root level="error">
+        <appender-ref ref="CONSOLE"/>
+    </root>
 
 </configuration>

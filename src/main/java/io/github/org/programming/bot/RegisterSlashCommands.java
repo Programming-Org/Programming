@@ -24,6 +24,9 @@ import io.github.org.programming.bot.commands.ExampleCommand;
 import io.github.org.programming.bot.commands.moderation.BanCommand;
 import io.github.org.programming.bot.commands.moderation.KickCommand;
 import io.github.org.programming.bot.commands.moderation.UnBanCommand;
+import io.github.org.programming.bot.commands.thread.AskCommand;
+import io.github.org.programming.bot.commands.thread.CloseAskThread;
+import io.github.org.programming.bot.commands.thread.EditAskThread;
 import io.github.org.programming.bot.config.BotConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -33,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SlashCommandReg extends SlashCommandHandler {
-    protected SlashCommandReg(@NotNull JDA jda, @NotNull Guild guild) {
+public class RegisterSlashCommands extends SlashCommandHandler {
+    protected RegisterSlashCommands(@NotNull JDA jda, @NotNull Guild guild) {
         super(jda, guild);
 
         List<SlashCommandExtender> extenders = new ArrayList<>();
@@ -43,6 +46,9 @@ public class SlashCommandReg extends SlashCommandHandler {
         extenders.add(new KickCommand());
         extenders.add(new BanCommand());
         extenders.add(new UnBanCommand());
+        extenders.add(new AskCommand());
+        extenders.add(new CloseAskThread());
+        extenders.add(new EditAskThread());
 
         queueAndRegisterSlashCommands(extenders);
     }

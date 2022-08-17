@@ -69,7 +69,7 @@ public abstract class MessageCommandHandler extends BaseHandler {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void addMessageCommand(@NotNull MessageCommandExtender command) {
 
-        BaseHandler.checkIfBuildIsNull(command.build());
+        BaseHandler.checkIfBuildIsNull(command.build(), command.getClass().getSimpleName());
 
         messageCommand.put(command.build().getCommandData().getName(), command);
         if (command.build().isGuildOnly()) {

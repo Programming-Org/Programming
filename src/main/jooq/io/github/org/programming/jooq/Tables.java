@@ -4,6 +4,8 @@
 package io.github.org.programming.jooq;
 
 
+import io.github.org.programming.jooq.tables.Activequestionmessage;
+import io.github.org.programming.jooq.tables.Askthread;
 import io.github.org.programming.jooq.tables.Moderation;
 
 
@@ -12,6 +14,16 @@ import io.github.org.programming.jooq.tables.Moderation;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>public.activequestionmessage</code>.
+     */
+    public static final Activequestionmessage ACTIVEQUESTIONMESSAGE = Activequestionmessage.ACTIVEQUESTIONMESSAGE;
+
+    /**
+     * The table <code>public.askthread</code>.
+     */
+    public static final Askthread ASKTHREAD = Askthread.ASKTHREAD;
 
     /**
      * The table <code>public.moderation</code>.
