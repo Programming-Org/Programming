@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
+import org.jooq.Row8;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -73,9 +73,19 @@ public class Moderation extends TableImpl<ModerationRecord> {
     public final TableField<ModerationRecord, Instant> TIME_STAMP = createField(DSL.name("time_stamp"), SQLDataType.INSTANT.nullable(false).defaultValue(DSL.field("CURRENT_TIMESTAMP", SQLDataType.INSTANT)), this, "");
 
     /**
+     * The column <code>public.moderation.amount_of_warnings</code>.
+     */
+    public final TableField<ModerationRecord, Integer> AMOUNT_OF_WARNINGS = createField(DSL.name("amount_of_warnings"), SQLDataType.INTEGER, this, "");
+
+    /**
      * The column <code>public.moderation.reason</code>.
      */
     public final TableField<ModerationRecord, String> REASON = createField(DSL.name("reason"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
+     * The column <code>public.moderation.type</code>.
+     */
+    public final TableField<ModerationRecord, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private Moderation(Name alias, Table<ModerationRecord> aliased) {
         this(alias, aliased, null);
@@ -152,11 +162,11 @@ public class Moderation extends TableImpl<ModerationRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row8 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<Integer, String, String, String, Instant, String> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row8<Integer, String, String, String, Instant, Integer, String, String> fieldsRow() {
+        return (Row8) super.fieldsRow();
     }
 }

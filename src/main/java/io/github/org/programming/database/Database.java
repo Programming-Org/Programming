@@ -31,6 +31,7 @@ import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -58,14 +59,11 @@ public class Database {
                 Objects.requireNonNull(getConnection(), "Connection is null").createStatement()) {
             File folder = new File("src/main/resources/sql");
             File[] listOfFiles = folder.listFiles();
-
-            logger.info("Executing table updates...");
-
+            assert listOfFiles != null;
             for (File file : listOfFiles) {
                 if (file.isFile()) {
-                    logger.info("Executing update: {}", file.getName());
                     String sql = new String(Files.readAllBytes(file.toPath()));
-                    statement.execute(sql);
+                    statement.executeUpdate(sql);
                 }
             }
         } catch (SQLException | IOException e) {

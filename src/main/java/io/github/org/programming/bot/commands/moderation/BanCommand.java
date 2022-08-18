@@ -21,6 +21,7 @@ package io.github.org.programming.bot.commands.moderation;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.bot.commands.moderation.util.ModerationType;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.moderation.ModerationDatabase;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -35,6 +36,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
+import static io.github.org.programming.bot.commands.moderation.util.ModerationUtil.sendMessageToAuditLog;
+
 public class BanCommand implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
@@ -43,14 +46,16 @@ public class BanCommand implements SlashCommandExtender {
         Member moderator = event.getMember();
         String reason = event.getOption("reason", OptionMapping::getAsString);
 
-        int id = ModerationDatabase.updateModerationDataBase(event.getGuild().getId(), user.getId(),
-                moderator.getId(), reason, "ban");
+        Integer id = ModerationDatabase.updateModerationDataBase(event.getGuild().getId(),
+                user.getId(), moderator.getId(), reason, ModerationType.BAN);
 
         user.openPrivateChannel()
             .flatMap(channel -> channel.sendMessageEmbeds(banEmbed(moderator, reason, id)))
+            .mapToResult()
             .flatMap(message -> event.getGuild()
                 .getChannelById(TextChannel.class, BotConfig.getAuditLogChannelId())
-                .sendMessageEmbeds(banEmbed(moderator, reason, id)))
+                .sendMessageEmbeds(sendMessageToAuditLog(user, "banned", moderator, id, reason)))
+            .mapToResult()
             .flatMap(message -> event.getGuild().ban(user, delDays, reason))
             .flatMap(message -> event.reply("Banned " + user.getAsMention() + " for " + reason))
             .queue();
@@ -76,6 +81,7 @@ public class BanCommand implements SlashCommandExtender {
             .addOption(OptionType.STRING, "reason", "The reason for banning the user", true)
             .build()
             .setBotPerms(Permission.BAN_MEMBERS)
-            .setUserPerms(Permission.BAN_MEMBERS);
+            .setUserPerms(Permission.BAN_MEMBERS)
+            .setToGuildOnly();
     }
 }

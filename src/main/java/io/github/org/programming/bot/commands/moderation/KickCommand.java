@@ -21,6 +21,7 @@ package io.github.org.programming.bot.commands.moderation;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.bot.commands.moderation.util.ModerationType;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.moderation.ModerationDatabase;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -36,6 +37,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import static io.github.org.programming.bot.commands.moderation.util.ModerationUtil.sendMessageToAuditLog;
+
 public class KickCommand implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
@@ -43,8 +46,8 @@ public class KickCommand implements SlashCommandExtender {
         Member moderator = event.getMember();
         String reason = event.getOption("reason", OptionMapping::getAsString);
 
-        int id = ModerationDatabase.updateModerationDataBase(event.getGuild().getId(),
-                member.getId(), moderator.getId(), reason, "kick");
+        Integer id = ModerationDatabase.updateModerationDataBase(event.getGuild().getId(),
+                member.getId(), moderator.getId(), reason, ModerationType.KICK);
 
 
         User user = Objects
@@ -53,9 +56,13 @@ public class KickCommand implements SlashCommandExtender {
 
         user.openPrivateChannel()
             .flatMap(channel -> channel.sendMessageEmbeds(kickEmbed(moderator, reason, id)))
-            .flatMap(message -> event.getGuild()
-                .getChannelById(TextChannel.class, BotConfig.getAuditLogChannelId())
-                .sendMessageEmbeds(kickEmbed(moderator, reason, id)))
+            .mapToResult()
+            .flatMap(
+                    message -> event.getGuild()
+                        .getChannelById(TextChannel.class, BotConfig.getAuditLogChannelId())
+                        .sendMessageEmbeds(sendMessageToAuditLog(member.getUser(), "kicked",
+                                moderator, id, reason)))
+            .mapToResult()
             .flatMap(message -> member.kick(reason))
             .flatMap(message -> event.reply("Kicked " + member.getAsMention() + " for " + reason))
             .queue();
@@ -79,6 +86,7 @@ public class KickCommand implements SlashCommandExtender {
             .build()
             .setToGuildOnly()
             .setBotPerms(Permission.KICK_MEMBERS)
-            .setUserPerms(Permission.KICK_MEMBERS);
+            .setUserPerms(Permission.KICK_MEMBERS)
+            .setToGuildOnly();
     }
 }

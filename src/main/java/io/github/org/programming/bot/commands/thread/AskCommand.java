@@ -58,7 +58,9 @@ public class AskCommand implements SlashCommandExtender {
         if (!getAskAmount(event.getMember().getId(), event.getGuild().getId()).isEmpty()
                 && getAskAmount(event.getMember().getId(), event.getGuild().getId())
                     .size() >= BotConfig.getAskLimit()) {
-            event.reply("You can only create 2 threads per day").setEphemeral(true).queue();
+            event.reply("You can only create " + BotConfig.getAskLimit() + " threads per day")
+                .setEphemeral(true)
+                .queue();
             return;
         }
 

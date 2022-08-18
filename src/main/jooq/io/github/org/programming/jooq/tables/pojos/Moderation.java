@@ -21,7 +21,9 @@ public class Moderation implements Serializable {
     private final String  userId;
     private final String  moderatorId;
     private final Instant timeStamp;
+    private final Integer amountOfWarnings;
     private final String  reason;
+    private final String  type;
 
     public Moderation(Moderation value) {
         this.id = value.id;
@@ -29,7 +31,9 @@ public class Moderation implements Serializable {
         this.userId = value.userId;
         this.moderatorId = value.moderatorId;
         this.timeStamp = value.timeStamp;
+        this.amountOfWarnings = value.amountOfWarnings;
         this.reason = value.reason;
+        this.type = value.type;
     }
 
     public Moderation(
@@ -38,14 +42,18 @@ public class Moderation implements Serializable {
         String  userId,
         String  moderatorId,
         Instant timeStamp,
-        String  reason
+        Integer amountOfWarnings,
+        String  reason,
+        String  type
     ) {
         this.id = id;
         this.guildId = guildId;
         this.userId = userId;
         this.moderatorId = moderatorId;
         this.timeStamp = timeStamp;
+        this.amountOfWarnings = amountOfWarnings;
         this.reason = reason;
+        this.type = type;
     }
 
     /**
@@ -84,10 +92,24 @@ public class Moderation implements Serializable {
     }
 
     /**
+     * Getter for <code>public.moderation.amount_of_warnings</code>.
+     */
+    public Integer getAmountOfWarnings() {
+        return this.amountOfWarnings;
+    }
+
+    /**
      * Getter for <code>public.moderation.reason</code>.
      */
     public String getReason() {
         return this.reason;
+    }
+
+    /**
+     * Getter for <code>public.moderation.type</code>.
+     */
+    public String getType() {
+        return this.type;
     }
 
     @Override
@@ -99,7 +121,9 @@ public class Moderation implements Serializable {
         sb.append(", ").append(userId);
         sb.append(", ").append(moderatorId);
         sb.append(", ").append(timeStamp);
+        sb.append(", ").append(amountOfWarnings);
         sb.append(", ").append(reason);
+        sb.append(", ").append(type);
 
         sb.append(")");
         return sb.toString();

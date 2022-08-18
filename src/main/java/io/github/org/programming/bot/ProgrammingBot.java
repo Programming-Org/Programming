@@ -18,10 +18,12 @@
  */ 
 package io.github.org.programming.bot;
 
+import io.github.org.programming.Bot;
 import io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler;
 import io.github.org.programming.bot.commands.thread.AskThreadStatus;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.Database;
+import io.github.org.programming.database.moderation.ModerationDatabase;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -30,12 +32,14 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.pagination.ThreadChannelPaginationAction;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -50,7 +54,7 @@ import static io.github.org.programming.database.thread.AskDatabase.deleteAskDat
 import static io.github.org.programming.database.thread.AskDatabase.getAskTimeStamps;
 
 public class ProgrammingBot extends ListenerAdapter {
-    private final Logger logger = LoggerFactory.getLogger(ProgrammingBot.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProgrammingBot.class);
 
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -91,9 +95,26 @@ public class ProgrammingBot extends ListenerAdapter {
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskHelpThreadArchived(guild);
         }, 0, 1, TimeUnit.SECONDS);
+
+        scheduledExecutor.scheduleAtFixedRate(() -> {
+            checkIfAskUserNeedsToBeUnbanned(guild, jda);
+        }, 0, 1, TimeUnit.DAYS);
     }
 
-    public synchronized void checkIfAskActiveQuestionMessageExists(Guild guild) {
+    // TODO : Need to check if this works,
+    private synchronized void checkIfAskUserNeedsToBeUnbanned(@NotNull Guild guild, JDA jda) {
+        List<String> userIds = ModerationDatabase.getTempBanUsers(
+                Duration.between(Instant.now(), Instant.now().plus(Duration.ofDays(1))),
+                guild.getId());
+        for (String userId : userIds) {
+            User user = jda.getUserById(userId);
+            if (user != null) {
+                guild.unban(user).queue();
+            }
+        }
+    }
+
+    public synchronized void checkIfAskActiveQuestionMessageExists(@NotNull Guild guild) {
         TextChannel activeQuestionsChannel =
                 guild.getTextChannelById(BotConfig.getActiveQuestionChannelId());
 
@@ -114,7 +135,7 @@ public class ProgrammingBot extends ListenerAdapter {
         }
     }
 
-    private void dealWithError(Throwable error, Guild guild, String messageId,
+    private void dealWithError(@NotNull Throwable error, Guild guild, String messageId,
             TextChannel activeQuestionsChannel) {
         if (Objects.equals(error.getMessage(), "10008: Unknown Message")) {
             deleteActiveQuestionMessageId(guild.getId(), messageId);
@@ -155,9 +176,8 @@ public class ProgrammingBot extends ListenerAdapter {
     public synchronized void checkIfAskThreadTimeNeedsToBeRest(JDA jda) {
         jda.getGuilds().forEach(c -> {
             List<Instant> oldTimeInstant = getAskTimeStamps(c.getId());
-            // need to check if between 24 hours since last time asked
             oldTimeInstant.forEach(i -> {
-                if (i.isAfter(Instant.now().minusSeconds(86400))) {
+                if (Duration.between(i, Instant.now()).toDays() >= 1) {
                     deleteAskDatabaseWithTime(i, c.getId());
                 }
             });
