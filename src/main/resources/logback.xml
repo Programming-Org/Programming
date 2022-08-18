@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" debug="true">
-    <conversionRule conversionWord="highlight" converterClass="io.github.org.programming.bot.config.LoggerColorScheme"/>
-
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>
-                %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
-            </Pattern>
-        </layout>
+<configuration>
+    <conversionRule conversionWord="highlight" converterClass="io.github.org.programming.bot.config.ColorConversion"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%cyan(%d{yyyy/mm/dd HH:mm:ss}) %green({%thread}) [%highlight(%level)] %magenta(%replace(%logger){'.*\.programming\.', ''}): %highlight(%msg) %n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
     </appender>
-
-    <logger name="io.github.programming" level="debug" additivity="false">
-        <appender-ref ref="CONSOLE"/>
+    <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>files/logs/all.log</file>
+        <encoder>
+            <pattern>%d{yyyy/mm/dd HH:mm:ss} {%thread} [%level] %logger: %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>files/logs/archive/%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <!-- Keep logs for 30 days -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <logger name="io.github.org.programming" level="${LOG_LEVEL:-INFO}" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </logger>
-
-    <root level="error">
-        <appender-ref ref="CONSOLE"/>
+    <root level="${ROOT_LOG_LEVEL:-WARN}">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </root>
-
 </configuration>
+
+

@@ -107,6 +107,10 @@ public class SlashCommandBuilder {
         return this;
     }
 
+    public SlashCommandBuilder addSubcommands(@NotNull SubcommandData... subcommands) {
+        this.subcommands.addAll(List.of(subcommands));
+        return this;
+    }
 
     @NotNull
     public SlashCommandBuilder addSubcommands(@NotNull List<SubcommandData> subcommands) {

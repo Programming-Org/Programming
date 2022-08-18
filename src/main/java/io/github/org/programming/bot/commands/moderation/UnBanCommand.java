@@ -21,6 +21,7 @@ package io.github.org.programming.bot.commands.moderation;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.bot.commands.moderation.util.ModerationType;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.moderation.ModerationDatabase;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -34,6 +35,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.NotNull;
 
+import static io.github.org.programming.bot.commands.moderation.util.ModerationUtil.sendMessageToAuditLog;
+
 
 public class UnBanCommand implements SlashCommandExtender {
     @Override
@@ -43,27 +46,16 @@ public class UnBanCommand implements SlashCommandExtender {
         String reason = event.getOption("reason", OptionMapping::getAsString);
 
         int id = ModerationDatabase.updateModerationDataBase(event.getGuild().getId(), user.getId(),
-                moderator.getId(), reason, "unban");
+                moderator.getId(), reason, ModerationType.UNBAN);
 
         event.getGuild()
             .unban(user)
             .flatMap(channel -> event.getGuild()
                 .getChannelById(TextChannel.class, BotConfig.getAuditLogChannelId())
-                .sendMessageEmbeds(unbanEmbed(user, moderator, reason, id)))
+                .sendMessageEmbeds(sendMessageToAuditLog(user, "unbanned", moderator, id, reason)))
+            .mapToResult()
             .flatMap(message -> event.reply("Unbanned " + user.getAsMention() + " for " + reason))
             .queue();
-
-    }
-
-    private MessageEmbed unbanEmbed(User member, @NotNull Member moderator, @NotNull String reason,
-            int caseId) {
-        return new EmbedBuilder()
-            .setTitle("The member + " + member.getAsMention() + " has been unbanned")
-            .setDescription("The member has been unbanned by " + moderator.getAsMention() + " for "
-                    + reason)
-            .setFooter("Your case number is " + caseId, null)
-            .setColor(0x00FF00)
-            .build();
 
     }
 
@@ -74,6 +66,7 @@ public class UnBanCommand implements SlashCommandExtender {
             .addOption(OptionType.STRING, "reason", "The reason for the unban", true)
             .build()
             .setBotPerms(Permission.BAN_MEMBERS)
-            .setUserPerms(Permission.BAN_MEMBERS);
+            .setUserPerms(Permission.BAN_MEMBERS)
+            .setToGuildOnly();
     }
 }

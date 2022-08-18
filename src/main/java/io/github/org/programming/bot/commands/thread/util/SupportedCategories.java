@@ -34,9 +34,12 @@ public class SupportedCategories {
 
     public static @NotNull String messageToSend() {
         StringBuilder sb = new StringBuilder();
-        sb.append("***Active questions***:").append("\n");
-        categoryChoices.forEach(category -> {
-            sb.append("**").append(category).append("**: ").append("\n");
+        sb.append("***Active questions***:").append("\n").append("\n");
+
+        categoryChoicesString.forEach(category -> {
+            String categoryCapitalised =
+                    category.substring(0, 1).toUpperCase() + category.substring(1);
+            sb.append(categoryCapitalised).append(":").append("\n").append("\n");
         });
         return sb.toString();
     }

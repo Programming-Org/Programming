@@ -7,6 +7,7 @@ package io.github.org.programming.jooq;
 import io.github.org.programming.jooq.tables.Activequestionmessage;
 import io.github.org.programming.jooq.tables.Askthread;
 import io.github.org.programming.jooq.tables.Moderation;
+import io.github.org.programming.jooq.tables.Tempban;
 
 
 /**
@@ -29,4 +30,9 @@ public class Tables {
      * The table <code>public.moderation</code>.
      */
     public static final Moderation MODERATION = Moderation.MODERATION;
+
+    /**
+     * The table <code>public.tempban</code>.
+     */
+    public static final Tempban TEMPBAN = Tempban.TEMPBAN;
 }

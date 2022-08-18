@@ -19,9 +19,18 @@
 package io.github.org.programming;
 
 import io.github.org.programming.bot.ProgrammingBot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Bot {
+    private static final Logger logger = LoggerFactory.getLogger(Bot.class);
+
     public static void main(String[] args) throws Exception {
-        new ProgrammingBot(args);
+        try {
+            new ProgrammingBot(args);
+        } catch (Exception e) {
+            logger.error("Failed to start bot", e);
+            System.exit(1);
+        }
     }
 }

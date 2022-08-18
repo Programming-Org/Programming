@@ -7,6 +7,7 @@ package io.github.org.programming.jooq;
 import io.github.org.programming.jooq.tables.Activequestionmessage;
 import io.github.org.programming.jooq.tables.Askthread;
 import io.github.org.programming.jooq.tables.Moderation;
+import io.github.org.programming.jooq.tables.Tempban;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,6 +46,11 @@ public class Public extends SchemaImpl {
     public final Moderation MODERATION = Moderation.MODERATION;
 
     /**
+     * The table <code>public.tempban</code>.
+     */
+    public final Tempban TEMPBAN = Tempban.TEMPBAN;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -62,7 +68,8 @@ public class Public extends SchemaImpl {
         return Arrays.asList(
             Activequestionmessage.ACTIVEQUESTIONMESSAGE,
             Askthread.ASKTHREAD,
-            Moderation.MODERATION
+            Moderation.MODERATION,
+            Tempban.TEMPBAN
         );
     }
 }
