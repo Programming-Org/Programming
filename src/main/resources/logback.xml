@@ -3,7 +3,9 @@
     <conversionRule conversionWord="highlight" converterClass="io.github.org.programming.bot.config.ColorConversion"/>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%cyan(%d{yyyy/mm/dd HH:mm:ss}) %green({%thread}) [%highlight(%level)] %magenta(%replace(%logger){'.*\.programming\.', ''}): %highlight(%msg) %n</pattern>
+            <pattern>%cyan(%d{yyyy/mm/dd HH:mm:ss}) %green({%thread}) [%highlight(%level)]
+                %magenta(%replace(%logger){'.*\.programming\.', ''}): %highlight(%msg) %n
+            </pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
