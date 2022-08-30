@@ -1,8 +1,4 @@
-[![Java CI with Gradle](https://github.com/Programming-Org/Programming/actions/workflows/gradle.yml/badge.svg)](https://github.com/Programming-Org/Programming/actions/workflows/gradle.yml)
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-[![codecov](https://codecov.io/gh/Programming-Org/Programming/branch/main/graph/badge.svg?token=M1KBWF0CDY)](https://codecov.io/gh/Programming-Org/Programming)
+[![Java CI with Gradle](https://github.com/Programming-Org/Programming/actions/workflows/gradle.yml/badge.svg)](https://github.com/Programming-Org/Programming/actions/workflows/gradle.yml) [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-) [![codecov](https://codecov.io/gh/Programming-Org/Programming/branch/main/graph/badge.svg?token=M1KBWF0CDY)](https://codecov.io/gh/Programming-Org/Programming)
 
 # Welcome to the Programming Server's Discord bot!
 
