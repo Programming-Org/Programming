@@ -90,7 +90,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="http://realyusufismail-github-io.vercel.app"><img src="https://avatars.githubusercontent.com/u/67903886?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Yusuf Arfan Ismail</b></sub></a><br /><a href="#infra-RealYusufIsmail" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/Programming-Org/Programming/commits?author=RealYusufIsmail" title="Tests">⚠️</a> <a href="https://github.com/Programming-Org/Programming/commits?author=RealYusufIsmail" title="Code">💻</a></td>
+    <td align="center"><a href="http://realyusufismail-github-io.vercel.app"><img src="https://avatars.githubusercontent.com/u/67903886?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Yusuf Arfan Ismail</b></sub></a><br /><a href="#infra-RealYusufIsmail" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/Programming-Org/Programming/commits?author=RealYusufIsmail" title="Tests">⚠️</a> <a href="https://github.com/Programming-Org/Programming/commits?author=RealYusufIsmail" title="Code">💻</a> <a href="https://github.com/Programming-Org/Programming/pulls?q=is%3Apr+reviewed-by%3ARealYusufIsmail" title="Reviewed Pull Requests">👀</a></td>
   </tr>
 </table>
 
