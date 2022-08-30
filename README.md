@@ -1,4 +1,7 @@
 [![Java CI with Gradle](https://github.com/Programming-Org/Programming/actions/workflows/gradle.yml/badge.svg)](https://github.com/Programming-Org/Programming/actions/workflows/gradle.yml)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![codecov](https://codecov.io/gh/Programming-Org/Programming/branch/main/graph/badge.svg?token=M1KBWF0CDY)](https://codecov.io/gh/Programming-Org/Programming)
 
 # Welcome to the Programming Server's Discord bot!
@@ -77,3 +80,23 @@ If it does it will be merged immediately, if not you will be told what to change
 
 Copyright (C) 2022 - present, Programming Org
 
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="http://realyusufismail-github-io.vercel.app"><img src="https://avatars.githubusercontent.com/u/67903886?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Yusuf Arfan Ismail</b></sub></a><br /><a href="#infra-RealYusufIsmail" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/Programming-Org/Programming/commits?author=RealYusufIsmail" title="Tests">⚠️</a> <a href="https://github.com/Programming-Org/Programming/commits?author=RealYusufIsmail" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
