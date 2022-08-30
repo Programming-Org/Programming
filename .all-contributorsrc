@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "RealYusufIsmail",
+      "name": "Yusuf Arfan Ismail",
+      "avatar_url": "https://avatars.githubusercontent.com/u/67903886?v=4",
+      "profile": "http://realyusufismail-github-io.vercel.app",
+      "contributions": [
+        "infra",
+        "test",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "Programming",
+  "projectOwner": "Programming-Org",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
