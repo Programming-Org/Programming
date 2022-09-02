@@ -18,22 +18,7 @@
  */ 
 package programming.commands;
 
-import io.github.org.programming.backend.builder.slash.SlashCommand;
-import io.github.org.programming.backend.extension.SlashCommandExtender;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+public abstract class TestingSystemImpl implements TestingSystem {
 
-public class ExampleCommand implements TestingSystem {
-
-    @Override
-    public void setUp() {
-
-    }
-
-    @Test
-    @DisplayName("'/ping' Replies with the ping")
-    public void result() {}
 
 }

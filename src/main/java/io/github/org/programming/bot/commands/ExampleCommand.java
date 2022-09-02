@@ -38,6 +38,6 @@ public class ExampleCommand implements SlashCommandExtender {
 
     @Override
     public SlashCommand build() {
-        return new SlashCommandBuilder("ping", "Reply with the ping").build().setToGuildOnly();
+        return new SlashCommandBuilder("ping", "Replies with the ping").build().setToGuildOnly();
     }
 }
