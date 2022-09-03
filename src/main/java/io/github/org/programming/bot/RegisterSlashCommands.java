@@ -21,6 +21,9 @@ package io.github.org.programming.bot;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
 import io.github.org.programming.backend.handler.SlashCommandHandler;
 import io.github.org.programming.bot.commands.ExampleCommand;
+import io.github.org.programming.bot.commands.info.BotInfoCommand;
+import io.github.org.programming.bot.commands.info.ServerInfoCommand;
+import io.github.org.programming.bot.commands.info.UserInfoCommand;
 import io.github.org.programming.bot.commands.moderation.*;
 import io.github.org.programming.bot.commands.thread.AskCommand;
 import io.github.org.programming.bot.commands.thread.CloseAskThread;
@@ -52,6 +55,9 @@ public class RegisterSlashCommands extends SlashCommandHandler {
         extenders.add(new TimeOutCommand());
         extenders.add(new AuditCommand());
         extenders.add(new DeleteMessagesCommand());
+        extenders.add(new UserInfoCommand());
+        extenders.add(new BotInfoCommand());
+        extenders.add(new ServerInfoCommand());
 
         queueAndRegisterSlashCommands(extenders);
     }

@@ -47,13 +47,13 @@ dependencies {
     implementation group: 'net.dv8tion', name: 'JDA', version: '5.0.0-alpha.17'
     //Logger
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
-    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.4.0'
     //implementation group: 'uk.org.lidalia', name: 'sysout-over-slf4j', version: '1.0.2'
     //config
     implementation group: 'io.github.yusufsdiscordbot', name: 'config', version: '1.0.4'
     //database
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.4.2'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
     //jooq
     implementation group: 'org.jooq', name: 'jooq', version: '3.17.3'
     implementation group: 'org.jooq', name: 'jooq-codegen', version: '3.17.3'
@@ -61,7 +61,7 @@ dependencies {
     //test
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     //jooq
-    jooqGenerator 'org.postgresql:postgresql:42.4.2'
+    jooqGenerator 'org.postgresql:postgresql:42.5.0'
 }
 
 apply plugin: 'jacoco' // code coverage reports
