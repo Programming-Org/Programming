@@ -20,5 +20,4 @@ package programming.commands;
 
 public abstract class TestingSystemImpl implements TestingSystem {
 
-
 }
