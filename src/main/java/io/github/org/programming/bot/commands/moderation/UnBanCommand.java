@@ -21,7 +21,9 @@ package io.github.org.programming.bot.commands.moderation;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
 import io.github.org.programming.bot.commands.moderation.util.ModerationType;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.moderation.ModerationDatabase;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -41,6 +43,7 @@ import static io.github.org.programming.bot.commands.moderation.util.ModerationU
 public class UnBanCommand implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
         User user = event.getOption("member", OptionMapping::getAsUser);
         Member moderator = event.getMember();
         String reason = event.getOption("reason", OptionMapping::getAsString);
@@ -67,6 +70,7 @@ public class UnBanCommand implements SlashCommandExtender {
             .build()
             .setBotPerms(Permission.BAN_MEMBERS)
             .setUserPerms(Permission.BAN_MEMBERS)
+            .setCommandType(CommandType.MODERATION)
             .setToGuildOnly();
     }
 }

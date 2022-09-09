@@ -21,6 +21,8 @@ package io.github.org.programming.bot.commands.moderation;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import io.github.org.programming.database.moderation.ModerationDatabase;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -38,6 +40,7 @@ import java.util.Map;
 public class AuditCommand implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
         switch (event.getSubcommandName()) {
             case "get_case" -> getCase(event);
             case "get_amount_warns" -> getAmountWarns(event);
@@ -104,6 +107,7 @@ public class AuditCommand implements SlashCommandExtender {
                     .build()
                     .setUserPerms(Permission.ADMINISTRATOR)
                     .setBotPerms(Permission.ADMINISTRATOR)
+                    .setCommandType(CommandType.MODERATION)
                     .setToGuildOnly();
     }
 }

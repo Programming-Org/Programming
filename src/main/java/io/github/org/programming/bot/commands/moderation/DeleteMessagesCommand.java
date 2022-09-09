@@ -21,6 +21,8 @@ package io.github.org.programming.bot.commands.moderation;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -36,6 +38,7 @@ public class DeleteMessagesCommand implements SlashCommandExtender {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
         switch (event.getSubcommandName()) {
             case "user" -> deleteUserMessages(event);
             case "channel" -> deleteChannelMessages(event);
@@ -120,6 +123,7 @@ public class DeleteMessagesCommand implements SlashCommandExtender {
                     .build()
                     .setBotPerms(Permission.MESSAGE_MANAGE)
                     .setUserPerms(Permission.MESSAGE_MANAGE)
+                    .setCommandType(CommandType.MODERATION)
                     .setToGuildOnly();
     }
 }
