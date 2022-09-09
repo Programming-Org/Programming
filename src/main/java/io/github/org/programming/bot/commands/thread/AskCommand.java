@@ -21,6 +21,8 @@ package io.github.org.programming.bot.commands.thread;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import io.github.org.programming.bot.config.BotConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -44,6 +46,7 @@ import static io.github.org.programming.database.thread.AskDatabase.updateAskDat
 public class AskCommand implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
         // need to check if memeber has already created 2 threads in server channel
         // if yes, then send message saying they can't create anymore threads
         // if no, then create thread and send message saying thread created
@@ -130,6 +133,7 @@ public class AskCommand implements SlashCommandExtender {
             .addOptions(new OptionData(OptionType.STRING, "category", "The type of question", true)
                 .addChoices(categoryChoices))
             .build()
+            .setCommandType(CommandType.SUPPORT)
             .setToGuildOnly();
     }
 

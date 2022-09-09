@@ -21,6 +21,7 @@ package io.github.org.programming.bot.commands.moderation;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
 import io.github.org.programming.bot.commands.moderation.util.ModerationType;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.moderation.ModerationDatabase;
@@ -87,6 +88,7 @@ public class KickCommand implements SlashCommandExtender {
             .setToGuildOnly()
             .setBotPerms(Permission.KICK_MEMBERS)
             .setUserPerms(Permission.KICK_MEMBERS)
+            .setCommandType(CommandType.MODERATION)
             .setToGuildOnly();
     }
 }

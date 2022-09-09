@@ -21,6 +21,7 @@ package io.github.org.programming.bot.commands;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +39,8 @@ public class ExampleCommand implements SlashCommandExtender {
 
     @Override
     public SlashCommand build() {
-        return new SlashCommandBuilder("ping", "Reply with the ping").build().setToGuildOnly();
+        return new SlashCommandBuilder("ping", "Reply with the ping").build()
+            .setCommandType(CommandType.INFO)
+            .setToGuildOnly();
     }
 }

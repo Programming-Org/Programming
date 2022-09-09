@@ -21,6 +21,8 @@ package io.github.org.programming.bot.commands.thread;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import io.github.org.programming.bot.config.BotConfig;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -32,6 +34,7 @@ public class CloseAskThread implements SlashCommandExtender {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
         ThreadChannel threadChannel = event.getGuildChannel().asThreadChannel();
 
         if (!threadChannel.getParentChannel()
@@ -62,6 +65,8 @@ public class CloseAskThread implements SlashCommandExtender {
     @Override
     public SlashCommand build() {
         return new SlashCommandBuilder("close",
-                "Used to close an thread in the active question channel").build().setToGuildOnly();
+                "Used to close an thread in the active question channel").build()
+                    .setCommandType(CommandType.SUPPORT)
+                    .setToGuildOnly();
     }
 }

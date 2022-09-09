@@ -21,8 +21,10 @@ package io.github.org.programming.bot.commands.moderation;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
 import io.github.org.programming.bot.commands.moderation.util.ModerationType;
 import io.github.org.programming.bot.commands.moderation.util.ModerationUtil;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.moderation.ModerationDatabase;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -47,6 +49,7 @@ public class TimeOutCommand implements SlashCommandExtender {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
         switch (event.getSubcommandName()) {
             case "add" -> addTimeOut(event);
             case "remove" -> removeTimeOut(event);
@@ -203,6 +206,7 @@ public class TimeOutCommand implements SlashCommandExtender {
                     .build()
                     .setBotPerms(Permission.MODERATE_MEMBERS)
                     .setUserPerms(Permission.MODERATE_MEMBERS)
+                    .setCommandType(CommandType.MODERATION)
                     .setToGuildOnly();
     }
 }

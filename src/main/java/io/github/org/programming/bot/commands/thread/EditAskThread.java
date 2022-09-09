@@ -21,6 +21,8 @@ package io.github.org.programming.bot.commands.thread;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import io.github.org.programming.bot.config.BotConfig;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -38,6 +40,7 @@ import static io.github.org.programming.bot.commands.thread.AskCommand.categoryC
 public class EditAskThread implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
         ThreadChannel threadChannel = event.getGuildChannel().asThreadChannel();
 
         if (!threadChannel.getParentChannel()
@@ -126,6 +129,8 @@ public class EditAskThread implements SlashCommandExtender {
                                 .addOptions(new OptionData(OptionType.STRING, "new_category",
                                         "The new category of the thread", true)
                                             .addChoices(categoryChoices))))
-                    .build();
+                    .build()
+                    .setToGuildOnly()
+                    .setCommandType(CommandType.SUPPORT);
     }
 }

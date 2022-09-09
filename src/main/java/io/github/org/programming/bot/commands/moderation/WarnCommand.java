@@ -21,7 +21,9 @@ package io.github.org.programming.bot.commands.moderation;
 import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
 import io.github.org.programming.bot.commands.moderation.util.ModerationType;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.moderation.ModerationDatabase;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -41,6 +43,7 @@ import static io.github.org.programming.bot.commands.moderation.util.ModerationU
 public class WarnCommand implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
         switch (event.getSubcommandName()) {
             case "add" -> addWarn(event);
             case "remove" -> removeWarn(event);
@@ -130,6 +133,7 @@ public class WarnCommand implements SlashCommandExtender {
             .build()
             .setBotPerms(Permission.BAN_MEMBERS)
             .setUserPerms(Permission.BAN_MEMBERS)
+            .setCommandType(CommandType.MODERATION)
             .setToGuildOnly();
     }
 }
