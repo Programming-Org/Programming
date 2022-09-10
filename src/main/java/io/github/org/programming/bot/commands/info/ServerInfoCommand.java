@@ -28,6 +28,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
+import static io.github.org.programming.bot.util.TimeFormatter.formatTime;
+
 public class ServerInfoCommand extends SlashCommandExtender {
     @Override
     public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
@@ -52,7 +54,7 @@ public class ServerInfoCommand extends SlashCommandExtender {
             .addField("Emojis", String.valueOf(guild.getEmojis().size()), true)
             .addField("Boosts", String.valueOf(guild.getBoostCount()), true)
             .addField("Boost Tier", String.valueOf(guild.getBoostTier()), true)
-            .addField("Created At", guild.getTimeCreated().toString(), true)
+            .addField("Created At", formatTime(guild.getTimeCreated()), true)
             .addField("Verification Level", String.valueOf(guild.getVerificationLevel().getKey()),
                     true)
             .addField("Explicit Content Filter",

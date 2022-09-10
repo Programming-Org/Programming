@@ -50,7 +50,7 @@ public class UserInfoCommand extends SlashCommandExtender {
 
             var thisMember = event.getMember();
 
-            getInfo(thisMember, member.getUser(), event);
+            getInfo(thisMember, thisMember.getUser(), event);
         } else {
             getInfo(member, member.getUser(), event);
         }
@@ -86,7 +86,7 @@ public class UserInfoCommand extends SlashCommandExtender {
             AVATAR = "No Avatar";
         }
 
-        EmbedBuilder em = new EmbedBuilder().setColor(Color.GREEN);
+        EmbedBuilder em = new EmbedBuilder().setColor(Color.GRAY);
         em.setDescription("🕵️   **User information for " + member.getUser().getName() + ":**")
             .addField("Name / Nickname", NAME, false)
             .addField("User Tag", TAG, false)
