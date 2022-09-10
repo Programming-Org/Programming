@@ -70,7 +70,7 @@ public class ProgrammingBot extends ListenerAdapter {
         JDA jda = JDABuilder
             .createDefault(BotConfig.getToken(), GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                    GatewayIntent.GUILD_PRESENCES)
+                    GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_EMOJIS_AND_STICKERS)
             .enableCache(CacheFlag.ONLINE_STATUS, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS)
             .disableCache(CacheFlag.ACTIVITY, CacheFlag.EMOJI, CacheFlag.MEMBER_OVERRIDES)
             .setActivity(Activity.watching("for misbehaving users"))
