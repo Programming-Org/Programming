@@ -64,7 +64,7 @@ public class ProgrammingBot extends ListenerAdapter {
 
     private static DSLContext context;
 
-    public ProgrammingBot(String[] args) throws Exception {
+    public ProgrammingBot() throws Exception {
         onDatabase();
 
         JDA jda = JDABuilder
@@ -221,5 +221,9 @@ public class ProgrammingBot extends ListenerAdapter {
             String newName = "Members: " + guild2.getMemberCount();
             channel.getManager().setName(newName).queue();
         }
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 }
