@@ -57,12 +57,11 @@ public class UnBanCommand extends SlashCommandExtender {
             .mapToResult()
             .flatMap(message -> event.reply("Unbanned " + user.getAsMention() + " for " + reason))
             .queue();
-
     }
 
     @Override
     public SlashCommand build() {
-        return new SlashCommandBuilder("unban", "The user to unban")
+        return new SlashCommandBuilder("unban", "Used to unban a user")
             .addOption(OptionType.USER, "member", "The user to unban", true)
             .addOption(OptionType.STRING, "reason", "The reason for the unban", true)
             .build()
