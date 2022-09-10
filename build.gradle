@@ -46,7 +46,7 @@ targetCompatibility = 17
 dependencies {
     implementation group: 'net.dv8tion', name: 'JDA', version: '5.0.0-alpha.17'
     //Logger
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.0'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.4.0'
     //implementation group: 'uk.org.lidalia', name: 'sysout-over-slf4j', version: '1.0.2'
     //config
