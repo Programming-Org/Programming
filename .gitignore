@@ -41,3 +41,6 @@ bin/
 codecov
 *.log
 gradle.properties
+
+### log ###
+*.log.gz
