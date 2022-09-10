@@ -85,6 +85,7 @@ public class ServerInfoCommand extends SlashCommandExtender {
             .addField("Features", String.join(", ", guild.getFeatures()), true)
             .addField("Max Members", String.valueOf(guild.getMaxMembers()), true)
             .addField("Max Presences", String.valueOf(guild.getMaxPresences()), true)
+            .addField("Max file size", String.valueOf(guild.getMaxFileSize()), true)
             .setThumbnail(guild.getIconUrl())
             .setColor(Color.GRAY)
             .setFooter("ID: " + guild.getId());
