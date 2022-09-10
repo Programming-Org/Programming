@@ -35,6 +35,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.net.URL;
 
 public class UserInfoCommand extends SlashCommandExtender {
     @Override
@@ -88,15 +89,15 @@ public class UserInfoCommand extends SlashCommandExtender {
 
         EmbedBuilder em = new EmbedBuilder().setColor(Color.GRAY);
         em.setDescription("🕵️   **User information for " + member.getUser().getName() + ":**")
-            .addField("Name / Nickname", NAME, false)
-            .addField("User Tag", TAG, false)
-            .addField("ID", ID, false)
-            .addField("Current Status", STATUS, false)
-            .addField("Current Activities", String.valueOf(GAMES), false)
-            .addField("Roles", String.valueOf(ROLES), false)
-            .addField("Guild Joined", GUILD_JOIN_DATE, false)
-            .addField("Discord Joined", DISCORD_JOINED_DATE, false)
-            .addField("Avatar-URL", AVATAR, false);
+            .addField("Name / Nickname", NAME, true)
+            .addField("User Tag", TAG, true)
+            .addField("ID", ID, true)
+            .addField("Current Status", STATUS, true)
+            .addField("Current Activities", String.valueOf(GAMES), true)
+            .addField("Roles", String.valueOf(ROLES), true)
+            .addField("Guild Joined", GUILD_JOIN_DATE, true)
+            .addField("Discord Joined", DISCORD_JOINED_DATE, true)
+            .addField("Avatar-URL", AVATAR, true);
 
         if (!AVATAR.equals("No Avatar")) {
             em.setThumbnail(AVATAR);
@@ -104,6 +105,7 @@ public class UserInfoCommand extends SlashCommandExtender {
 
         event.replyEmbeds(em.build()).queue();
     }
+
 
     @Override
     public SlashCommand build() {
