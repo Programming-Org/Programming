@@ -70,49 +70,27 @@ public class TimeOutCommand extends SlashCommandExtender {
         Long days = event.getOption("days", OptionMapping::getAsLong);
         Long weeks = event.getOption("weeks", OptionMapping::getAsLong);
 
-        Duration duration;
+        Duration duration = Duration.ofDays(0);
 
         if (hours != null) {
             duration = Duration.ofHours(hours);
-        } else if (days != null) {
+        }
+
+        if (days != null) {
             duration = Duration.ofDays(days);
-        } else if (weeks != null) {
+        }
+
+        if (weeks != null) {
             duration = Duration.ofDays(weeks * 7);
-        } else {
-            duration = Duration.ofDays(1);
+        }
+
+        if (duration.equals(Duration.ofDays(0)) || duration.isNegative()) {
+            event.reply("Invalid duration").setEphemeral(true).queue();
+            return;
         }
 
         if (duration.toMinutes() > MAX_TIMEOUT_DURATION_MIN) {
-            event
-                .reply("The duration is too long. The maximum duration is "
-                        + MAX_TIMEOUT_DURATION_DAY + " days.")
-                .setEphemeral(true)
-                .queue();
-            return;
-        }
-
-        if (duration.toHours() > MAX_TIMEOUT_DURATION_HOUR) {
-            event
-                .reply("The duration is too long. The maximum duration is "
-                        + MAX_TIMEOUT_DURATION_DAY + " days.")
-                .setEphemeral(true)
-                .queue();
-            return;
-        }
-
-        if (duration.toDays() > MAX_TIMEOUT_DURATION_DAY) {
-            event
-                .reply("The duration is too long. The maximum duration is "
-                        + MAX_TIMEOUT_DURATION_DAY + " days.")
-                .setEphemeral(true)
-                .queue();
-            return;
-        }
-
-        if (duration.toDays() * 7 > MAX_TIMEOUT_DURATION_WEEK) {
-            event
-                .reply("The duration is too long. The maximum duration is "
-                        + MAX_TIMEOUT_DURATION_WEEK + " weeks.")
+            event.reply("Duration is too long, can't be longer than 28 days")
                 .setEphemeral(true)
                 .queue();
             return;
@@ -121,15 +99,18 @@ public class TimeOutCommand extends SlashCommandExtender {
         Integer id = ModerationDatabase.updateModerationDataBase(event.getGuild().getId(),
                 user.getId(), moderator.getId(), reason, ModerationType.ADD_TIME_OUT);
 
+        Duration finalDuration = duration;
         user.getUser()
             .openPrivateChannel()
-            .flatMap(privateChannel -> privateChannel
-                .sendMessageEmbeds(timeoutEmbed(event.getGuild(), moderator, duration, reason, id)))
-            .flatMap(m -> m.getGuild()
+            .flatMap(privateChannel -> privateChannel.sendMessageEmbeds(
+                    timeoutEmbed(event.getGuild(), moderator, finalDuration, reason, id)))
+            .mapToResult()
+            .flatMap(m -> event.getGuild()
                 .getChannelById(TextChannel.class, BotConfig.getAuditLogChannelId())
                 .sendMessageEmbeds(ModerationUtil.sendMessageToAuditLog(user.getUser(),
                         "added timed out", moderator, id, reason)))
-            .flatMap(g -> g.getGuild().timeoutFor(user, duration))
+            .mapToResult()
+            .flatMap(g -> event.getGuild().timeoutFor(user, finalDuration))
             .flatMap(m -> event.reply("User timed out.").setEphemeral(true))
             .queue();
     }
