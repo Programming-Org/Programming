@@ -22,6 +22,7 @@ import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
 import io.github.org.programming.backend.type.CommandType;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -33,6 +34,7 @@ import java.lang.management.ManagementFactory;
 public class BotInfoCommand implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
         var embedBuilder = new EmbedBuilder();
         var selfUser = event.getJDA().getSelfUser();
         final long duration = ManagementFactory.getRuntimeMXBean().getUptime();
@@ -89,6 +91,7 @@ public class BotInfoCommand implements SlashCommandExtender {
     @Override
     public SlashCommand build() {
         return new SlashCommandBuilder("bot_info", "Get info about me :)").build()
+            .setToGuildOnly()
             .setCommandType(CommandType.INFO);
     }
 }

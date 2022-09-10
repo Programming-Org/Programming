@@ -28,6 +28,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.pagination.ThreadChannelPaginationAction;
@@ -200,6 +203,32 @@ public class ProgrammingBot extends ListenerAdapter {
             String name = c.getName();
             String category = name.substring(1, name.indexOf("]")).toLowerCase();
             updateActiveQuestions(c, AskThreadStatus.CLOSED, category);
+        }
+    }
+
+    @Override
+    public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
+        changeAmountOfMemberChannelName(event.getJDA(), event.getGuild());
+    }
+
+    @Override
+    public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
+        changeAmountOfMemberChannelName(event.getJDA(), event.getGuild());
+    }
+
+    private void changeAmountOfMemberChannelName(JDA jda, Guild guild2) {
+        Guild guild = jda.getGuildById(BotConfig.getGuildId());
+
+        if (BotConfig.getGuildId().equals(guild2.getId())) {
+            var channel = guild.getChannelById(StandardGuildMessageChannel.class,
+                    BotConfig.getUserAmountChannelId());
+
+            if (channel == null) {
+                throw new IllegalStateException("User amount channel not found");
+            }
+
+            String newName = "Members: " + guild2.getMemberCount();
+            channel.getManager().setName(newName).queue();
         }
     }
 }

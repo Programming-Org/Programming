@@ -29,6 +29,13 @@ import java.util.List;
 
 public class HelpCommand implements SlashCommandExtender {
     private final List<SlashCommandExtender> commands;
+    private List<SlashCommand> moderationCommands;
+    private List<SlashCommand> utilityCommands;
+    private List<SlashCommand> funCommands;
+    private List<SlashCommand> musicCommands;
+    private List<SlashCommand> infoCommands;
+    private List<SlashCommand> supportCommands;
+
 
     public HelpCommand(List<SlashCommandExtender> commands) {
         this.commands = commands;
@@ -39,6 +46,19 @@ public class HelpCommand implements SlashCommandExtender {
         commands.forEach(c -> {
             SlashCommand command = c.build();
             CommandType type = command.getCommandType();
+
+            if (type == CommandType.MODERATION)
+                moderationCommands.add(command);
+            else if (type == CommandType.UTILITY)
+                utilityCommands.add(command);
+            else if (type == CommandType.FUN)
+                funCommands.add(command);
+            else if (type == CommandType.MUSIC)
+                musicCommands.add(command);
+            else if (type == CommandType.INFO)
+                infoCommands.add(command);
+            else if (type == CommandType.SUPPORT)
+                supportCommands.add(command);
         });
     }
 

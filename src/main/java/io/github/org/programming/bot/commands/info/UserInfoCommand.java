@@ -22,6 +22,7 @@ import io.github.org.programming.backend.builder.slash.SlashCommand;
 import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
 import io.github.org.programming.backend.type.CommandType;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import io.github.org.programming.bot.util.TimeFormatter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -38,6 +39,7 @@ import java.awt.Color;
 public class UserInfoCommand implements SlashCommandExtender {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
         var member = event.getOption("user", OptionMapping::getAsMember);
 
         if (member == null) {
@@ -108,6 +110,7 @@ public class UserInfoCommand implements SlashCommandExtender {
         return new SlashCommandBuilder("user_info", "Used to obtain information about a user.")
             .addOption(OptionType.USER, "user", "The user to obtain information about.", false)
             .build()
+            .setToGuildOnly()
             .setCommandType(CommandType.INFO);
     }
 }
