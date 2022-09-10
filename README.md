@@ -50,6 +50,8 @@ HELP_CHANNEL_ID=
 ACTIVE_QUESTION_CHANNEL_ID=
 //the max amount of help threads that can be created in a day, default is 2
 ASK_LIMIT=
+//Used to inform you how many members there is in the server
+USER_AMOUNT_CHANNEL_ID=
 ```
 
 ### Part 3

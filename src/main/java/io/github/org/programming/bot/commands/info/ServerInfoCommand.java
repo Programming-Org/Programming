@@ -93,6 +93,7 @@ public class ServerInfoCommand implements SlashCommandExtender {
     @Override
     public SlashCommand build() {
         return new SlashCommandBuilder("server_info", "Get info about the server").build()
+            .setToGuildOnly()
             .setCommandType(CommandType.INFO);
     }
 }

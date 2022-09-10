@@ -30,8 +30,8 @@ public class BotConfig {
         return Config.getLong("OWNER_ID");
     }
 
-    public static long getGuildId() {
-        return Config.getLong("GUILD_ID");
+    public static String getGuildId() {
+        return Config.getString("GUILD_ID");
     }
 
     public static String getAuditLogChannelId() {
@@ -52,5 +52,9 @@ public class BotConfig {
 
     public static int getAskLimit() {
         return Config.getInt("ASK_LIMIT", 2);
+    }
+
+    public static String getUserAmountChannelId() {
+        return Config.getString("USER_AMOUNT_CHANNEL_ID");
     }
 }
