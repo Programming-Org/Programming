@@ -21,6 +21,7 @@ package io.github.org.programming.bot;
 import io.github.org.programming.backend.extension.SlashCommandExtender;
 import io.github.org.programming.backend.handler.SlashCommandHandler;
 import io.github.org.programming.bot.commands.ExampleCommand;
+import io.github.org.programming.bot.commands.help.HelpCommand;
 import io.github.org.programming.bot.commands.info.BotInfoCommand;
 import io.github.org.programming.bot.commands.info.ServerInfoCommand;
 import io.github.org.programming.bot.commands.info.UserInfoCommand;
@@ -58,6 +59,7 @@ public class RegisterSlashCommands extends SlashCommandHandler {
         extenders.add(new UserInfoCommand());
         extenders.add(new BotInfoCommand());
         extenders.add(new ServerInfoCommand());
+        extenders.add(new HelpCommand(this.getSlashCommands()));
 
         queueAndRegisterSlashCommands(extenders);
     }
