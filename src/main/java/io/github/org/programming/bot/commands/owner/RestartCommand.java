@@ -39,6 +39,12 @@ public class RestartCommand extends SlashCommandExtender {
 
         try {
             event.reply("Restarting...").queue();
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            logger.error("Failed to restart bot", e);
+        }
+
+        try {
             event.getJDA().shutdownNow();
             Thread.sleep(1000);
         } catch (InterruptedException e) {
