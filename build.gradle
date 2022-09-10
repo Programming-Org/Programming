@@ -51,7 +51,7 @@ dependencies {
     //implementation group: 'uk.org.lidalia', name: 'sysout-over-slf4j', version: '1.0.2'
     //config
     implementation group: 'io.github.yusufsdiscordbot', name: 'config', version: '1.0.4'
-    implementation group: 'io.github.yusufsdiscordbot', name: 'jconfig', version: '1.0.1'
+    implementation group: 'io.github.yusufsdiscordbot', name: 'jconfig', version: '1.0.2'
     //database
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
@@ -63,6 +63,9 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     //jooq
     jooqGenerator 'org.postgresql:postgresql:42.5.0'
+    //json
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.4'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4'
 }
 
 apply plugin: 'jacoco' // code coverage reports

@@ -31,27 +31,23 @@ To get started, you'll need to create a Discord bot account and get a token.
 
 ### Part 2
 Once you have added the bot to your server, you will need to create a .env file as seen here.
-```env
-TOKEN=
-GUILD_ID=
-OWNER_ID=
-AUDIT_LOG_CHANNEL_ID=
-//for the excutor default is 1.
-CORE_POOL_SIZE=
-DATABASE_NAME=programming_bot
-DB_USER=
-DB_PASSWORD=
-DB_URL=
-PORT_NUMBER=
-SERVER_NAME=
-//used for creating questions
-HELP_CHANNEL_ID=
-//Used to post the thread channels which are open
-ACTIVE_QUESTION_CHANNEL_ID=
-//the max amount of help threads that can be created in a day, default is 2
-ASK_LIMIT=
-//Used to inform you how many members there is in the server
-USER_AMOUNT_CHANNEL_ID=
+```json
+{
+  "TOKEN": "YOUR_TOKEN_HERE",
+  "GUILD_ID": "YOUR_GUILD_ID_HERE",
+  "OWNER_ID": "YOUR_OWNER_ID_HERE",
+  "AUDIT_LOG_CHANNEL_ID": "YOUR_AUDIT_LOG_CHANNEL_ID_HERE",
+  "CORE_POOL_SIZE": 1,
+  "DATABASE_NAME": "YOUR_DATABASE_NAME_HERE",
+  "DB_USER": "YOUR_DB_USER_HERE",
+  "DB_PASSWORD": "YOUR_DB_PASSWORD_HERE",
+  "DB_URL": "YOUR_DB_URL_HERE",
+  "PORT_NUMBER": 8080,
+  "HELP_CHANNEL_ID": "YOUR_HELP_CHANNEL_ID_HERE",
+  "ACTIVE_QUESTION_CHANNEL_ID": "YOUR_ACTIVE_QUESTION_CHANNEL_ID_HERE",
+  "ASK_LIMIT": 3,
+  "USER_AMOUNT_CHANNEL_ID": "YOUR_USER_AMOUNT_CHANNEL_ID_HERE"
+}
 ```
 
 ### Part 3

@@ -58,8 +58,4 @@ public class BotConfig {
     public static String getUserAmountChannelId() {
         return Config.getString("USER_AMOUNT_CHANNEL_ID");
     }
-
-    public static int getTest() {
-        return JConfigUtils.getInt("test");
-    }
 }
