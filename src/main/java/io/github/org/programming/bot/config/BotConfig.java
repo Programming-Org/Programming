@@ -19,6 +19,7 @@
 package io.github.org.programming.bot.config;
 
 import io.github.yusufsdiscordbot.config.Config;
+import io.github.yusufsdiscordbot.jconfig.JConfigUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class BotConfig {
@@ -56,5 +57,9 @@ public class BotConfig {
 
     public static String getUserAmountChannelId() {
         return Config.getString("USER_AMOUNT_CHANNEL_ID");
+    }
+
+    public static int getTest() {
+        return JConfigUtils.getInt("test");
     }
 }

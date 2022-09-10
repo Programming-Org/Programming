@@ -51,6 +51,7 @@ dependencies {
     //implementation group: 'uk.org.lidalia', name: 'sysout-over-slf4j', version: '1.0.2'
     //config
     implementation group: 'io.github.yusufsdiscordbot', name: 'config', version: '1.0.4'
+    implementation group: 'io.github.yusufsdiscordbot', name: 'jconfig', version: '1.0.1'
     //database
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
