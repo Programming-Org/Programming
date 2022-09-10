@@ -37,9 +37,9 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Instant;
 import java.util.Map;
 
-public class AuditCommand implements SlashCommandExtender {
+public class AuditCommand extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         switch (event.getSubcommandName()) {
             case "get_case" -> getCase(event);

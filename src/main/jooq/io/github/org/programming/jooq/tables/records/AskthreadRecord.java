@@ -5,13 +5,12 @@ package io.github.org.programming.jooq.tables.records;
 
 
 import io.github.org.programming.jooq.tables.Askthread;
-
-import java.time.Instant;
-
 import org.jooq.Field;
 import org.jooq.Record4;
 import org.jooq.Row4;
 import org.jooq.impl.TableRecordImpl;
+
+import java.time.Instant;
 
 
 /**

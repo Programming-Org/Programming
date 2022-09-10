@@ -59,7 +59,7 @@ public class RegisterSlashCommands extends SlashCommandHandler {
         extenders.add(new UserInfoCommand());
         extenders.add(new BotInfoCommand());
         extenders.add(new ServerInfoCommand());
-        extenders.add(new HelpCommand(this.getSlashCommands()));
+        extenders.add(new HelpCommand(extenders));
 
         queueAndRegisterSlashCommands(extenders);
     }

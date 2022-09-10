@@ -22,8 +22,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static io.github.org.programming.bot.commands.thread.AskCommand.categoryChoices;
-
 public class SupportedCategories {
     public SupportedCategories() {
         throw new UnsupportedOperationException("Utility class");

@@ -40,9 +40,9 @@ import java.util.Objects;
 
 import static io.github.org.programming.bot.commands.moderation.util.ModerationUtil.sendMessageToAuditLog;
 
-public class KickCommand implements SlashCommandExtender {
+public class KickCommand extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         Member member = event.getOption("user", OptionMapping::getAsMember);
         Member moderator = event.getMember();
         String reason = event.getOption("reason", OptionMapping::getAsString);

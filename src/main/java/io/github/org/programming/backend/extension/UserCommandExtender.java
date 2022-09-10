@@ -19,34 +19,13 @@
 package io.github.org.programming.backend.extension;
 
 import io.github.org.programming.backend.builder.user.UserCommand;
-import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+public abstract class UserCommandExtender extends ListenerAdapter {
 
-public interface UserCommandExtender {
+    public abstract void onUserContext(@NotNull UserContextInteractionEvent event);
 
-    void onUserContextInteraction(@NotNull UserContextInteractionEvent event);
-
-    default void onButtonClick(ButtonInteractionEvent event) {
-
-    }
-
-    default void onModalInteraction(ModalInteractionEvent event) {
-
-    }
-
-    default void onCommandAutoComplete(@Nonnull CommandAutoCompleteInteractionEvent event) {
-
-    }
-
-    default void onSelectMenu(@Nonnull SelectMenuInteractionEvent event) {
-
-    }
-
-    UserCommand build();
+    public abstract UserCommand build();
 }

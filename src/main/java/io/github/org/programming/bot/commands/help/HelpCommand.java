@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HelpCommand implements SlashCommandExtender {
+public class HelpCommand extends SlashCommandExtender {
     private final List<SlashCommandExtender> commands;
     private final List<SlashCommand> moderationCommands = new ArrayList<>();
     private final List<SlashCommand> utilityCommands = new ArrayList<>();
@@ -47,7 +47,13 @@ public class HelpCommand implements SlashCommandExtender {
     }
 
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
+
+        if (commands.isEmpty()) {
+            event.reply("There are no commands available.").setEphemeral(true).queue();
+            return;
+        }
+
         commands.forEach(c -> {
             SlashCommand command = c.build();
             CommandType type = command.getCommandType();
@@ -76,15 +82,15 @@ public class HelpCommand implements SlashCommandExtender {
         event.replyEmbeds(embedBuilder.build())
             .addActionRow(Button.primary("moderation", "Moderation"),
                     Button.primary("utility", "Utility"), Button.primary("fun", "Fun"),
-                    Button.primary("music", "Music"), Button.primary("info", "Info"),
-                    Button.primary("support", "Support"), Button.primary("normal", "Normal"))
+                    Button.primary("music", "Music"))
+            .addActionRow(Button.primary("info", "Info"), Button.primary("support", "Support"),
+                    Button.primary("normal", "Normal"))
             .queue();
     }
 
     @Override
-    public void onButtonClick(ButtonInteractionEvent event) {
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         String id = event.getComponentId();
-
         switch (id) {
             case "moderation" -> event
                 .editMessageEmbeds(
@@ -108,7 +114,6 @@ public class HelpCommand implements SlashCommandExtender {
             case "normal" -> event
                 .editMessageEmbeds(new HelpEmbed(normalCommands, CommandType.NORMAL).build())
                 .queue();
-            default -> event.reply("This category does not exist").setEphemeral(true).queue();
         }
     }
 

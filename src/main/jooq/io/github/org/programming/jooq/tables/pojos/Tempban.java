@@ -4,10 +4,10 @@
 package io.github.org.programming.jooq.tables.pojos;
 
 
+import org.jooq.types.DayToSecond;
+
 import java.io.Serializable;
 import java.time.Instant;
-
-import org.jooq.types.DayToSecond;
 
 
 /**

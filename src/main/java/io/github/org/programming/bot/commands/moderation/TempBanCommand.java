@@ -42,9 +42,9 @@ import java.time.LocalDateTime;
 
 import static io.github.org.programming.bot.commands.moderation.util.ModerationUtil.sendMessageToAuditLog;
 
-public class TempBanCommand implements SlashCommandExtender {
+public class TempBanCommand extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         User user = event.getOption("user", OptionMapping::getAsUser);
         int delDays = event.getOption("days", OptionMapping::getAsInt);

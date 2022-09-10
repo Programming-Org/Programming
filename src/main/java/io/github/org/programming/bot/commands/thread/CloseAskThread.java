@@ -30,10 +30,10 @@ import org.jetbrains.annotations.NotNull;
 
 import static io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler.updateActiveQuestions;
 
-public class CloseAskThread implements SlashCommandExtender {
+public class CloseAskThread extends SlashCommandExtender {
 
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         ThreadChannel threadChannel = event.getGuildChannel().asThreadChannel();
 

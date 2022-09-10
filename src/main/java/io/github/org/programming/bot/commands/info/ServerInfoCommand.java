@@ -28,9 +28,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-public class ServerInfoCommand implements SlashCommandExtender {
+public class ServerInfoCommand extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         var embedBuilder = new EmbedBuilder();
         var guild = event.getGuild();
 

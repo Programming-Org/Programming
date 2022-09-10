@@ -31,9 +31,9 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.lang.management.ManagementFactory;
 
-public class BotInfoCommand implements SlashCommandExtender {
+public class BotInfoCommand extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         var embedBuilder = new EmbedBuilder();
         var selfUser = event.getJDA().getSelfUser();

@@ -29,7 +29,10 @@ import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.moderation.ModerationDatabase;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -40,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Duration;
 import java.time.Instant;
 
-public class TimeOutCommand implements SlashCommandExtender {
+public class TimeOutCommand extends SlashCommandExtender {
     // max time
     private static final int MAX_TIMEOUT_DURATION_MIN = 40320; // 28 days
     private static final int MAX_TIMEOUT_DURATION_HOUR = 672; // 28 days
@@ -48,7 +51,7 @@ public class TimeOutCommand implements SlashCommandExtender {
     private static final int MAX_TIMEOUT_DURATION_WEEK = 4; // 28 days
 
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         switch (event.getSubcommandName()) {
             case "add" -> addTimeOut(event);

@@ -40,9 +40,9 @@ import org.jetbrains.annotations.NotNull;
 
 import static io.github.org.programming.bot.commands.moderation.util.ModerationUtil.sendMessageToAuditLog;
 
-public class WarnCommand implements SlashCommandExtender {
+public class WarnCommand extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         switch (event.getSubcommandName()) {
             case "add" -> addWarn(event);

@@ -18,7 +18,6 @@
  */ 
 package io.github.org.programming.bot;
 
-import io.github.org.programming.Bot;
 import io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler;
 import io.github.org.programming.bot.commands.thread.AskThreadStatus;
 import io.github.org.programming.bot.config.BotConfig;
@@ -28,7 +27,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -88,20 +86,13 @@ public class ProgrammingBot extends ListenerAdapter {
 
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskActiveQuestionMessageExists(guild);
+            checkIfAskUserNeedsToBeUnbanned(guild, jda);
         }, 0, 1, TimeUnit.DAYS);
-
-        // need to check this every minute
-        scheduledExecutor.scheduleAtFixedRate(() -> {
-            checkIfAskThreadTimeNeedsToBeRest(jda);
-        }, 0, 1, TimeUnit.SECONDS);
 
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskHelpThreadArchived(guild);
-        }, 0, 1, TimeUnit.SECONDS);
-
-        scheduledExecutor.scheduleAtFixedRate(() -> {
-            checkIfAskUserNeedsToBeUnbanned(guild, jda);
-        }, 0, 1, TimeUnit.DAYS);
+            checkIfAskThreadTimeNeedsToBeRest(jda);
+        }, 0, 1, TimeUnit.MINUTES);
     }
 
     // TODO : Need to check if this works,
