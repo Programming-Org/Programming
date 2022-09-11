@@ -63,9 +63,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     //jooq
     jooqGenerator 'org.postgresql:postgresql:42.5.0'
-    //json
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.4'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4'
 }
 
 apply plugin: 'jacoco' // code coverage reports

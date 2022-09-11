@@ -84,8 +84,6 @@ public class ProgrammingBot extends ListenerAdapter {
 
         logger.info("Bot is ready in guild {}", guild.getName());
 
-        logger.info("Test is {}", BotConfig.getTest());
-
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskActiveQuestionMessageExists(guild);
             checkIfAskUserNeedsToBeUnbanned(guild, jda);
