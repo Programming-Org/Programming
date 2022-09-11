@@ -210,7 +210,7 @@ public class ProgrammingBot extends ListenerAdapter {
     private void changeAmountOfMemberChannelName(JDA jda, Guild guild2) {
         Guild guild = jda.getGuildById(BotConfig.getGuildId());
 
-        if (BotConfig.getGuildId().equals(guild2.getId())) {
+        if (BotConfig.getGuildId() == guild2.getIdLong()) {
             var channel = guild.getChannelById(StandardGuildMessageChannel.class,
                     BotConfig.getUserAmountChannelId());
 

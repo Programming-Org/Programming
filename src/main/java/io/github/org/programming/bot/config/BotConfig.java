@@ -18,44 +18,45 @@
  */ 
 package io.github.org.programming.bot.config;
 
-import io.github.yusufsdiscordbot.config.Config;
-import io.github.yusufsdiscordbot.jconfig.JConfigUtils;
+import io.github.realyusufismail.jconfig.JConfigUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class BotConfig {
+    private static final JConfigUtils.Companion CONFIG = JConfigUtils.Companion;
+
     public static String getToken() {
-        return Config.getString("TOKEN");
+        return CONFIG.getString("TOKEN");
     }
 
     public static long getOwnerId() {
-        return Config.getLong("OWNER_ID");
+        return CONFIG.getLong("OWNER_ID");
     }
 
-    public static String getGuildId() {
-        return Config.getString("GUILD_ID");
+    public static long getGuildId() {
+        return CONFIG.getLong("GUILD_ID");
     }
 
-    public static String getAuditLogChannelId() {
-        return Config.getString("AUDIT_LOG_CHANNEL_ID");
+    public static long getAuditLogChannelId() {
+        return CONFIG.getLong("AUDIT_LOG_CHANNEL_ID");
     }
 
     public static @NotNull Integer getCorePoolSize() {
-        return Config.getInt("CORE_POOL_SIZE", 1);
+        return CONFIG.getInt("CORE_POOL_SIZE", 1);
     }
 
-    public static String getHelpChannelId() {
-        return Config.getString("HELP_CHANNEL_ID");
+    public static long getHelpChannelId() {
+        return CONFIG.getLong("HELP_CHANNEL_ID");
     }
 
-    public static String getActiveQuestionChannelId() {
-        return Config.getString("ACTIVE_QUESTION_CHANNEL_ID");
+    public static long getActiveQuestionChannelId() {
+        return CONFIG.getLong("ACTIVE_QUESTION_CHANNEL_ID");
     }
 
     public static int getAskLimit() {
-        return Config.getInt("ASK_LIMIT", 2);
+        return CONFIG.getInt("ASK_LIMIT", 2);
     }
 
-    public static String getUserAmountChannelId() {
-        return Config.getString("USER_AMOUNT_CHANNEL_ID");
+    public static long getUserAmountChannelId() {
+        return CONFIG.getLong("USER_AMOUNT_CHANNEL_ID");
     }
 }
