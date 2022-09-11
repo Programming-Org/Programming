@@ -18,45 +18,43 @@
  */ 
 package io.github.org.programming.bot.config;
 
-import io.github.realyusufismail.jconfig.JConfigUtils;
+import io.github.realyusufismail.jconfig.util.JConfigUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class BotConfig {
-    private static final JConfigUtils.Companion CONFIG = JConfigUtils.Companion;
-
     public static String getToken() {
-        return CONFIG.getString("TOKEN");
+        return JConfigUtils.getString("TOKEN");
     }
 
     public static long getOwnerId() {
-        return CONFIG.getLong("OWNER_ID");
+        return JConfigUtils.getLong("OWNER_ID");
     }
 
     public static long getGuildId() {
-        return CONFIG.getLong("GUILD_ID");
+        return JConfigUtils.getLong("GUILD_ID");
     }
 
     public static long getAuditLogChannelId() {
-        return CONFIG.getLong("AUDIT_LOG_CHANNEL_ID");
+        return JConfigUtils.getLong("AUDIT_LOG_CHANNEL_ID");
     }
 
     public static @NotNull Integer getCorePoolSize() {
-        return CONFIG.getInt("CORE_POOL_SIZE", 1);
+        return JConfigUtils.getInt("CORE_POOL_SIZE", 1);
     }
 
     public static long getHelpChannelId() {
-        return CONFIG.getLong("HELP_CHANNEL_ID");
+        return JConfigUtils.getLong("HELP_CHANNEL_ID");
     }
 
     public static long getActiveQuestionChannelId() {
-        return CONFIG.getLong("ACTIVE_QUESTION_CHANNEL_ID");
+        return JConfigUtils.getLong("ACTIVE_QUESTION_CHANNEL_ID");
     }
 
     public static int getAskLimit() {
-        return CONFIG.getInt("ASK_LIMIT", 2);
+        return JConfigUtils.getInt("ASK_LIMIT", 2);
     }
 
     public static long getUserAmountChannelId() {
-        return CONFIG.getLong("USER_AMOUNT_CHANNEL_ID");
+        return JConfigUtils.getLong("USER_AMOUNT_CHANNEL_ID");
     }
 }

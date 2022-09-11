@@ -50,7 +50,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.4.0'
     //implementation group: 'uk.org.lidalia', name: 'sysout-over-slf4j', version: '1.0.2'
     //config
-    implementation group: 'io.github.realyusufismail', name: 'jconfig', version: '1.0.2'
+    implementation group: 'io.github.realyusufismail', name: 'jconfig', version: '1.0.5'
     //database
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'

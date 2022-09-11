@@ -18,28 +18,27 @@
  */ 
 package io.github.org.programming.database;
 
-import io.github.realyusufismail.jconfig.JConfigUtils;
+import io.github.realyusufismail.jconfig.util.JConfigUtils;
 
 public class DatabaseConfig {
-    private static final JConfigUtils.Companion CONFIG = JConfigUtils.Companion;
 
     public static String getDatabaseUser() {
-        return CONFIG.getString("DB_USER");
+        return JConfigUtils.getString("DB_USER");
     }
 
     public static String getDatabasePassword() {
-        return CONFIG.getString("DB_PASSWORD");
+        return JConfigUtils.getString("DB_PASSWORD");
     }
 
     public static String getDatabaseName() {
-        return CONFIG.getString("DATABASE_NAME");
+        return JConfigUtils.getString("DATABASE_NAME");
     }
 
     public static int getPortNumber() {
-        return CONFIG.getInt("PORT_NUMBER");
+        return JConfigUtils.getInt("PORT_NUMBER");
     }
 
     public static String getServerName() {
-        return CONFIG.getString("SERVER_NAME");
+        return JConfigUtils.getString("SERVER_NAME");
     }
 }
