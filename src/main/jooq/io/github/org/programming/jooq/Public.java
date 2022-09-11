@@ -8,13 +8,12 @@ import io.github.org.programming.jooq.tables.Activequestionmessage;
 import io.github.org.programming.jooq.tables.Askthread;
 import io.github.org.programming.jooq.tables.Moderation;
 import io.github.org.programming.jooq.tables.Tempban;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**

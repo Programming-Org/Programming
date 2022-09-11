@@ -30,6 +30,11 @@ public class HelpEmbed extends EmbedBuilder {
     public HelpEmbed(@NotNull List<SlashCommand> commands, @NotNull CommandType type) {
         setTitle(type.name() + " Commands");
 
+        if (commands.isEmpty()) {
+            setDescription("No commands found");
+            return;
+        }
+
         commands.forEach(c -> {
             addField("/" + c.getSlashCommandData().getName(),
                     c.getSlashCommandData().getDescription(), false);

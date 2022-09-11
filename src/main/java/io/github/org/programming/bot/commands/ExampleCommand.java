@@ -30,10 +30,10 @@ import org.jetbrains.annotations.NotNull;
  * lib. <br>
  * This command basically replays with the gateway ping.
  */
-public class ExampleCommand implements SlashCommandExtender {
+public class ExampleCommand extends SlashCommandExtender {
 
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         event.reply(event.getJDA().getGatewayPing() + "ms").queue();
     }
 

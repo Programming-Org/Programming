@@ -18,5 +18,61 @@
  */ 
 package io.github.org.programming.bot.commands.owner;
 
-public class RestartCommand {
+import io.github.org.programming.backend.builder.slash.SlashCommand;
+import io.github.org.programming.backend.builder.slash.SlashCommandBuilder;
+import io.github.org.programming.backend.extension.SlashCommandExtender;
+import io.github.org.programming.backend.type.CommandType;
+import io.github.org.programming.bot.ProgrammingBot;
+import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+
+public class RestartCommand extends SlashCommandExtender {
+    private final Logger logger = ProgrammingBot.getLogger();
+
+    @Override
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
+        GuildOnlyCommand.guildOnlyCommand(event);
+        var restarted = false;
+
+        try {
+            event.reply("Restarting...").queue();
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            logger.error("Failed to restart bot", e);
+        }
+
+        try {
+            event.getJDA().shutdownNow();
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            logger.info("Restarting bot...");
+
+            try {
+                new ProgrammingBot();
+                restarted = true;
+            } catch (Exception e) {
+                logger.error("Failed to restart bot", e);
+                System.exit(1);
+            } finally {
+                if (restarted) {
+                    logger.info("Bot restarted successfully");
+                } else {
+                    logger.error("Bot failed to restart");
+                }
+            }
+        }
+    }
+
+    @Override
+    public SlashCommand build() {
+        return new SlashCommandBuilder("restart", "Restarts the bot").build()
+            .setToGuildOnly()
+            .setToOwnerOnly()
+            .setCommandType(CommandType.OWNER_ONLY);
+    }
 }

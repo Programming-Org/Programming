@@ -20,11 +20,9 @@ package io.github.org.programming.bot.commands.thread;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.ThreadChannel;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static io.github.org.programming.bot.ProgrammingBot.getContext;
-import static io.github.org.programming.bot.commands.thread.AskCommand.categoryChoices;
 import static io.github.org.programming.jooq.Tables.ACTIVEQUESTIONMESSAGE;
 
 public class ActiveQuestionsHandler {

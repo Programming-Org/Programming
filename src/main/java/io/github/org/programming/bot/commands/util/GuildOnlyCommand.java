@@ -27,6 +27,9 @@ public class GuildOnlyCommand {
     }
 
     public static void guildOnlyCommand(SlashCommandInteractionEvent event) {
-        event.reply("This command can only be used in a guild").setEphemeral(true).queue();
+        if (event.getGuild() == null) {
+            event.reply("This command can only be used in a guild!").setEphemeral(true).queue();
+            return;
+        }
     }
 }

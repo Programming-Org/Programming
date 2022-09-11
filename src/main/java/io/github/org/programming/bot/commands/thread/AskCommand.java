@@ -43,9 +43,9 @@ import static io.github.org.programming.bot.commands.thread.util.SupportedCatego
 import static io.github.org.programming.database.thread.AskDatabase.getAskAmount;
 import static io.github.org.programming.database.thread.AskDatabase.updateAskDatabase;
 
-public class AskCommand implements SlashCommandExtender {
+public class AskCommand extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         // need to check if memeber has already created 2 threads in server channel
         // if yes, then send message saying they can't create anymore threads

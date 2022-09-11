@@ -18,27 +18,27 @@
  */ 
 package io.github.org.programming.database;
 
-import io.github.yusufsdiscordbot.config.Config;
+import io.github.realyusufismail.jconfig.util.JConfigUtils;
 
 public class DatabaseConfig {
 
     public static String getDatabaseUser() {
-        return Config.getString("DB_USER");
+        return JConfigUtils.getString("DB_USER");
     }
 
     public static String getDatabasePassword() {
-        return Config.getString("DB_PASSWORD");
+        return JConfigUtils.getString("DB_PASSWORD");
     }
 
     public static String getDatabaseName() {
-        return Config.getString("DATABASE_NAME");
+        return JConfigUtils.getString("DATABASE_NAME");
     }
 
     public static int getPortNumber() {
-        return Config.getInt("PORT_NUMBER");
+        return JConfigUtils.getInt("PORT_NUMBER");
     }
 
     public static String getServerName() {
-        return Config.getString("SERVER_NAME");
+        return JConfigUtils.getString("SERVER_NAME");
     }
 }

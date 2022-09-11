@@ -7,23 +7,13 @@ package io.github.org.programming.jooq.tables;
 import io.github.org.programming.jooq.Keys;
 import io.github.org.programming.jooq.Public;
 import io.github.org.programming.jooq.tables.records.ModerationRecord;
-
-import java.time.Instant;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Identity;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row8;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.Instant;
 
 
 /**

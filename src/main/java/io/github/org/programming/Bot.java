@@ -27,7 +27,7 @@ public class Bot {
 
     public static void main(String[] args) throws Exception {
         try {
-            new ProgrammingBot(args);
+            new ProgrammingBot();
         } catch (Exception e) {
             logger.error("Failed to start bot", e);
             System.exit(1);

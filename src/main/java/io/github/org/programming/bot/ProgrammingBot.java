@@ -18,7 +18,6 @@
  */ 
 package io.github.org.programming.bot;
 
-import io.github.org.programming.Bot;
 import io.github.org.programming.bot.commands.thread.ActiveQuestionsHandler;
 import io.github.org.programming.bot.commands.thread.AskThreadStatus;
 import io.github.org.programming.bot.config.BotConfig;
@@ -28,7 +27,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -66,13 +64,13 @@ public class ProgrammingBot extends ListenerAdapter {
 
     private static DSLContext context;
 
-    public ProgrammingBot(String[] args) throws Exception {
+    public ProgrammingBot() throws Exception {
         onDatabase();
 
         JDA jda = JDABuilder
             .createDefault(BotConfig.getToken(), GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                    GatewayIntent.GUILD_PRESENCES)
+                    GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_EMOJIS_AND_STICKERS)
             .enableCache(CacheFlag.ONLINE_STATUS, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS)
             .disableCache(CacheFlag.ACTIVITY, CacheFlag.EMOJI, CacheFlag.MEMBER_OVERRIDES)
             .setActivity(Activity.watching("for misbehaving users"))
@@ -88,20 +86,13 @@ public class ProgrammingBot extends ListenerAdapter {
 
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskActiveQuestionMessageExists(guild);
+            checkIfAskUserNeedsToBeUnbanned(guild, jda);
         }, 0, 1, TimeUnit.DAYS);
-
-        // need to check this every minute
-        scheduledExecutor.scheduleAtFixedRate(() -> {
-            checkIfAskThreadTimeNeedsToBeRest(jda);
-        }, 0, 1, TimeUnit.SECONDS);
 
         scheduledExecutor.scheduleAtFixedRate(() -> {
             checkIfAskHelpThreadArchived(guild);
-        }, 0, 1, TimeUnit.SECONDS);
-
-        scheduledExecutor.scheduleAtFixedRate(() -> {
-            checkIfAskUserNeedsToBeUnbanned(guild, jda);
-        }, 0, 1, TimeUnit.DAYS);
+            checkIfAskThreadTimeNeedsToBeRest(jda);
+        }, 0, 1, TimeUnit.MINUTES);
     }
 
     // TODO : Need to check if this works,
@@ -219,7 +210,7 @@ public class ProgrammingBot extends ListenerAdapter {
     private void changeAmountOfMemberChannelName(JDA jda, Guild guild2) {
         Guild guild = jda.getGuildById(BotConfig.getGuildId());
 
-        if (BotConfig.getGuildId().equals(guild2.getId())) {
+        if (BotConfig.getGuildId() == guild2.getIdLong()) {
             var channel = guild.getChannelById(StandardGuildMessageChannel.class,
                     BotConfig.getUserAmountChannelId());
 
@@ -230,5 +221,9 @@ public class ProgrammingBot extends ListenerAdapter {
             String newName = "Members: " + guild2.getMemberCount();
             channel.getManager().setName(newName).queue();
         }
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 }

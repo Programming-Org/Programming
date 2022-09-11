@@ -24,7 +24,6 @@ out/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-*.env
 
 ### NetBeans ###
 /nbproject/private/
@@ -41,3 +40,10 @@ bin/
 codecov
 *.log
 gradle.properties
+
+### log ###
+*.log.gz
+
+### Security ###
+config.json
+*.env

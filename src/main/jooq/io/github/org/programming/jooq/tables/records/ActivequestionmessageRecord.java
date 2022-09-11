@@ -5,7 +5,6 @@ package io.github.org.programming.jooq.tables.records;
 
 
 import io.github.org.programming.jooq.tables.Activequestionmessage;
-
 import org.jooq.Field;
 import org.jooq.Record2;
 import org.jooq.Row2;

@@ -26,6 +26,7 @@ import io.github.org.programming.bot.commands.info.BotInfoCommand;
 import io.github.org.programming.bot.commands.info.ServerInfoCommand;
 import io.github.org.programming.bot.commands.info.UserInfoCommand;
 import io.github.org.programming.bot.commands.moderation.*;
+import io.github.org.programming.bot.commands.owner.RestartCommand;
 import io.github.org.programming.bot.commands.thread.AskCommand;
 import io.github.org.programming.bot.commands.thread.CloseAskThread;
 import io.github.org.programming.bot.commands.thread.EditAskThread;
@@ -59,8 +60,10 @@ public class RegisterSlashCommands extends SlashCommandHandler {
         extenders.add(new UserInfoCommand());
         extenders.add(new BotInfoCommand());
         extenders.add(new ServerInfoCommand());
-        extenders.add(new HelpCommand(this.getSlashCommands()));
+        extenders.add(new RestartCommand());
 
+        // Always keep at the end
+        extenders.add(new HelpCommand(extenders));
         queueAndRegisterSlashCommands(extenders);
     }
 

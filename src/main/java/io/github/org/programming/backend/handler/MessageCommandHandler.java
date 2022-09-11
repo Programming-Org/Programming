@@ -21,11 +21,7 @@ package io.github.org.programming.backend.handler;
 import io.github.org.programming.backend.extension.MessageCommandExtender;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -68,9 +64,8 @@ public abstract class MessageCommandHandler extends BaseHandler {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void addMessageCommand(@NotNull MessageCommandExtender command) {
-
         BaseHandler.checkIfBuildIsNull(command.build(), command.getClass().getSimpleName());
-
+        jda.addEventListener(command);
         messageCommand.put(command.build().getCommandData().getName(), command);
         if (command.build().isGuildOnly()) {
             guildCommandsData.addCommands(command.build().getCommandData());
@@ -136,33 +131,8 @@ public abstract class MessageCommandHandler extends BaseHandler {
                 && !event.getGuild().getSelfMember().hasPermission(cmd.build().getBotPerms())) {
             event.reply("I do not have permission to use this command.").setEphemeral(true).queue();
         } else {
-            cmd.onMessageContextInteraction(event);
+            cmd.onMessageContext(event);
         }
-    }
-
-    @Override
-    public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
-        final MessageCommandExtender cmd = messageCommand.get(event.getComponentId());
-        cmd.onButtonClick(event);
-    }
-
-    @Override
-    public void onSelectMenuInteraction(@Nonnull SelectMenuInteractionEvent event) {
-        final MessageCommandExtender cmd = messageCommand.get(event.getComponentId());
-        cmd.onSelectMenu(event);
-    }
-
-    @Override
-    public void onCommandAutoCompleteInteraction(
-            @Nonnull CommandAutoCompleteInteractionEvent event) {
-        final MessageCommandExtender cmd = messageCommand.get(event.getName());
-        cmd.onCommandAutoComplete(event);
-    }
-
-    @Override
-    public void onModalInteraction(@Nonnull ModalInteractionEvent event) {
-        final MessageCommandExtender cmd = messageCommand.get(event.getModalId());
-        cmd.onModalInteraction(event);
     }
 
     /**

@@ -37,9 +37,9 @@ import java.util.Objects;
 
 import static io.github.org.programming.bot.commands.thread.AskCommand.categoryChoices;
 
-public class EditAskThread implements SlashCommandExtender {
+public class EditAskThread extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         ThreadChannel threadChannel = event.getGuildChannel().asThreadChannel();
 

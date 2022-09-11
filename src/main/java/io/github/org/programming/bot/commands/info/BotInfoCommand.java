@@ -31,15 +31,19 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.lang.management.ManagementFactory;
 
-public class BotInfoCommand implements SlashCommandExtender {
+import static io.github.org.programming.bot.util.TimeFormatter.formatTime;
+
+public class BotInfoCommand extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         var embedBuilder = new EmbedBuilder();
         var selfUser = event.getJDA().getSelfUser();
         final long duration = ManagementFactory.getRuntimeMXBean().getUptime();
         final String os = System.getProperty("os.name");
         final String javaVersion = System.getProperty("java.version");
+        final String jdaVersion = JDAInfo.VERSION_MAJOR + "." + JDAInfo.VERSION_MINOR + "."
+                + JDAInfo.VERSION_CLASSIFIER;
         final String memory =
                 (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024
                         / 1024 + "MB";
@@ -52,10 +56,10 @@ public class BotInfoCommand implements SlashCommandExtender {
             .addField("ID", selfUser.getId(), true)
             .addField("Host OS", os, true)
             .addField("Java Version", javaVersion, true)
-            .addField("JDA Version", JDAInfo.VERSION, true)
+            .addField("JDA Version", jdaVersion, true)
             .addField("Memory Usage", memory, true)
             .addField("CPU Cores", cpu, true)
-            .addField("Created at", selfUser.getTimeCreated().toString(), true)
+            .addField("Created at", formatTime(selfUser.getTimeCreated()), true)
             .addField("Users", String.valueOf(event.getJDA().getUsers().size()), true)
             .addField("Ping", String.valueOf(event.getJDA().getGatewayPing()), true)
             .addField("Uptime", formatUptime(duration), true)

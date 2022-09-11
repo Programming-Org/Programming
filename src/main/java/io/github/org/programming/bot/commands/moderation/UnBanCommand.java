@@ -26,10 +26,8 @@ import io.github.org.programming.bot.commands.moderation.util.ModerationType;
 import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import io.github.org.programming.bot.config.BotConfig;
 import io.github.org.programming.database.moderation.ModerationDatabase;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -40,9 +38,9 @@ import org.jetbrains.annotations.NotNull;
 import static io.github.org.programming.bot.commands.moderation.util.ModerationUtil.sendMessageToAuditLog;
 
 
-public class UnBanCommand implements SlashCommandExtender {
+public class UnBanCommand extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         User user = event.getOption("member", OptionMapping::getAsUser);
         Member moderator = event.getMember();
@@ -59,12 +57,11 @@ public class UnBanCommand implements SlashCommandExtender {
             .mapToResult()
             .flatMap(message -> event.reply("Unbanned " + user.getAsMention() + " for " + reason))
             .queue();
-
     }
 
     @Override
     public SlashCommand build() {
-        return new SlashCommandBuilder("unban", "The user to unban")
+        return new SlashCommandBuilder("unban", "Used to unban a user")
             .addOption(OptionType.USER, "member", "The user to unban", true)
             .addOption(OptionType.STRING, "reason", "The reason for the unban", true)
             .build()

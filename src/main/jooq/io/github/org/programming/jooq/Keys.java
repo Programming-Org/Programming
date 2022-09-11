@@ -8,7 +8,6 @@ import io.github.org.programming.jooq.tables.Moderation;
 import io.github.org.programming.jooq.tables.Tempban;
 import io.github.org.programming.jooq.tables.records.ModerationRecord;
 import io.github.org.programming.jooq.tables.records.TempbanRecord;
-
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;

@@ -40,9 +40,9 @@ import org.jetbrains.annotations.NotNull;
 
 import static io.github.org.programming.bot.commands.moderation.util.ModerationUtil.sendMessageToAuditLog;
 
-public class BanCommand implements SlashCommandExtender {
+public class BanCommand extends SlashCommandExtender {
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         User user = event.getOption("user", OptionMapping::getAsUser);
         int delDays = event.getOption("days", OptionMapping::getAsInt);

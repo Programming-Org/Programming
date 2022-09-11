@@ -24,7 +24,10 @@ import io.github.org.programming.backend.extension.SlashCommandExtender;
 import io.github.org.programming.backend.type.CommandType;
 import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -34,10 +37,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 
-public class DeleteMessagesCommand implements SlashCommandExtender {
+public class DeleteMessagesCommand extends SlashCommandExtender {
 
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         switch (event.getSubcommandName()) {
             case "user" -> deleteUserMessages(event);
