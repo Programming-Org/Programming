@@ -31,6 +31,8 @@ To get started, you'll need to create a Discord bot account and get a token.
 
 ### Part 2
 Once you have added the bot to your server, you will need to create a .env file as seen here.
+
+Where it says 11111111111 replace it with a long value
 ```json
 {
   "TOKEN": "YOUR_TOKEN_HERE",
@@ -44,7 +46,7 @@ Once you have added the bot to your server, you will need to create a .env file 
   "DB_URL": "YOUR_DB_URL_HERE",
   "PORT_NUMBER": 8080,
   "SERVER_NAME": "YOUR_SERVER_NAME_HERE",
-  "HELP_CHANNEL_ID": "YOUR_HELP_CHANNEL_ID_HERE",
+  "HELP_CHANNEL_ID": 11111111111,
   "ACTIVE_QUESTION_CHANNEL_ID": 11111111111,
   "ASK_LIMIT": 3,
   "USER_AMOUNT_CHANNEL_ID": 11111111111
