@@ -149,8 +149,8 @@ jar {
 
 def props = new Properties()
 //if the file exists, load the properties
-if (file(".env").exists()) {
-    file(".env").withInputStream { props.load(it) }
+if (file("config.json").exists()) {
+    file("config.json").withInputStream { props.load(it) }
 }
 
 //create the build directory so no errors happen with the workflow
