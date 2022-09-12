@@ -16,8 +16,8 @@ public class Askthread implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final String  memberId;
-    private final String  guildId;
+    private final String memberId;
+    private final String guildId;
     private final Integer amount;
     private final Instant timeStamp;
 
@@ -29,8 +29,8 @@ public class Askthread implements Serializable {
     }
 
     public Askthread(
-        String  memberId,
-        String  guildId,
+        String memberId,
+        String guildId,
         Integer amount,
         Instant timeStamp
     ) {

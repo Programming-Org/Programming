@@ -6,8 +6,21 @@ package io.github.org.programming.jooq.tables;
 
 import io.github.org.programming.jooq.Public;
 import io.github.org.programming.jooq.tables.records.ActivequestionmessageRecord;
+
+import java.util.function.Function;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Function2;
+import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.Records;
+import org.jooq.Row2;
+import org.jooq.Schema;
+import org.jooq.SelectField;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
@@ -94,6 +107,11 @@ public class Activequestionmessage extends TableImpl<ActivequestionmessageRecord
         return new Activequestionmessage(alias, this);
     }
 
+    @Override
+    public Activequestionmessage as(Table<?> alias) {
+        return new Activequestionmessage(alias.getQualifiedName(), this);
+    }
+
     /**
      * Rename this table
      */
@@ -110,6 +128,14 @@ public class Activequestionmessage extends TableImpl<ActivequestionmessageRecord
         return new Activequestionmessage(name, null);
     }
 
+    /**
+     * Rename this table
+     */
+    @Override
+    public Activequestionmessage rename(Table<?> name) {
+        return new Activequestionmessage(name.getQualifiedName(), null);
+    }
+
     // -------------------------------------------------------------------------
     // Row2 type methods
     // -------------------------------------------------------------------------
@@ -117,5 +143,20 @@ public class Activequestionmessage extends TableImpl<ActivequestionmessageRecord
     @Override
     public Row2<String, String> fieldsRow() {
         return (Row2) super.fieldsRow();
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
+     */
+    public <U> SelectField<U> mapping(Function2<? super String, ? super String, ? extends U> from) {
+        return convertFrom(Records.mapping(from));
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Class,
+     * Function)}.
+     */
+    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super String, ? super String, ? extends U> from) {
+        return convertFrom(toType, Records.mapping(from));
     }
 }

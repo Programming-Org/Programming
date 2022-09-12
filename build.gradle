@@ -16,6 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import groovy.json.JsonSlurper
 import nu.studer.gradle.jooq.JooqEdition
 
 buildscript {
@@ -147,10 +149,19 @@ jar {
 }
 
 
-def props = new Properties()
+def props = new Hashtable<String,Object>()
 //if the file exists, load the properties
+//TODO: config file is not working
 if (file("config.json").exists()) {
-    file("config.json").withInputStream { props.load(it) }
+    def jsonFile = file('config.json')
+
+    if (jsonFile.exists()) {
+        def jsonSlurper = new JsonSlurper()
+        def json = jsonSlurper.parseText(jsonFile.text)
+        props.putAll(json)
+    } else {
+        throw new GradleException("config.json does not exist!")
+    }
 }
 
 //create the build directory so no errors happen with the workflow
@@ -166,7 +177,7 @@ task createBuildDir {
 
 
 jooq {
-    version = '3.15.2'
+    version = '3.17.3'
     edition = JooqEdition.OSS
     configurations {
         main {
@@ -175,9 +186,9 @@ jooq {
                 logging = org.jooq.meta.jaxb.Logging.WARN
                 jdbc {
                     driver = 'org.postgresql.Driver'
-                    url = props.getProperty("DB_URL", "null")
-                    user = props.getProperty("DB_USER", "null")
-                    password = props.getProperty("DB_PASSWORD", "null")
+                    url = props.get("DB_URL") as String
+                    user = props.get("DB_USER") as String
+                    password = props.get("DB_PASSWORD") as String
                 }
                 generator {
                     name = 'org.jooq.codegen.JavaGenerator'
