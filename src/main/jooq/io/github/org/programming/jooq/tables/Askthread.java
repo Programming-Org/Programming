@@ -6,13 +6,25 @@ package io.github.org.programming.jooq.tables;
 
 import io.github.org.programming.jooq.Public;
 import io.github.org.programming.jooq.tables.records.AskthreadRecord;
+
+import java.time.Instant;
+import java.util.function.Function;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Function4;
+import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.Records;
+import org.jooq.Row4;
+import org.jooq.Schema;
+import org.jooq.SelectField;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.Instant;
 
 
 /**
@@ -104,6 +116,11 @@ public class Askthread extends TableImpl<AskthreadRecord> {
         return new Askthread(alias, this);
     }
 
+    @Override
+    public Askthread as(Table<?> alias) {
+        return new Askthread(alias.getQualifiedName(), this);
+    }
+
     /**
      * Rename this table
      */
@@ -120,6 +137,14 @@ public class Askthread extends TableImpl<AskthreadRecord> {
         return new Askthread(name, null);
     }
 
+    /**
+     * Rename this table
+     */
+    @Override
+    public Askthread rename(Table<?> name) {
+        return new Askthread(name.getQualifiedName(), null);
+    }
+
     // -------------------------------------------------------------------------
     // Row4 type methods
     // -------------------------------------------------------------------------
@@ -127,5 +152,20 @@ public class Askthread extends TableImpl<AskthreadRecord> {
     @Override
     public Row4<String, String, Integer, Instant> fieldsRow() {
         return (Row4) super.fieldsRow();
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
+     */
+    public <U> SelectField<U> mapping(Function4<? super String, ? super String, ? super Integer, ? super Instant, ? extends U> from) {
+        return convertFrom(Records.mapping(from));
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Class,
+     * Function)}.
+     */
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super String, ? super String, ? super Integer, ? super Instant, ? extends U> from) {
+        return convertFrom(toType, Records.mapping(from));
     }
 }

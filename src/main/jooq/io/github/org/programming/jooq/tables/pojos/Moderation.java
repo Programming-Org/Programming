@@ -17,13 +17,13 @@ public class Moderation implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final Integer id;
-    private final String  guildId;
-    private final String  userId;
-    private final String  moderatorId;
+    private final String guildId;
+    private final String userId;
+    private final String moderatorId;
     private final Instant timeStamp;
     private final Integer amountOfWarnings;
-    private final String  reason;
-    private final String  type;
+    private final String reason;
+    private final String type;
 
     public Moderation(Moderation value) {
         this.id = value.id;
@@ -38,13 +38,13 @@ public class Moderation implements Serializable {
 
     public Moderation(
         Integer id,
-        String  guildId,
-        String  userId,
-        String  moderatorId,
+        String guildId,
+        String userId,
+        String moderatorId,
         Instant timeStamp,
         Integer amountOfWarnings,
-        String  reason,
-        String  type
+        String reason,
+        String type
     ) {
         this.id = id;
         this.guildId = guildId;

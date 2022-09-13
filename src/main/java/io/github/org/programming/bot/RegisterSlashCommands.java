@@ -31,6 +31,7 @@ import io.github.org.programming.bot.commands.thread.AskCommand;
 import io.github.org.programming.bot.commands.thread.CloseAskThread;
 import io.github.org.programming.bot.commands.thread.EditAskThread;
 import io.github.org.programming.bot.config.BotConfig;
+import io.github.org.programming.bot.tag.TagCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import org.jetbrains.annotations.NotNull;
@@ -61,6 +62,7 @@ public class RegisterSlashCommands extends SlashCommandHandler {
         extenders.add(new BotInfoCommand());
         extenders.add(new ServerInfoCommand());
         extenders.add(new RestartCommand());
+        extenders.add(new TagCommand());
 
         // Always keep at the end
         extenders.add(new HelpCommand(extenders));

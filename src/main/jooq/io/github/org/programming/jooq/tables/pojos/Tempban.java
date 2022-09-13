@@ -4,10 +4,10 @@
 package io.github.org.programming.jooq.tables.pojos;
 
 
-import org.jooq.types.DayToSecond;
-
 import java.io.Serializable;
 import java.time.Instant;
+
+import org.jooq.types.DayToSecond;
 
 
 /**
@@ -18,13 +18,13 @@ public class Tempban implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final Integer     id;
-    private final String      guildId;
-    private final String      userId;
-    private final String      moderatorId;
+    private final Integer id;
+    private final String guildId;
+    private final String userId;
+    private final String moderatorId;
     private final DayToSecond duration;
-    private final Instant     start;
-    private final String      reason;
+    private final Instant start;
+    private final String reason;
 
     public Tempban(Tempban value) {
         this.id = value.id;
@@ -37,13 +37,13 @@ public class Tempban implements Serializable {
     }
 
     public Tempban(
-        Integer     id,
-        String      guildId,
-        String      userId,
-        String      moderatorId,
+        Integer id,
+        String guildId,
+        String userId,
+        String moderatorId,
         DayToSecond duration,
-        Instant     start,
-        String      reason
+        Instant start,
+        String reason
     ) {
         this.id = id;
         this.guildId = guildId;

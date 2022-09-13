@@ -7,13 +7,27 @@ package io.github.org.programming.jooq.tables;
 import io.github.org.programming.jooq.Keys;
 import io.github.org.programming.jooq.Public;
 import io.github.org.programming.jooq.tables.records.ModerationRecord;
+
+import java.time.Instant;
+import java.util.function.Function;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Function8;
+import org.jooq.Identity;
+import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.Records;
+import org.jooq.Row8;
+import org.jooq.Schema;
+import org.jooq.SelectField;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.Instant;
 
 
 /**
@@ -135,6 +149,11 @@ public class Moderation extends TableImpl<ModerationRecord> {
         return new Moderation(alias, this);
     }
 
+    @Override
+    public Moderation as(Table<?> alias) {
+        return new Moderation(alias.getQualifiedName(), this);
+    }
+
     /**
      * Rename this table
      */
@@ -151,6 +170,14 @@ public class Moderation extends TableImpl<ModerationRecord> {
         return new Moderation(name, null);
     }
 
+    /**
+     * Rename this table
+     */
+    @Override
+    public Moderation rename(Table<?> name) {
+        return new Moderation(name.getQualifiedName(), null);
+    }
+
     // -------------------------------------------------------------------------
     // Row8 type methods
     // -------------------------------------------------------------------------
@@ -158,5 +185,20 @@ public class Moderation extends TableImpl<ModerationRecord> {
     @Override
     public Row8<Integer, String, String, String, Instant, Integer, String, String> fieldsRow() {
         return (Row8) super.fieldsRow();
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
+     */
+    public <U> SelectField<U> mapping(Function8<? super Integer, ? super String, ? super String, ? super String, ? super Instant, ? super Integer, ? super String, ? super String, ? extends U> from) {
+        return convertFrom(Records.mapping(from));
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Class,
+     * Function)}.
+     */
+    public <U> SelectField<U> mapping(Class<U> toType, Function8<? super Integer, ? super String, ? super String, ? super String, ? super Instant, ? super Integer, ? super String, ? super String, ? extends U> from) {
+        return convertFrom(toType, Records.mapping(from));
     }
 }

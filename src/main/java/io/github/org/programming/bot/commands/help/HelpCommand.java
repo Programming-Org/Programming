@@ -40,6 +40,7 @@ public class HelpCommand extends SlashCommandExtender {
     private final List<SlashCommand> infoCommands = new ArrayList<>();
     private final List<SlashCommand> supportCommands = new ArrayList<>();
     private final List<SlashCommand> normalCommands = new ArrayList<>();
+    private final List<SlashCommand> ownerCommands = new ArrayList<>();
 
 
     public HelpCommand(List<SlashCommandExtender> commands) {
@@ -72,6 +73,8 @@ public class HelpCommand extends SlashCommandExtender {
                 supportCommands.add(command);
             else if (type == CommandType.NORMAL)
                 normalCommands.add(command);
+            else if (type == CommandType.OWNER_ONLY)
+                ownerCommands.add(command);
         });
 
         var embedBuilder = new EmbedBuilder();
@@ -84,7 +87,7 @@ public class HelpCommand extends SlashCommandExtender {
                     Button.primary("utility", "Utility"), Button.primary("fun", "Fun"),
                     Button.primary("music", "Music"))
             .addActionRow(Button.primary("info", "Info"), Button.primary("support", "Support"),
-                    Button.primary("normal", "Normal"))
+                    Button.primary("normal", "Normal"), Button.primary("owner", "Owner"))
             .queue();
     }
 
@@ -113,6 +116,9 @@ public class HelpCommand extends SlashCommandExtender {
                 .queue();
             case "normal" -> event
                 .editMessageEmbeds(new HelpEmbed(normalCommands, CommandType.NORMAL).build())
+                .queue();
+            case "owner" -> event
+                .editMessageEmbeds(new HelpEmbed(ownerCommands, CommandType.OWNER_ONLY).build())
                 .queue();
         }
     }

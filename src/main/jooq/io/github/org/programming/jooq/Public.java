@@ -7,13 +7,15 @@ package io.github.org.programming.jooq;
 import io.github.org.programming.jooq.tables.Activequestionmessage;
 import io.github.org.programming.jooq.tables.Askthread;
 import io.github.org.programming.jooq.tables.Moderation;
+import io.github.org.programming.jooq.tables.Tag;
 import io.github.org.programming.jooq.tables.Tempban;
-import org.jooq.Catalog;
-import org.jooq.Table;
-import org.jooq.impl.SchemaImpl;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.jooq.Catalog;
+import org.jooq.Table;
+import org.jooq.impl.SchemaImpl;
 
 
 /**
@@ -45,6 +47,11 @@ public class Public extends SchemaImpl {
     public final Moderation MODERATION = Moderation.MODERATION;
 
     /**
+     * The table <code>public.tag</code>.
+     */
+    public final Tag TAG = Tag.TAG;
+
+    /**
      * The table <code>public.tempban</code>.
      */
     public final Tempban TEMPBAN = Tempban.TEMPBAN;
@@ -68,6 +75,7 @@ public class Public extends SchemaImpl {
             Activequestionmessage.ACTIVEQUESTIONMESSAGE,
             Askthread.ASKTHREAD,
             Moderation.MODERATION,
+            Tag.TAG,
             Tempban.TEMPBAN
         );
     }

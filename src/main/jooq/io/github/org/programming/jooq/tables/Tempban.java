@@ -7,14 +7,28 @@ package io.github.org.programming.jooq.tables;
 import io.github.org.programming.jooq.Keys;
 import io.github.org.programming.jooq.Public;
 import io.github.org.programming.jooq.tables.records.TempbanRecord;
+
+import java.time.Instant;
+import java.util.function.Function;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Function7;
+import org.jooq.Identity;
+import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.Records;
+import org.jooq.Row7;
+import org.jooq.Schema;
+import org.jooq.SelectField;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 import org.jooq.types.DayToSecond;
-
-import java.time.Instant;
 
 
 /**
@@ -131,6 +145,11 @@ public class Tempban extends TableImpl<TempbanRecord> {
         return new Tempban(alias, this);
     }
 
+    @Override
+    public Tempban as(Table<?> alias) {
+        return new Tempban(alias.getQualifiedName(), this);
+    }
+
     /**
      * Rename this table
      */
@@ -147,6 +166,14 @@ public class Tempban extends TableImpl<TempbanRecord> {
         return new Tempban(name, null);
     }
 
+    /**
+     * Rename this table
+     */
+    @Override
+    public Tempban rename(Table<?> name) {
+        return new Tempban(name.getQualifiedName(), null);
+    }
+
     // -------------------------------------------------------------------------
     // Row7 type methods
     // -------------------------------------------------------------------------
@@ -154,5 +181,20 @@ public class Tempban extends TableImpl<TempbanRecord> {
     @Override
     public Row7<Integer, String, String, String, DayToSecond, Instant, String> fieldsRow() {
         return (Row7) super.fieldsRow();
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
+     */
+    public <U> SelectField<U> mapping(Function7<? super Integer, ? super String, ? super String, ? super String, ? super DayToSecond, ? super Instant, ? super String, ? extends U> from) {
+        return convertFrom(Records.mapping(from));
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Class,
+     * Function)}.
+     */
+    public <U> SelectField<U> mapping(Class<U> toType, Function7<? super Integer, ? super String, ? super String, ? super String, ? super DayToSecond, ? super Instant, ? super String, ? extends U> from) {
+        return convertFrom(toType, Records.mapping(from));
     }
 }
