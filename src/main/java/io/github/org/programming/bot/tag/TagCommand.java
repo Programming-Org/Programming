@@ -26,9 +26,10 @@ import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
 import io.github.org.programming.database.tag.TagDatabase;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -41,13 +42,11 @@ import java.awt.*;
 import java.util.Objects;
 
 public class TagCommand extends SlashCommandExtender {
-    private String newTageID;
-    private String editTagID;
-
     @Override
     public void onSlashCommand(@NotNull SlashCommandInteractionEvent event) {
         switch (Objects.requireNonNull(event.getSubcommandName())) {
             case "get" -> onTagGet(event);
+            case "list" -> onTagList(event);
             case "create" -> onTagCreate(event);
             case "edit" -> onTagEdit(event);
             case "delete" -> onTagDelete(event);
@@ -57,6 +56,11 @@ public class TagCommand extends SlashCommandExtender {
 
     private void onTagGet(@NotNull SlashCommandInteractionEvent event) {
         String tagId = Objects.requireNonNull(event.getOption("tag_id")).getAsString();
+
+        if (!TagDatabase.checkIfTagIdExists(tagId)) {
+            event.reply("Tag with id " + tagId + " does not exist").setEphemeral(true).queue();
+            return;
+        }
 
         String tagName = TagDatabase.getName(tagId);
         String tagDescription = TagDatabase.getDescription(tagId);
@@ -71,15 +75,57 @@ public class TagCommand extends SlashCommandExtender {
         event.replyEmbeds(embedBuilder).setEphemeral(true).queue();
     }
 
+    private void onTagList(@NotNull SlashCommandInteractionEvent event) {
+        Guild guild = event.getGuild();
+        Member member = event.getMember();
+
+        if (guild == null || member == null) {
+            event.reply("This command can only be used in a guild").setEphemeral(true).queue();
+            return;
+        }
+
+        if (!member.hasPermission(Permission.MANAGE_SERVER)) {
+            event.reply("You need the Manage Server permission to use this command")
+                .setEphemeral(true)
+                .queue();
+            return;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        TagDatabase.getTags().forEach((id, name) -> {
+            stringBuilder.append("Id: ").append(id).append(" | Name: ").append(name);
+        });
+
+        if (stringBuilder.isEmpty()) {
+            event.reply("There are no tags").setEphemeral(true).queue();
+            return;
+        }
+
+        var embedBuilder = new EmbedBuilder().setTitle("Tags")
+            .setDescription(stringBuilder.toString())
+            .setColor(Color.GRAY)
+            .setTimestamp(event.getTimeCreated())
+            .build();
+
+        event.replyEmbeds(embedBuilder).setEphemeral(true).queue();
+    }
+
     private void onTagCreate(@NotNull SlashCommandInteractionEvent event) {
-        newTageID = event.getOption("tag_id", OptionMapping::getAsString);
         GuildOnlyCommand.guildOnlyCommand(event);
         checkForPerms(event);
+
+
+        TextInput tagId = TextInput.create("tag-id", "Tag ID", TextInputStyle.SHORT)
+            .setPlaceholder("Enter the new tag ID")
+            .setMinLength(1)
+            .setMaxLength(10)
+            .setRequired(true)
+            .build();
 
         TextInput tagName = TextInput.create("tag-name", "Tag Name", TextInputStyle.SHORT)
             .setPlaceholder("Enter the name of the tag")
             .setMinLength(1)
-            .setMaxLength(32)
+            .setMaxLength(10)
             .setRequired(true)
             .build();
 
@@ -92,7 +138,7 @@ public class TagCommand extends SlashCommandExtender {
                     .build();
 
         Modal modal = Modal.create("tag-create", "Create A Tag")
-            .addActionRows(ActionRow.of(tagName), ActionRow.of(tagDescription))
+            .addActionRows(ActionRow.of(tagId), ActionRow.of(tagName), ActionRow.of(tagDescription))
             .build();
 
         event.replyModal(modal).queue();
@@ -101,10 +147,16 @@ public class TagCommand extends SlashCommandExtender {
     private void onTagEdit(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         checkForPerms(event);
-        editTagID = event.getOption("tag_id", OptionMapping::getAsString);
+
+        TextInput tagId = TextInput.create("tag-id", "Tag ID", TextInputStyle.SHORT)
+            .setPlaceholder("Enter the ID of the tag you want to edit")
+            .setMinLength(1)
+            .setMaxLength(10)
+            .setRequired(true)
+            .build();
 
         TextInput tagName = TextInput.create("tag-name", "New Tag Name", TextInputStyle.SHORT)
-            .setPlaceholder("Enter the name of the tag")
+            .setPlaceholder("Enter the new name of the tag")
             .setMinLength(1)
             .setMaxLength(32)
             .setRequired(false)
@@ -112,31 +164,61 @@ public class TagCommand extends SlashCommandExtender {
 
         TextInput tagDescription =
                 TextInput.create("tag-description", "New Tag Description", TextInputStyle.PARAGRAPH)
-                    .setPlaceholder("Enter the description of the tag")
-                    .setMinLength(30)
+                    .setPlaceholder("Enter the new description of the tag")
+                    .setMinLength(10)
                     .setMaxLength(999)
                     .setRequired(false)
                     .build();
+
+        Modal modal = Modal.create("tag-edit", "Edit A Tag")
+            .addActionRows(ActionRow.of(tagId), ActionRow.of(tagName), ActionRow.of(tagDescription))
+            .build();
+
+        event.replyModal(modal).queue();
     }
 
     private void onTagDelete(@NotNull SlashCommandInteractionEvent event) {
         GuildOnlyCommand.guildOnlyCommand(event);
         checkForPerms(event);
+        var tagId = event.getOption("tag_id");
 
-        TagDatabase.deleteTag(event.getOption("tag_id", OptionMapping::getAsString));
+        if (tagId == null) {
+            event.reply("Please provide a tag ID").setEphemeral(true).queue();
+            return;
+        }
+
+        if (!TagDatabase.checkIfTagIdExists(tagId.getAsString())) {
+            event.reply("Tag ID does not exist").setEphemeral(true).queue();
+            return;
+        }
+
+        TagDatabase.deleteTag(tagId.getAsString());
 
         event.reply("Tag deleted").setEphemeral(true).queue();
     }
 
     private void checkForPerms(SlashCommandInteractionEvent event) {
-        if (!event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
+        Member member = event.getMember();
+        Guild guild = event.getGuild();
+
+        if (guild == null) {
+            event.reply("I am not in a guild").setEphemeral(true).queue();
+            return;
+        }
+
+        if (member == null) {
+            event.reply("You are not in a guild").setEphemeral(true).queue();
+            return;
+        }
+
+        if (!member.hasPermission(Permission.MANAGE_SERVER)) {
             event.reply("You do not have permission to use this command")
                 .setEphemeral(true)
                 .queue();
             return;
         }
 
-        if (!event.getGuild().getSelfMember().hasPermission(Permission.MANAGE_SERVER)) {
+        if (!guild.getSelfMember().hasPermission(Permission.MANAGE_SERVER)) {
             event.reply("I do not have permission to use this command").setEphemeral(true).queue();
             return;
         }
@@ -144,24 +226,63 @@ public class TagCommand extends SlashCommandExtender {
 
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
-        System.out.println(event.getModalId());
-        if (event.getModalId().equals("tag-create")) {
-            TagDatabase.createTag(newTageID, event.getValue("tag-name").getAsString(),
-                    event.getValue("tag-description").getAsString());
-            event.getInteraction().reply("Tag created").setEphemeral(true).queue();
-        }
+        switch (event.getModalId()) {
+            case "tag-create" -> {
+                var tagId = event.getValue("tag-id");
 
-        if (event.getModalId().equals("tag-edit")) {
-            if (event.getValue("tag-name") != null) {
-                TagDatabase.editTagName(editTagID, event.getValue("tag-name").getAsString());
-            } else if (event.getValue("tag-description") != null) {
-                TagDatabase.editTagDescription(editTagID,
-                        event.getValue("tag-description").getAsString());
-            } else {
-                event.getInteraction()
-                    .reply("You must enter a new name or description")
-                    .setEphemeral(true)
-                    .queue();
+                if (tagId != null) {
+                    if (!TagDatabase.checkIfTagIdExists(tagId.getAsString())) {
+                        var tagName = event.getValue("tag-name");
+                        var tagDescription = event.getValue("tag-description");
+
+                        if (tagName != null && tagDescription != null) {
+                            TagDatabase.createTag(tagId.getAsString(), tagName.getAsString(),
+                                    tagDescription.getAsString());
+                            event.reply("Tag created").setEphemeral(true).queue();
+                        } else {
+                            event.reply("You must provide a name and description for the tag")
+                                .setEphemeral(true)
+                                .queue();
+                        }
+                    }
+                }
+            }
+            case "tag-edit" -> {
+                var tagId = event.getValue("tag-id");
+
+                if (tagId != null) {
+                    if (TagDatabase.checkIfTagIdExists(tagId.getAsString())) {
+                        var tagName = event.getValue("tag-name");
+                        var tagDescription = event.getValue("tag-description");
+
+
+                        if (tagName != null) {
+                            TagDatabase.editTagName(tagId.getAsString(), tagName.getAsString());
+                        }
+
+                        if (tagDescription != null) {
+                            TagDatabase.editTagDescription(tagId.getAsString(),
+                                    tagDescription.getAsString());
+                        }
+
+                        if (tagName == null || tagDescription == null) {
+                            event.getInteraction()
+                                .reply("You must enter a new name and description")
+                                .setEphemeral(true)
+                                .queue();
+                            return;
+                        }
+
+                        event.getInteraction().reply("Tag edited").setEphemeral(true).queue();
+                    } else {
+                        event.getInteraction()
+                            .reply("Tag ID does not exist")
+                            .setEphemeral(true)
+                            .queue();
+                    }
+                } else {
+                    event.getInteraction().reply("Tag ID not found").setEphemeral(true).queue();
+                }
             }
         }
     }
@@ -169,14 +290,13 @@ public class TagCommand extends SlashCommandExtender {
 
     @Override
     public SlashCommand build() {
-        return new SlashCommandBuilder("tag", "Used to create/edit/delete tags")
+        return new SlashCommandBuilder("tag", "Used to get/create/edit/delete tags")
             .addSubcommands(
                     new SubcommandData("get", "Get a tag").addOption(OptionType.STRING, "tag_id",
                             "The id of the tag you want to get", true),
-                    new SubcommandData("create", "Create a tag").addOption(OptionType.STRING,
-                            "tag_id", "A new tag id", true),
-                    new SubcommandData("edit", "Edit a tag").addOption(OptionType.STRING, "tag_id",
-                            "The id of the tag you want to edit", true),
+                    new SubcommandData("list", "List all tags"),
+                    new SubcommandData("create", "Create a tag"),
+                    new SubcommandData("edit", "Edit a tag"),
                     new SubcommandData("delete", "Delete a tag").addOption(OptionType.STRING,
                             "tag_id", "The id of the tag you wish to delete", true))
             .build()

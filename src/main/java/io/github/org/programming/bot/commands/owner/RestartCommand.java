@@ -24,7 +24,6 @@ import io.github.org.programming.backend.extension.SlashCommandExtender;
 import io.github.org.programming.backend.type.CommandType;
 import io.github.org.programming.bot.ProgrammingBot;
 import io.github.org.programming.bot.commands.util.GuildOnlyCommand;
-import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

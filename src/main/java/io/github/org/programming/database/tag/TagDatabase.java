@@ -18,6 +18,8 @@
  */ 
 package io.github.org.programming.database.tag;
 
+import java.util.Map;
+
 import static io.github.org.programming.bot.ProgrammingBot.getContext;
 import static io.github.org.programming.jooq.Tables.TAG;
 
@@ -50,7 +52,18 @@ public class TagDatabase {
             .execute();
     }
 
+    public static boolean checkIfTagIdExists(String tagId) {
+        return getContext().select(TAG.ID)
+            .from(TAG)
+            .where(TAG.ID.eq(tagId))
+            .fetchOne(TAG.ID) != null;
+    }
+
     public static void deleteTag(String tagId) {
         getContext().deleteFrom(TAG).where(TAG.ID.eq(tagId)).execute();
+    }
+
+    public static Map<String, String> getTags() {
+        return getContext().select(TAG.ID, TAG.NAME).from(TAG).fetchMap(TAG.ID, TAG.NAME);
     }
 }
