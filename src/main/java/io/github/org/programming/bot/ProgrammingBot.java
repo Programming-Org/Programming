@@ -93,6 +93,10 @@ public class ProgrammingBot extends ListenerAdapter {
             checkIfAskHelpThreadArchived(guild);
             checkIfAskThreadTimeNeedsToBeRest(jda);
         }, 0, 1, TimeUnit.MINUTES);
+
+        scheduledExecutor.scheduleAtFixedRate(() -> {
+            new HandleAutoMod().handleAutoMod(guild);
+        }, 0, 30, TimeUnit.SECONDS);
     }
 
     // TODO : Need to check if this works,

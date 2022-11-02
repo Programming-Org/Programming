@@ -104,6 +104,13 @@ public class ModerationDatabase {
             .fetchOne(MODERATION.AMOUNT_OF_WARNINGS);
     }
 
+    public static Map<Integer, String> getWarningsAndUserIds() {
+        return getContext().select(MODERATION.ID, MODERATION.USER_ID)
+            .from(MODERATION)
+            .where(MODERATION.TYPE.eq(ModerationType.WARN.getType()))
+            .fetchMap(MODERATION.ID, MODERATION.USER_ID);
+    }
+
 
     public static void removeCase(int caseId) {
         getContext().deleteFrom(MODERATION).where(MODERATION.ID.eq(caseId)).execute();
